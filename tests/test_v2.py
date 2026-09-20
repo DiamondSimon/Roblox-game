@@ -6,12 +6,12 @@ class V2Tests(unittest.TestCase):
  def test_fresh_player_and_movement_caps(self):
   lua=boot();lua.execute('''
    local d=require(TestModules.PlayerDataService):Get(TestPlayer)
-   assert(d.Cores==0 and d.Scrap==0 and d.SchemaVersion==2)
+   assert(d.Cores==0 and d.Scrap==0 and d.SchemaVersion==3)
    for _,level in pairs(d.Upgrades) do assert(level==0) end
-   assert(require(TestModules.YardService):Capacity(TestPlayer,d)==4)
+   assert(require(TestModules.YardService):Capacity(TestPlayer,d)==8)
    local e=require(game.ReplicatedStorage.Shared.Config.EconomyConfig)
    d.Upgrades.Speed=4;d.Upgrades.Carry=4
-   assert(e.speed(d.Upgrades,false)==20 and e.speed(d.Upgrades,true)==16)
+   assert(e.speed(d.Upgrades,false)==18 and e.speed(d.Upgrades,true)==14)
   ''')
  def test_claim_duplicate_and_daily_rollover(self):
   lua=boot();lua.execute('''
@@ -49,7 +49,7 @@ class V2Tests(unittest.TestCase):
    data:Get(TestPlayer).Scrap=10000
    TestPlayer.Character.HumanoidRootPart.Position=Vector3.zero
    gameService:Upgrade(TestPlayer,"Speed");assert(data:Get(TestPlayer).Upgrades.Speed==0)
-   Clock=Clock+1;TestPlayer.Character.HumanoidRootPart.Position=require(TestModules.YardService).Owned[TestPlayer].Terminal.Position
+   Clock=Clock+1;TestPlayer.Character.HumanoidRootPart.Position=require(TestModules.WorldService).Shops.Upgrades.Position
    gameService:Upgrade(TestPlayer,{});assert(data:Get(TestPlayer).Scrap==10000)
   ''')
  def test_contested_pickup_and_distinct_yards(self):
@@ -67,12 +67,13 @@ class V2Tests(unittest.TestCase):
  def test_full_yard_replacement_preserves_starter(self):
   lua=boot();lua.execute('''
    local data=require(TestModules.PlayerDataService);local d=data:Get(TestPlayer)
-   for i=2,4 do table.insert(d.MachineInventory,{Uid="extra"..i,MachineId="radio",Protected=false}) end
+   table.insert(d.MachineInventory,{Uid="legacy",MachineId="radio",Protected=true})
+   for i=2,8 do table.insert(d.MachineInventory,{Uid="extra"..i,MachineId="radio",Protected=false}) end
    local g=require(TestModules.GameplayService);local model=next(g.Salvage)
    TestPlayer.Character.HumanoidRootPart.Position=model.PrimaryPart.Position;g:Pickup(TestPlayer,model)
    Clock=Clock+30;TestPlayer.Character.HumanoidRootPart.Position=require(TestModules.YardService).Owned[TestPlayer].Deposit.Position
-   g:Deposit(TestPlayer,d.MachineInventory[1].Uid);assert(g.Carrying[TestPlayer]);assert(#d.MachineInventory==4)
-   Clock=Clock+1;g:Deposit(TestPlayer,"extra2");assert(not g.Carrying[TestPlayer]);assert(#d.MachineInventory==4)
+   g:Deposit(TestPlayer,d.MachineInventory[1].Uid);assert(g.Carrying[TestPlayer]);assert(#d.MachineInventory==8)
+   Clock=Clock+1;g:Deposit(TestPlayer,"extra2");assert(not g.Carrying[TestPlayer]);assert(#d.MachineInventory==8)
    assert(d.MachineInventory[1].Protected)
   ''')
  def test_schema_migration_preserves_old_progress(self):
@@ -82,8 +83,8 @@ class V2Tests(unittest.TestCase):
    d.SchemaVersion=1;d.Cores=nil;d.QuestState=nil;d.Cosmetics=nil
    d.Upgrades={Income=15,Slots=7};d.Scrap=12345;d.Receipts.old=500
    local migrated=Data:Load(Player)
-   assert(migrated.SchemaVersion==2 and migrated.Scrap==12345 and migrated.Cores==0)
-   assert(migrated.Upgrades.Income==15 and migrated.CapacityFloor==13)
+   assert(migrated.SchemaVersion==3 and migrated.Scrap==12345 and migrated.Cores==0)
+   assert(migrated.Upgrades.Income==15 and migrated.Upgrades.Floors==2)
    assert(migrated.Receipts.old.Currency=="Scrap" and migrated.Receipts.old.Amount==500)
   ''')
  def test_core_receipt_ambiguous_failure_and_reload(self):

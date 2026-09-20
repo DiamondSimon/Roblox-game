@@ -1,12 +1,13 @@
 -- Narrow server startup harness. This is NOT a Roblox engine replacement.
 local vmt={}
-vmt.__index=function(v,k) if k=="Magnitude" then return math.sqrt(v.X*v.X+v.Y*v.Y+v.Z*v.Z) end end
+vmt.__index=function(v,k) if k=="Unit" then local m=math.sqrt(v.X*v.X+v.Y*v.Y+v.Z*v.Z);return Vector3.new(v.X/m,v.Y/m,v.Z/m) elseif k=="Dot" then return function(a,b) return a.X*b.X+a.Y*b.Y+a.Z*b.Z end elseif k=="Magnitude" then return math.sqrt(v.X*v.X+v.Y*v.Y+v.Z*v.Z) end end
 vmt.__add=function(a,b) return Vector3.new(a.X+b.X,a.Y+b.Y,a.Z+b.Z) end
 vmt.__sub=function(a,b) return Vector3.new(a.X-b.X,a.Y-b.Y,a.Z-b.Z) end
+vmt.__mul=function(a,b) return Vector3.new(a.X*b,a.Y*b,a.Z*b) end
 Vector3={new=function(x,y,z) return setmetatable({X=x or 0,Y=y or 0,Z=z or 0},vmt) end};Vector3.zero=Vector3.new()
 Vector2={new=function(x,y) return {X=x,Y=y} end}
 local cmt={__mul=function(a,b) return CFrame.new(a.Position.X+b.Position.X,a.Position.Y+b.Position.Y,a.Position.Z+b.Position.Z) end}
-CFrame={new=function(x,y,z) return setmetatable({Position=Vector3.new(x,y,z)},cmt) end}
+CFrame={new=function(x,y,z) return setmetatable({Position=type(x)=="table" and x or Vector3.new(x,y,z),LookVector=Vector3.new(0,0,-1)},cmt) end}
 CFrame.lookAt=function(position,target) return CFrame.new(position.X,position.Y,position.Z) end
 Color3={fromRGB=function(r,g,b) return {R=r/255,G=g/255,B=b/255} end}
 UDim2={new=function(...) return {...} end,fromOffset=function(...) return {...} end,fromScale=function(...) return {...} end}
@@ -19,7 +20,15 @@ local function signal()
  return {callbacks={},Connect=function(self,fn) table.insert(self.callbacks,fn);return {Disconnect=function() end} end,
  Fire=function(self,...) for _,fn in ipairs(self.callbacks) do fn(...) end end}
 end
+RaycastParams={new=function() return {} end}
+Enum.RaycastFilterType={Exclude="Exclude"};Enum.HumanoidStateType={GettingUp="GettingUp"}
 local methods={}
+function methods:IsDescendantOf(parent) local p=self.Parent;while p do if p==parent then return true end;p=p.Parent end;return false end
+function methods:SetNetworkOwner() end
+function methods:SetNetworkOwnershipAuto() end
+function methods:ApplyImpulse(v) self.LastImpulse=v end
+function methods:ChangeState(v) self.LastState=v end
+
 function methods:GetChildren() local a={} for _,c in ipairs(self._children) do table.insert(a,c) end return a end
 function methods:GetDescendants() local a={} for _,c in ipairs(self._children) do table.insert(a,c);for _,d in ipairs(c:GetDescendants()) do table.insert(a,d) end end return a end
 function methods:FindFirstChild(name) for _,c in ipairs(self._children) do if c.Name==name then return c end end end
@@ -52,7 +61,7 @@ end,__newindex=function(o,k,v)
 end}
 Instance={new=function(cls)
  local o=setmetatable({_props={ClassName=cls,Name=cls},_children={},_attributes={}},mt)
- if cls=="Part" or cls=="SpawnLocation" then o.Position=Vector3.zero end
+ if cls=="Part" or cls=="SpawnLocation" then o.Position=Vector3.zero;o.AssemblyMass=1 end
  if cls=="ProximityPrompt" then o.Triggered=signal() end
  if cls=="RemoteEvent" then o.OnServerEvent=signal() end
  return o
@@ -70,7 +79,7 @@ task={wait=function() return coroutine.yield() end,spawn=function(fn,...)
 end,delay=function(_,fn) table.insert(Scheduled,coroutine.create(fn)) end}
 Random={new=function() return {NextNumber=function(_,a,b) return (a+b)/2 end} end}
 Warnings={};warn=function(s) table.insert(Warnings,s) end
-workspace=Instance.new("Workspace")
+workspace=Instance.new("Workspace");function workspace:Raycast() return self.RaycastHit end
 local rep=Instance.new("ReplicatedStorage")
 local server=Instance.new("ServerScriptService")
 local players=Instance.new("Players");players.PlayerAdded=signal();players.PlayerRemoving=signal()
@@ -82,7 +91,7 @@ function player:LoadCharacterAsync()
  local humanoid=Instance.new("Humanoid");humanoid.Health=100;humanoid.Died=signal();humanoid.Parent=character
  self.Character=character;self.CharacterAdded:Fire(character)
 end
-function players:GetPlayers() return {player} end
+function players:GetPlayers() return self:GetChildren() end
 function players:GetPlayerByUserId(id) if id==42 then return player end end
 local guid=0;DataStoreOpenCalls=0
 local services={AnalyticsService={LogCustomEvent=function() end},CollectionService={AddTag=function() end},ReplicatedStorage=rep,ServerScriptService=server,Players=players,Lighting=Instance.new("Lighting"),

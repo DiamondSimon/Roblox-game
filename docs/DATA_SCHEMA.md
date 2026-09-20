@@ -1,27 +1,13 @@
-# Schema 2 — V0.2
+# Save schema 3
 
-Store name unchanged: SCRAPYARD_Alpha_v1. Keys: player_<UserId>. Envelope: Data and expiring Lease. No resets.
+Storage key remains `player_<UserId>` in `SCRAPYARD_Alpha_v1`; outer record `{Data, Lease}` is unchanged. Fresh Studio practice sessions remain memory-only. Persistent load/save uses UpdateAsync leases; unknown schemas fail closed.
 
-| Field | Authority / meaning |
-|---|---|
-| SchemaVersion | 2; migrate 1, reject unknown versions |
-| Scrap, LifetimeScrap | Preserved balance / lifetime passive income |
-| Cores | New nonnegative hybrid premium balance, initially 0 |
-| Upgrades | Income, Slots preserved; Speed, Carry, Expansion default 0 |
-| CapacityFloor | For migrated players, old base 6 + old Slots level; fresh 0 |
-| MachineInventory | Ordered Uid, MachineId, Protected entries; preserved |
-| DiscoveredMachines / Mutations | Preserved discovery sets |
-| QuestState | UTC Day; Progress, Claimed, Inspected maps |
-| Cosmetics | Owned map; Equipped key (Default initially) |
-| Receipts | PurchaseId → {Currency, Amount}; numeric old receipts become Scrap records |
-| Settings, DailyRewardState, Statistics | Preserved reserved fields |
+New fields: `Upgrades.Floors` (0–3), `Rebirths` (0–10), `RunDelivered`, `TutorialStage` (1 pickup / 2 return / 3 shop / 4 complete), `SpinState={Day=-1,Reward=0}`. Fresh inventory and discoveries are empty. Balances and all upgrade levels start at zero. Capacity is derived, never client-authoritative: eight times (1 + Floors + verified ExtraSlots entitlement).
 
-All owned inventory is placed sequentially. Capacity, Scrap/sec and paid pass benefits are derived; no second mutable ownership list. Capacity = max(legacy floor, 4 + Slots×2 + Expansion×2) + 5 for verified capacity pass, capped at 24. Existing machines remain visible even if entitlement verification is temporarily unavailable.
+Schema 1 first migrates to schema 2 with the existing receipt/currency/quest/cosmetic migration. Schema 2 then computes old capacity as max(CapacityFloor, 4 + 2×Slots + 2×Expansion, inventory count), rounds it upward to eight-slot floors, and installs schema 3 fields. Old machines, UIDs, protected flags, Scrap, Cores, income/movement upgrades, cosmetics, receipts and discoveries remain. Historical Slots and Expansion fields remain for compatibility but are no longer purchasable. Existing players with machines get tutorial stage 4; empty migrated profiles get stage 1. Old high income levels (up to 20) remain valid, but only ten levels can be newly bought.
 
-Legacy income levels through 20 and slot levels through 7 remain valid even though new purchase caps are lower (Income 10, Slots 4). They are not clamped or refunded. UI marks levels beyond the new cap as maxed. Old balances can still afford immediate purchases; fresh-economy timing applies to new/reset practice sessions only.
+Spin marker + Cores, sale removal + Scrap, and rebirth reset + permanent increment each share a single profile transaction. Busy blocks competing mutations. Ambiguous transaction writes deactivate the session and require durable reload, preventing overwrite or repeat rewards. Receipts retain existing idempotency and ambiguous-write merging behavior. Autosave remains every 30 seconds; nontransactional pickup/deposit/upgrade progress can be lost on an unexpected server crash before autosave, as in V0.2.
 
-UpdateAsync migration runs during lease acquisition. Unsupported or corrupt versions fail closed instead of creating defaults. The 180-second lease, 30-second autosave and shutdown release remain. Currency is online only; the latest ordinary autosave interval may be lost after an abrupt crash.
+Paid ownership stays in Roblox Marketplace and is verified server-side; it is never reset by rebirth. Protected legacy items survive rebirth and cannot be sold/replaced. No paid stored-machine products currently exist. Carried/world junk is transient, not saved to a profile. Disconnect drops carried junk only while that server remains alive. Teleport/slap cooldowns and immunity are transient server tables, cleared on leave.
 
-Core purchases, quest claims, style unlocks and equip changes use serialized atomic profile commits. Failed/ambiguous transactional writes freeze the session and disconnect for durable reload; read-only storefront and autosave cannot overwrite an uncertain spend. Numeric and tagged receipt replay are retained. Monitor total profile size; receipt IDs are never casually deleted.
-
-Do not run old server versions against migrated profiles: schema 1 code rejects schema 2. Shut down old private test servers when publishing V0.2. Archive/restore procedures must retain the complete envelope and receipt history.
+See V0.3_FEATURES.md for the exact reset-preserve list. Reverting to a schema-2 build after migrating persistent saves is unsupported; use a separate test universe for acceptance.

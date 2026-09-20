@@ -11,6 +11,8 @@ function Purchase:RefreshPasses(player)
    if ok then player:SetAttribute(pass.Key,owned) end
   end
  end
+ local d=Data:Get(player)
+ if d then require(script.Parent.YardService):Refresh(player,d) end
 end
 function Purchase:Start()
  local products={};local ids={}

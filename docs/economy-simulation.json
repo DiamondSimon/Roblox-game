@@ -1,434 +1,66 @@
 {
-  "New / free": {
-    "1": {
-      "Machines": 1.0,
-      "Income": 0.3,
-      "Earned": 18.0,
-      "Balance": 18.0,
-      "Purchases": 0.0
-    },
-    "3": {
-      "Machines": 2.0,
-      "Income": 1.1,
-      "Earned": 126.0,
-      "Balance": 126.0,
-      "Purchases": 0.0
-    },
-    "5": {
-      "Machines": 4.0,
-      "Income": 3.7,
-      "Earned": 380.0,
-      "Balance": 170.76,
-      "Purchases": 1.0
-    },
-    "8": {
-      "Machines": 4.0,
-      "Income": 4.7,
-      "Earned": 1140.32,
-      "Balance": 643.48,
-      "Purchases": 2.0
-    },
-    "10": {
-      "Machines": 4.0,
-      "Income": 5.71,
-      "Earned": 1778.4,
-      "Balance": 456.72,
-      "Purchases": 4.0
-    },
-    "15": {
-      "Machines": 6.0,
-      "Income": 9.42,
-      "Earned": 3961.88,
-      "Balance": 1917.88,
-      "Purchases": 5.0
-    },
-    "20": {
-      "Machines": 6.0,
-      "Income": 11.9,
-      "Earned": 7046.36,
-      "Balance": 4503.28,
-      "Purchases": 5.0
-    },
-    "25": {
-      "Machines": 6.0,
-      "Income": 13.39,
-      "Earned": 10693.66,
-      "Balance": 4847.18,
-      "Purchases": 5.0
-    },
-    "30": {
-      "Machines": 8.0,
-      "Income": 17.75,
-      "Earned": 14959.0,
-      "Balance": 3832.44,
-      "Purchases": 8.0
-    },
-    "45": {
-      "Machines": 10.0,
-      "Income": 24.75,
-      "Earned": 35156.32,
-      "Balance": 17892.8,
-      "Purchases": 10.0
-    }
+  "New / free / 0% loss": {
+    "FirstUpgrade": 290.0,
+    "FirstFloor": 990.0,
+    "RebirthEligible": 2390.0,
+    "Scrap60m": 60497.619999999995,
+    "Machines": 16.0,
+    "RebirthReached": 200
   },
-  "New / 2X": {
-    "1": {
-      "Machines": 1.0,
-      "Income": 0.6,
-      "Earned": 36.0,
-      "Balance": 36.0,
-      "Purchases": 0.0
-    },
-    "3": {
-      "Machines": 2.0,
-      "Income": 2.2,
-      "Earned": 252.0,
-      "Balance": 252.0,
-      "Purchases": 0.0
-    },
-    "5": {
-      "Machines": 4.0,
-      "Income": 7.39,
-      "Earned": 804.24,
-      "Balance": 391.2,
-      "Purchases": 2.0
-    },
-    "8": {
-      "Machines": 4.0,
-      "Income": 9.41,
-      "Earned": 2301.36,
-      "Balance": 1451.84,
-      "Purchases": 3.0
-    },
-    "10": {
-      "Machines": 5.0,
-      "Income": 12.65,
-      "Earned": 3632.76,
-      "Balance": 1695.4,
-      "Purchases": 5.0
-    },
-    "15": {
-      "Machines": 6.0,
-      "Income": 19.96,
-      "Earned": 8520.76,
-      "Balance": 4917.96,
-      "Purchases": 5.0
-    },
-    "20": {
-      "Machines": 7.0,
-      "Income": 26.16,
-      "Earned": 14733.2,
-      "Balance": 4164.24,
-      "Purchases": 7.0
-    },
-    "25": {
-      "Machines": 10.0,
-      "Income": 36.45,
-      "Earned": 24103.52,
-      "Balance": 9577.88,
-      "Purchases": 10.0
-    },
-    "30": {
-      "Machines": 10.0,
-      "Income": 40.8,
-      "Earned": 35871.2,
-      "Balance": 18372.6,
-      "Purchases": 10.0
-    },
-    "45": {
-      "Machines": 14.0,
-      "Income": 68.8,
-      "Earned": 82462.0,
-      "Balance": 26957.2,
-      "Purchases": 14.0
-    }
+  "New / 2X / 0% loss": {
+    "FirstUpgrade": 290.0,
+    "FirstFloor": 690.0,
+    "RebirthEligible": 1690.0,
+    "Scrap60m": 128981.0,
+    "Machines": 16.0,
+    "RebirthReached": 200
   },
-  "Average / free": {
-    "1": {
-      "Machines": 1.0,
-      "Income": 0.3,
-      "Earned": 18.0,
-      "Balance": 18.0,
-      "Purchases": 0.0
-    },
-    "3": {
-      "Machines": 3.0,
-      "Income": 3.8,
-      "Earned": 312.0,
-      "Balance": 293.0,
-      "Purchases": 0.0
-    },
-    "5": {
-      "Machines": 4.0,
-      "Income": 7.62,
-      "Earned": 1006.22,
-      "Balance": 378.34,
-      "Purchases": 2.0
-    },
-    "8": {
-      "Machines": 4.0,
-      "Income": 9.18,
-      "Earned": 2469.72,
-      "Balance": 882.9,
-      "Purchases": 4.0
-    },
-    "10": {
-      "Machines": 6.0,
-      "Income": 14.32,
-      "Earned": 3845.23,
-      "Balance": 1801.23,
-      "Purchases": 5.0
-    },
-    "15": {
-      "Machines": 6.0,
-      "Income": 17.73,
-      "Earned": 8806.32,
-      "Balance": 5856.13,
-      "Purchases": 5.0
-    },
-    "20": {
-      "Machines": 8.0,
-      "Income": 24.24,
-      "Earned": 14508.95,
-      "Balance": 2569.23,
-      "Purchases": 8.0
-    },
-    "25": {
-      "Machines": 10.0,
-      "Income": 32.3,
-      "Earned": 22985.93,
-      "Balance": 8496.93,
-      "Purchases": 10.0
-    },
-    "30": {
-      "Machines": 10.0,
-      "Income": 35.97,
-      "Earned": 33069.92,
-      "Balance": 18135.15,
-      "Purchases": 10.0
-    },
-    "45": {
-      "Machines": 14.0,
-      "Income": 59.84,
-      "Earned": 70150.35,
-      "Balance": 12726.8,
-      "Purchases": 14.0
-    }
+  "Average / free / 0% loss": {
+    "FirstUpgrade": 215.0,
+    "FirstFloor": 665.0,
+    "RebirthEligible": 1640.0,
+    "Scrap60m": 122752.27,
+    "Machines": 16.0,
+    "RebirthReached": 200
   },
-  "Average / 2X": {
-    "1": {
-      "Machines": 1.0,
-      "Income": 0.6,
-      "Earned": 36.0,
-      "Balance": 36.0,
-      "Purchases": 0.0
-    },
-    "3": {
-      "Machines": 3.0,
-      "Income": 8.24,
-      "Earned": 667.2,
-      "Balance": 487.6,
-      "Purchases": 1.0
-    },
-    "5": {
-      "Machines": 4.0,
-      "Income": 15.23,
-      "Earned": 2073.12,
-      "Balance": 1184.34,
-      "Purchases": 3.0
-    },
-    "8": {
-      "Machines": 5.0,
-      "Income": 21.58,
-      "Earned": 5208.02,
-      "Balance": 3310.82,
-      "Purchases": 5.0
-    },
-    "10": {
-      "Machines": 6.0,
-      "Income": 29.14,
-      "Earned": 8180.08,
-      "Balance": 5638.2,
-      "Purchases": 5.0
-    },
-    "15": {
-      "Machines": 8.0,
-      "Income": 46.43,
-      "Earned": 18355.74,
-      "Balance": 5473.42,
-      "Purchases": 8.0
-    },
-    "20": {
-      "Machines": 10.0,
-      "Income": 60.93,
-      "Earned": 34343.52,
-      "Balance": 19213.02,
-      "Purchases": 10.0
-    },
-    "25": {
-      "Machines": 10.0,
-      "Income": 69.5,
-      "Earned": 53559.86,
-      "Balance": 14322.48,
-      "Purchases": 11.0
-    },
-    "30": {
-      "Machines": 14.0,
-      "Income": 101.12,
-      "Earned": 78765.2,
-      "Balance": 20036.7,
-      "Purchases": 14.0
-    },
-    "45": {
-      "Machines": 14.0,
-      "Income": 125.6,
-      "Earned": 181560.6,
-      "Balance": 102065.7,
-      "Purchases": 14.0
-    }
+  "Average / free / 25% loss": {
+    "FirstUpgrade": 215.0,
+    "FirstFloor": 740.0,
+    "RebirthEligible": 1865.0,
+    "Scrap60m": 103268.765,
+    "Machines": 16.0,
+    "RebirthReached": 200
   },
-  "Efficient / free": {
-    "1": {
-      "Machines": 2.0,
-      "Income": 2.5,
-      "Earned": 40.0,
-      "Balance": 40.0,
-      "Purchases": 0.0
-    },
-    "3": {
-      "Machines": 4.0,
-      "Income": 8.23,
-      "Earned": 615.56,
-      "Balance": 359.78,
-      "Purchases": 1.0
-    },
-    "5": {
-      "Machines": 4.0,
-      "Income": 10.53,
-      "Earned": 1770.95,
-      "Balance": 724.15,
-      "Purchases": 3.0
-    },
-    "8": {
-      "Machines": 6.0,
-      "Income": 18.1,
-      "Earned": 4324.2,
-      "Balance": 2280.2,
-      "Purchases": 5.0
-    },
-    "10": {
-      "Machines": 6.0,
-      "Income": 21.08,
-      "Earned": 6727.64,
-      "Balance": 4607.19,
-      "Purchases": 5.0
-    },
-    "15": {
-      "Machines": 7.0,
-      "Income": 25.79,
-      "Earned": 13305.75,
-      "Balance": 2109.64,
-      "Purchases": 7.0
-    },
-    "20": {
-      "Machines": 10.0,
-      "Income": 41.34,
-      "Earned": 24437.09,
-      "Balance": 9948.09,
-      "Purchases": 10.0
-    },
-    "25": {
-      "Machines": 10.0,
-      "Income": 46.38,
-      "Earned": 37521.55,
-      "Balance": 22761.74,
-      "Purchases": 10.0
-    },
-    "30": {
-      "Machines": 10.0,
-      "Income": 48.69,
-      "Earned": 51889.73,
-      "Balance": 27556.18,
-      "Purchases": 10.0
-    },
-    "45": {
-      "Machines": 14.0,
-      "Income": 84.48,
-      "Earned": 118358.95,
-      "Balance": 58900.95,
-      "Purchases": 14.0
-    }
+  "Average / 2X / 0% loss": {
+    "FirstUpgrade": 215.0,
+    "FirstFloor": 515.0,
+    "RebirthEligible": 1115.0,
+    "Scrap60m": 253030.63,
+    "Machines": 16.0,
+    "RebirthReached": 200
   },
-  "Efficient / 2X": {
-    "1": {
-      "Machines": 2.0,
-      "Income": 5.0,
-      "Earned": 80.0,
-      "Balance": 80.0,
-      "Purchases": 0.0
-    },
-    "3": {
-      "Machines": 4.0,
-      "Income": 16.46,
-      "Earned": 1295.0,
-      "Balance": 760.26,
-      "Purchases": 2.0
-    },
-    "5": {
-      "Machines": 4.0,
-      "Income": 21.06,
-      "Earned": 3606.92,
-      "Balance": 2219.78,
-      "Purchases": 4.0
-    },
-    "8": {
-      "Machines": 6.0,
-      "Income": 36.83,
-      "Earned": 9268.6,
-      "Balance": 7045.14,
-      "Purchases": 5.0
-    },
-    "10": {
-      "Machines": 7.0,
-      "Income": 45.76,
-      "Earned": 14115.06,
-      "Balance": 2737.04,
-      "Purchases": 7.0
-    },
-    "15": {
-      "Machines": 10.0,
-      "Income": 76.98,
-      "Earned": 32642.9,
-      "Balance": 17994.42,
-      "Purchases": 10.0
-    },
-    "20": {
-      "Machines": 10.0,
-      "Income": 87.88,
-      "Earned": 57368.4,
-      "Balance": 15760.2,
-      "Purchases": 11.0
-    },
-    "25": {
-      "Machines": 14.0,
-      "Income": 139.68,
-      "Earned": 93213.94,
-      "Balance": 33755.94,
-      "Purchases": 14.0
-    },
-    "30": {
-      "Machines": 14.0,
-      "Income": 148.32,
-      "Earned": 137321.3,
-      "Balance": 77863.3,
-      "Purchases": 14.0
-    },
-    "45": {
-      "Machines": 16.0,
-      "Income": 188.16,
-      "Earned": 286925.3,
-      "Balance": 83626.52,
-      "Purchases": 15.0
-    }
+  "Average / 2X / 25% loss": {
+    "FirstUpgrade": 215.0,
+    "FirstFloor": 515.0,
+    "RebirthEligible": 1340.0,
+    "Scrap60m": 213301.65000000002,
+    "Machines": 16.0,
+    "RebirthReached": 200
+  },
+  "Efficient / free / 0% loss": {
+    "FirstUpgrade": 160.0,
+    "FirstFloor": 490.0,
+    "RebirthEligible": 1205.0,
+    "Scrap60m": 182194.065,
+    "Machines": 16.0,
+    "RebirthReached": 200
+  },
+  "Efficient / 2X / 0% loss": {
+    "FirstUpgrade": 105.0,
+    "FirstFloor": 380.0,
+    "RebirthEligible": 875.0,
+    "Scrap60m": 372394.85,
+    "Machines": 16.0,
+    "RebirthReached": 200
   }
 }

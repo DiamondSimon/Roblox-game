@@ -8,6 +8,7 @@ local Data=require(services.PlayerDataService)
 local World=require(services.WorldService)
 local Yard=require(services.YardService)
 local Game=require(services.GameplayService)
+local Progression=require(services.ProgressionService)
 local Purchase=require(services.PurchaseService)
 local Telemetry=require(services.TelemetryService)
 local Economy=require(game.ReplicatedStorage.Shared.Config.EconomyConfig)
@@ -28,10 +29,11 @@ local function join(player)
  player.CharacterAdded:Connect(function(character)
   local humanoid=character:WaitForChild("Humanoid")
   character:WaitForChild("HumanoidRootPart")
+  Progression.Immune[player]=os.clock()+10
   character:PivotTo(yard.Spawn.CFrame*CFrame.new(0,4,0))
   local current=Data:Get(player);if current then humanoid.WalkSpeed=Economy.speed(current.Upgrades,false) end
   humanoid.Died:Connect(function()
-   Game:ClearCarry(player)
+   Game:Drop(player)
    task.delay(3,function() if player.Parent then player:LoadCharacterAsync() end end)
   end)
  end)
@@ -51,7 +53,7 @@ end
 Players.PlayerAdded:Connect(safeJoin)
 Players.PlayerRemoving:Connect(function(player)
  Telemetry:Leave(player)
- Game:ClearCarry(player);Game.LastAction[player]=nil;Yard:Release(player)
+ Game:Drop(player);Progression:Cleanup(player);Game.LastAction[player]=nil;Yard:Release(player)
  -- Load() owns cleanup if the player departed while its request was in flight.
  local s=Data.Sessions[player]
  if s and s.Data then Data:Release(player) end
@@ -59,7 +61,7 @@ Players.PlayerRemoving:Connect(function(player)
 end)
 for _,player in ipairs(Players:GetPlayers()) do task.spawn(safeJoin,player) end
 ReplicatedStorage:SetAttribute("BootStatus","Ready")
-print("SCRAPYARD 0.2.0 • First playable loop loaded")
+print("SCRAPYARD 0.3.0 • First playable loop loaded")
 end
 local ok,err=xpcall(boot,debug.traceback)
 if not ok then

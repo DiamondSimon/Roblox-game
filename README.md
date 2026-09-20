@@ -1,30 +1,28 @@
-# SCRAPYARD — V0.2 playtest build
+# SCRAPYARD — V0.3 playtest build
 
-Larger industrial district, slower major progression, movement upgrades, daily quests, earnable Cores and a clean right-side menu. The user confirmed V0.1.1 gameplay works; V0.2 is ready for the next Studio acceptance test. No Higgsfield credits used. No public publishing performed.
+Moving salvage, shredder pressure, slap-and-steal combat, compact multi-floor yards, a shared shop district, guided onboarding, free daily wheel and rebirths.
 
 ## Play
 
-Download **build/SCRAPYARD-0.2.0.rbxlx**, open it in Studio with File → Open from File, then press F5 / Play. Map generation happens at runtime. Practice mode requires no publishing or DataStore API access and resets on Stop.
+Open **build/SCRAPYARD-0.3.0.rbxlx** in Roblox Studio (File → Open from File), then Play. The map generates at runtime. No plugins, publishing or DataStore API access are required for practice mode. Practice progress resets when you stop.
 
-1. Start at your named yard with 0 Scrap, 0 Cores, no bought upgrades and a 0.30/sec radio.
-2. Follow the direct concrete haul path toward CENTRAL SALVAGE. The expected fresh walk is roughly 18–23 seconds, depending on yard/target and route.
-3. Hold E or tap a machine, carry it home, and use your teal intake pad. If full, explicitly select/confirm a replaceable machine. The protected starter cannot be replaced.
-4. At 240 Scrap, buy Income efficiency while standing near your yard's amber terminal. You can browse upgrades from the right-hand menu anywhere.
-5. Open QUESTS, complete an active contract, and claim Cores. SHOP → STYLES contains three permanent exact-price cosmetic choices. SHOP → PASSES / CORES is prepared but real purchases remain disabled.
+1. Start with an empty eight-slot yard, 0 Scrap and 0 Cores. Follow the yellow waypoint to the conveyor; hold E or tap a junk prompt.
+2. Carry the junk home and use the green intake. Teleports cannot transport carried junk. Stored junk generates Scrap.
+3. Tap **SHOP →**, walk up to the **Upgrades** stand and interact to finish the tutorial. Buy upgrades when affordable; there is no base upgrade terminal or standalone HUD upgrade button.
+4. The same district has **Sell**, **Spin**, **Rebirth** and **Supplies** stands. **HOME →** returns you to your yard.
+5. After the tutorial, use **F / SLAP** with empty hands near another player to knock them down and take carried junk. Yards and the shop district are safe zones. Stored junk cannot be stolen.
 
-## What changed
+## Systems and documentation
 
-- World floor 350×350 → 1000×880 studs; eight larger fenced lots, direct haul paths, cross roads, freight areas, crane, water tower, depot and future gates.
-- Income rebalanced; five upgrade branches: Income, Capacity, Walking, Carrying, Expansion.
-- Four daily quests, UTC reset, durable Core claims; no paid random rewards.
-- Cosmetic Core spending and Core pack receipt support, retaining hidden old Scrap fulfillment definitions.
-- Compact currency HUD; right-side Shop, Upgrades, Quests and Collection; progress/claim indicators.
-- Centralized client fan/hoist animations, restrained steam, warm lighting and spawn-label animation.
-- Schema 1→2 migration preserving existing Scrap, machines, receipts and upgrades. Existing players are not fresh-economy test cases.
+- [Complete V0.3 feature rules](docs/V0.3_FEATURES.md): timings, controls, map, combat, floors, shops, tutorial, spin and rebirth behavior.
+- [Economy scenarios](docs/ECONOMY_V3.md): actual tuning and reproducible synthetic scenarios.
+- [Data schema](docs/DATA_SCHEMA.md): schema 1/2 → 3 migration and preserved progress.
+- [Architecture](docs/ARCHITECTURE.md): ownership and server validation.
+- [Test plan](docs/TEST_PLAN.md): automated scope and remaining Studio checks.
+- [Studio setup](docs/STUDIO_SETUP.md): opening this exact build and testing with two players.
+- [Changelog](CHANGELOG.md) and [roadmap](docs/ROADMAP.md).
 
-## Source and tools
-
-Shared Config modules define economy/catalog/quests/shop. Server Services own data, schema, gameplay, quests, Core shop, purchases, world, yards and telemetry. ClientMain is the UI; Environment owns non-gameplay animation. All IDs remain zero. DataStore name remains `SCRAPYARD_Alpha_v1` intentionally.
+## Build and checks
 
 ```sh
 python -m pip install -r requirements-dev.txt
@@ -33,12 +31,6 @@ python -m unittest discover -s tests -v
 python tools/simulate_economy.py
 ```
 
-Optional Rojo project: `default.project.json`. The XML file works without plugins. Archived old builds remain only for regression reproduction; use 0.2.0.
+42 automated tests pass using actual Lua source and mocked Roblox APIs, including source-to-place parity. The tests do not run the Roblox engine or render screenshots. Physical knockdown, stair traversal, networking, mobile layouts, live DataStore and Marketplace acceptance still require Studio/published testing. No measured FPS or player-retention claims.
 
-## Verification status
-
-Automated module, startup, transaction, gameplay, client-callback and packaged-source checks pass. Six modeled progression scenarios plus an efficient 2X stress policy are documented in `docs/ECONOMY_V2.md`. These are simulated assumptions, not actual retention results.
-
-**V0.2 acceptance is pending:** actual Studio rendering, phone portrait/landscape, two-client networking/physics, published persistence and configured Marketplace tests cannot run in this workspace. Follow `docs/STUDIO_SETUP.md` and `docs/TEST_PLAN.md`. No claim of measured FPS, optimal retention or profitability.
-
-Stealing, security mechanics, functional fusion, events, licensed audio and custom hero assets are later work. Their upgrades/passes are not sold. Higgsfield requires explicit approval after this systems phase.
+All paid purchase IDs remain 0 and monetization is disabled. Core cosmetics and the free daily spin work in practice mode. DataStore name remains SCRAPYARD_Alpha_v1. Earlier builds and explicitly marked historical documents are retained for regression/history; use V0.3. No Higgsfield generation or public publishing performed.

@@ -2,7 +2,7 @@ return {
  Enabled=false,
  Passes={
   {Key="DoubleScrap",Id=0,Name="2X SCRAP",Description="PERMANENT • Double passive machine income."},
-  {Key="ExtraSlots",Id=0,Name="+5 MACHINE SLOTS",Description="PERMANENT • Five extra display positions."},
+  {Key="ExtraSlots",Id=0,Name="+8 MACHINE SLOTS",Description="PERMANENT • Eight extra display positions."},
  },
  Products={
   {Key="Cores80",Id=0,Name="80 CORES",Description="80 Cores for exact-price yard cosmetics.",Currency="Cores",Amount=80},

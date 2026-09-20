@@ -1,3 +1,5 @@
+> Historical V0.2 reference. V0.3 supersedes this document where behavior differs. Current rules: [V0.3_FEATURES.md](V0.3_FEATURES.md), [ECONOMY_V3.md](ECONOMY_V3.md), [DATA_SCHEMA.md](DATA_SCHEMA.md). In particular: no fresh starter, eight slots per floor, shared shops, free daily wheel and carried-junk combat.
+
 # V0.2 map
 
 Ground grows from 350×350 to 1000×880 studs (~7.2× area). Eight yard centers: X ±330, Z -210, -70, 70, 210. Main lots 104×114, annex 26×108. Gates face inward. Protected spawn near entrance, teal intake, amber terminal, 24 physical display pads, reserved crusher pad and expansion strip. Mechanical capacity begins at four; empty future positions visibly show room to grow.

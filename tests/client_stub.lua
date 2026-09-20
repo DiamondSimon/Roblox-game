@@ -30,3 +30,12 @@ function click(text)
  for _,obj in ipairs(pg:GetDescendants()) do if obj.ClassName=="TextButton" and obj.Text==text then obj.Activated:Fire();return end end
  error("Button not found: "..text)
 end
+
+TestServices.UserInputService={InputBegan=sig()}
+Enum.KeyCode={F="F"};Enum.EasingStyle={Quint="Quint",Sine="Sine"};Enum.EasingDirection={Out="Out",InOut="InOut"}
+
+ColorSequence={new=function(value) return value end}
+local attributeSignals={}
+function TestPlayer:GetAttributeChangedSignal(key) attributeSignals[key]=attributeSignals[key] or sig();return attributeSignals[key] end
+local setAttribute=TestPlayer.SetAttribute
+function TestPlayer:SetAttribute(key,value) setAttribute(self,key,value);if attributeSignals[key] then attributeSignals[key]:Fire() end end

@@ -1,3 +1,5 @@
+> Historical V0.2 reference. V0.3 supersedes this document where behavior differs. Current rules: [V0.3_FEATURES.md](V0.3_FEATURES.md), [ECONOMY_V3.md](ECONOMY_V3.md), [DATA_SCHEMA.md](DATA_SCHEMA.md). In particular: no fresh starter, eight slots per floor, shared shops, free daily wheel and carried-junk combat.
+
 # Daily quests and Cores
 
 `QuestConfig.Daily` is the authoritative catalog. QuestService updates progress from server gameplay, never from client-supplied counts.

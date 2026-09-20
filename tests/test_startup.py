@@ -28,10 +28,10 @@ class StartupTests(unittest.TestCase):
    local root=TestPlayer.Character.HumanoidRootPart
    assert((root.Position-TestPlayer.RespawnLocation.Position).Magnitude==4)
    local data=require(TestModules.PlayerDataService)
-   assert(#data:Get(TestPlayer).MachineInventory==1)
+   assert(#data:Get(TestPlayer).MachineInventory==0)
    local gameplay=require(TestModules.GameplayService)
-   local count=0;for _ in pairs(gameplay.Salvage) do count=count+1 end;assert(count==6)
-   local before=data:Get(TestPlayer).Scrap;advance();assert(data:Get(TestPlayer).Scrap>before)
+   local count=0;for _ in pairs(gameplay.Salvage) do count=count+1 end;assert(count==4)
+   local before=data:Get(TestPlayer).Scrap;advance();assert(data:Get(TestPlayer).Scrap==before)
   ''')
  def test_every_machine_model_builds(self):
   lua=boot()
@@ -55,9 +55,9 @@ class StartupTests(unittest.TestCase):
    Clock=Clock+30
    TestPlayer.Character.HumanoidRootPart.Position=yard.Deposit.Position
    gameplay:Deposit(TestPlayer);assert(not gameplay.Carrying[TestPlayer])
-   assert(#data:Get(TestPlayer).MachineInventory==2)
+   assert(#data:Get(TestPlayer).MachineInventory==1)
    Clock=Clock+1;data:Get(TestPlayer).Scrap=240
-   TestPlayer.Character.HumanoidRootPart.Position=yard.Terminal.Position
+   TestPlayer.Character.HumanoidRootPart.Position=require(TestModules.WorldService).Shops.Upgrades.Position
    gameplay:Upgrade(TestPlayer,"Income")
    assert(data:Get(TestPlayer).Upgrades.Income==1);assert(data:Get(TestPlayer).Scrap==0)
   ''')

@@ -1,3 +1,5 @@
+> Historical V0.2 reference. V0.3 supersedes this document where behavior differs. Current rules: [V0.3_FEATURES.md](V0.3_FEATURES.md), [ECONOMY_V3.md](ECONOMY_V3.md), [DATA_SCHEMA.md](DATA_SCHEMA.md). In particular: no fresh starter, eight slots per floor, shared shops, free daily wheel and carried-junk combat.
+
 # V0.2 game design
 
 Collect freely and frequently; slow major economic purchases. Fresh players start with one protected radio and four slots. Machines cost no Scrap to acquire. Duplicate deliveries count toward daily haul quests. A full yard can deliberately replace a non-protected machine at intake with no sale payout; this permits continued collecting without an infinite currency faucet.

@@ -67,7 +67,7 @@ class CoreTests(unittest.TestCase):
   lua=runtime();e=lua.execute((ROOT/'src/shared/Config/EconomyConfig.lua').read_text())
   self.assertEqual(e.upgradeCost(0),240)
   self.assertEqual(e.income(3,0,False),3)
-  self.assertAlmostEqual(e.income(3,1,True),6.72)
+  self.assertAlmostEqual(e.income(3,1,True),6.36)
   self.assertTrue(all(e.upgradeCost(i+1)>e.upgradeCost(i) for i in range(19)))
   catalog=lua.execute((ROOT/'src/shared/Config/MachineConfig.lua').read_text())
   self.assertEqual(len(catalog.Order),18)

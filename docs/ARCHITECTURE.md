@@ -1,13 +1,22 @@
-# V0.2 architecture
+# V0.3 architecture
 
-ServerMain owns startup/player lifecycle; startup errors log tracebacks and fail explicitly. PlayerDataService lazily opens storage only for persistent operations, owns leases and serializes writes. ProfileSchema handles fresh defaults and migration. EconomyConfig is the source for upgrade costs, benefits and caps; MachineConfig defines base incomes and spawn weights.
+ServerMain controls boot, character spawning, profile/yard lifecycle, respawn immunity and death/disconnect drops. Lazy DataStore opening remains critical for unpublished Studio practice startup.
 
-GameplayService owns pickup/carry/deposit/replacement, upgrade validation, passive income, spawn lifecycle and server action routing. YardService owns allocation/capacity/style. QuestService owns UTC daily progress and atomic reward claims. CoreShopService owns exact-price cosmetic unlock/equip. PurchaseService owns the only ProcessReceipt callback and verified pass benefits. TelemetryService provides best-effort Roblox custom events and session milestone deduplication.
+| Module | Responsibility |
+|---|---|
+| GameplayService | Weighted salvage, timed belt motion/expiry, carry ownership, deposits, upgrades, income ticks, state and remote routing |
+| ProgressionService | Server target selection/knockdown/theft, safe zones, teleports, tutorial targets, spin/sale/rebirth transactions and shop prompts |
+| WorldService | Map, shop district, shredder, eight compact yards, dynamic floor geometry |
+| YardService | Ownership, derived capacity, rendering inventory, cosmetics, floor refresh |
+| PlayerDataService / ProfileSchema | Lease/session serialization, transactions, migrations, validation |
+| QuestService / CoreShopService | UTC contracts/claims and exact-price cosmetic ownership |
+| PurchaseService | Verified passes and idempotent receipt fulfillment; refresh floors on entitlement changes |
+| ClientMain | Responsive HUD, menus, confirmations, wheel result animation, keyboard/touch slap input |
+| Waypoints | Local arrow/beam, respawn reconnect, shred/slap flashes |
+| Environment | Distance-limited fan, hoist and shredder rotor visuals |
 
-Remote requests: Sync, Upgrade, Replace, DiscardCarry, ClaimQuest, CoreShop, and allowlisted Telemetry. Clients cannot provide reward amounts or paid ownership. Mutable game actions are server validated and rate-limited. In-world inspection/upgrade/intake prompts require player proximity; upgrades/intake also require the player's own yard. Replacement IDs must belong to this inventory and must not be protected. No cross-player ownership transfer exists.
+Remote actions: Sync, Teleport(Home/Shop), Slap(no target argument), Upgrade(config key), Replace(owned UID), DiscardCarry, Spin(no reward argument), Sell(owned UID), Rebirth(true after UI confirmation), ClaimQuest, CoreShop and allowlisted Telemetry. Client input never determines prices, rewards, capacity, hit targets or inventory ownership.
 
-ClientMain owns the currency HUD, right navigation and modal pages. Environment owns tagged cosmetic animation. No public dev-grant remote; `tools/simulate_economy.py` is the isolated developer economy utility.
+State includes balances, inventory, income, capacity, upgrade levels, daily contracts, cosmetics, discoveries, persistence mode, tutorial stage/objective/waypoint, daily-spin status, rebirth count/cost and stun state. Server-to-client Open messages originate at validated physical shop prompts. Transactions serialize on the data session; no cross-profile persisted transaction is required because slaps only move transient carried junk.
 
-Telemetry records joined/yard, first pickup/placement/upgrade, first quest claim/free Cores, ShopOpened, PassPrompted, CorePurchasePrompted, verified PassPurchased, committed CorePurchaseCompleted, Played5/10/20Minutes, PlayerLeft. Client shop/prompt events are intent-only (untrusted, allowlisted, session-deduplicated); grant events are server-side. APIs are pcall-protected, disabled in Studio, never block economy. No external analytics or personal payload collection. Delivery/dashboard behavior needs a published test.
-
-Distance and minimum haul-time checks deter basic abuse but are not a full movement anti-cheat. Large-scale remote spam, physics/network latency, mobile performance and live analytics/Marketplace remain release gates. This milestone does not implement theft or multi-profile transfer transactions.
+Security scope: checks cover range, hit cone, line-of-sight, safe zones, state/cooldowns, deadline eligibility and duplicate UIDs/rewards. Minimal haul-time plausibility checks remain; full anti-speedhack/anti-teleport movement auditing is not implemented. Client visuals are not authoritative. Automated mocks verify logic but cannot prove Roblox replication, physics or performance.

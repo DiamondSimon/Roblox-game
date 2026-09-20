@@ -13,9 +13,9 @@ local function clone(t)
 end
 local function fresh() return Schema.fresh(Http:GenerateGUID(false)) end
 local function validate(d)
- assert(d.SchemaVersion==2,"Unsupported schema; never overwrite a newer save")
+ assert(d.SchemaVersion==3,"Unsupported schema; never overwrite a newer save")
  assert(type(d.Scrap)=="number" and d.Scrap==d.Scrap and d.Scrap>=0 and d.Scrap<math.huge,"Bad balance")
- assert(type(d.MachineInventory)=="table" and #d.MachineInventory<=24,"Bad inventory")
+ assert(type(d.MachineInventory)=="table" and #d.MachineInventory<=40,"Bad inventory")
  local ids={}
  for _,item in ipairs(d.MachineInventory) do
   assert(type(item.Uid)=="string" and not ids[item.Uid] and Machines.ById[item.MachineId],"Bad item")
@@ -29,6 +29,10 @@ local function validate(d)
   assert(type(d.Upgrades[key])=="number" and d.Upgrades[key]>=0 and d.Upgrades[key]%1==0 and d.Upgrades[key]<=4,"Bad utility upgrade")
  end
  assert(type(d.QuestState)=="table" and type(d.Cosmetics)=="table","Bad v2 state")
+ assert(type(d.Upgrades.Floors)=="number" and d.Upgrades.Floors%1==0 and d.Upgrades.Floors>=0 and d.Upgrades.Floors<=3,"Bad floors")
+ assert(type(d.Rebirths)=="number" and d.Rebirths%1==0 and d.Rebirths>=0 and d.Rebirths<=10,"Bad rebirths")
+ assert(type(d.TutorialStage)=="number" and d.TutorialStage>=1 and d.TutorialStage<=4,"Bad tutorial")
+ assert(type(d.SpinState)=="table" and type(d.SpinState.Day)=="number","Bad spin")
  return d
 end
 local function update(key, transform)
