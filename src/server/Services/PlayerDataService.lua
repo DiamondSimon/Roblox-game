@@ -3,7 +3,7 @@ local Http=game:GetService("HttpService")
 local Run=game:GetService("RunService")
 local Config=require(game.ReplicatedStorage.Shared.Config.GameConfig)
 local Machines=require(game.ReplicatedStorage.Shared.Config.MachineConfig)
-local Store=DSS:GetDataStore(Config.DataStoreName)
+local Store=nil -- Open lazily inside the protected persistent-write path.
 local Data={Sessions={}, Closing=false}
 local memoryMode=Run:IsStudio() and not Config.StudioPersistence
 local token=(game.JobId~="" and game.JobId or "studio")..Http:GenerateGUID(false)
@@ -32,7 +32,10 @@ local function validate(d)
 end
 local function update(key, transform)
  for attempt=1,3 do
-  local ok,result=pcall(function() return Store:UpdateAsync(key,transform) end)
+  local ok,result=pcall(function()
+   if not Store then Store=DSS:GetDataStore(Config.DataStoreName) end
+   return Store:UpdateAsync(key,transform)
+  end)
   if ok then return true,result end
   warn("SCRAPYARD save attempt failed",attempt)
   task.wait(attempt)

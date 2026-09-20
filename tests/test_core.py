@@ -6,7 +6,7 @@ import unittest
 from lupa import LuaRuntime
 ROOT=Path(__file__).resolve().parents[1]
 
-def runtime():
+def runtime(studio=False, datastore_unavailable=False, source=None):
  lua=LuaRuntime(unpack_returned_tuples=True)
  lua.execute('''
  Color3={fromRGB=function(r,g,b) return {r=r,g=g,b=b} end}
@@ -38,10 +38,24 @@ def runtime():
  function game:GetService(name) return Services[name] end
  function require(key) if key=="config" then return Config elseif key=="machines" then return Definitions elseif key=="money" then return Money elseif key=="data" then return Data end end
  ''')
- lua.globals().Data=lua.execute((ROOT/'src/server/Services/PlayerDataService.lua').read_text())
+ if studio: lua.execute('Services.RunService.IsStudio=function() return true end')
+ if datastore_unavailable: lua.execute('Store.openCalls=0;Services.DataStoreService.GetDataStore=function() Store.openCalls=Store.openCalls+1;error("Publish this place to access DataStore") end')
+ lua.globals().Data=lua.execute(source or (ROOT/'src/server/Services/PlayerDataService.lua').read_text())
  return lua
 
 class CoreTests(unittest.TestCase):
+ def test_unpublished_studio_never_opens_datastore(self):
+  lua=runtime(studio=True,datastore_unavailable=True)
+  lua.execute('Data:Load(Player);assert(Data:Get(Player));Data:Commit(Player);Data:Release(Player);assert(Store.openCalls==0)')
+ def test_persistent_datastore_open_failure_fails_closed(self):
+  lua=runtime(datastore_unavailable=True)
+  lua.execute('assert(Data:Load(Player)==nil);assert(Player.Kicked);assert(Store.openCalls==3)')
+ def test_original_version_reproduces_unpublished_failure(self):
+  import xml.etree.ElementTree as ET
+  old=ET.parse(ROOT/'build/SCRAPYARD-0.1.0.rbxlx')
+  source=next(n.find('Properties/ProtectedString').text for n in old.iter('Item') if n.findtext('Properties/string')=='PlayerDataService')
+  with self.assertRaisesRegex(Exception,'Publish this place'):
+   runtime(studio=True,datastore_unavailable=True,source=source)
  def test_all_sources_parse(self):
   lua=LuaRuntime(unpack_returned_tuples=True)
   compile=lua.eval('function(s) local f,e=load(s); return f~=nil,e end')

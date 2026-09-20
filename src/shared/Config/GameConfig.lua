@@ -1,5 +1,5 @@
 return {
- Version = "0.1.0", MaxPlayers = 8,
+ Version = "0.1.1", MaxPlayers = 8,
  -- Studio is deliberately isolated from live saves and receipts.
  StudioPersistence = false, DataStoreName = "SCRAPYARD_Alpha_v1",
  AutosaveSeconds = 30, LeaseSeconds = 180,

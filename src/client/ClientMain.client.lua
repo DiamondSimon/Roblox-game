@@ -2,7 +2,12 @@ local Players=game:GetService("Players")
 local Tween=game:GetService("TweenService")
 local Marketplace=game:GetService("MarketplaceService")
 local player=Players.LocalPlayer
-local remote=game.ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Game")
+local remoteFolder=game.ReplicatedStorage:WaitForChild("Remotes",30)
+local remote=remoteFolder and remoteFolder:WaitForChild("Game",10)
+if not remote then
+ warn("SCRAPYARD: server did not initialize. Check the server Output for SCRAPYARD startup failed.")
+ return
+end
 local Config=require(game.ReplicatedStorage.Shared.Config.MonetizationConfig)
 local Machines=require(game.ReplicatedStorage.Shared.Config.MachineConfig)
 local amber=Color3.fromRGB(255,184,55)
@@ -125,7 +130,7 @@ remote.OnClientEvent:Connect(function(kind,payload)
  elseif kind=="Notice" then notify(payload)
  elseif kind=="Upgrades" then openUpgrades() end
 end)
-local mode=text(gui,"ALPHA 0.1 • STUDIO PRACTICE DOES NOT SAVE",10,UDim2.new(0.5,0,1,-23),UDim2.new(0.75,0,0,18),muted);mode.AnchorPoint=Vector2.new(0.5,0);mode.TextXAlignment=Enum.TextXAlignment.Center
+local mode=text(gui,"ALPHA 0.1.1 • STUDIO PRACTICE DOES NOT SAVE",10,UDim2.new(0.5,0,1,-23),UDim2.new(0.75,0,0,18),muted);mode.AnchorPoint=Vector2.new(0.5,0);mode.TextXAlignment=Enum.TextXAlignment.Center
 local function resize()
  local camera=workspace.CurrentCamera;if not camera then return end
  local small=camera.ViewportSize.X<520
@@ -138,7 +143,7 @@ if workspace.CurrentCamera then workspace.CurrentCamera:GetPropertyChangedSignal
 resize()
 task.spawn(function()
  while true do
-  if state then mode.Text=state.Persistent and "ALPHA 0.1 • PRIVATE TEST BUILD" or "ALPHA 0.1 • PRACTICE MODE — PROGRESS RESETS" end
+  if state then mode.Text=state.Persistent and "ALPHA 0.1.1 • PRIVATE TEST BUILD" or "ALPHA 0.1.1 • PRACTICE MODE — PROGRESS RESETS" end
   task.wait(3)
  end
 end)

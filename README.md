@@ -1,12 +1,18 @@
 # SCRAPYARD
 
-**0.1.0 — first playable loop, ready for Studio testing. Not a public-release MVP.**
+**0.1.1 — first playable loop, ready for Studio testing. Not a public-release MVP.**
 
 Find salvage, carry it home, earn Scrap, and upgrade an industrial yard. Eight players share a central salvage strip.
 
+## 0.1.1 startup fix
+
+The original practice build opened a DataStore while requiring the save module, before checking Studio practice mode. An unpublished place could fail before constructing the map or spawning the player. DataStores now open lazily, only inside protected persistent operations. Practice mode makes zero DataStore requests. Startup failures now log a traceback and disconnect with an explicit error instead of silently leaving a sky-only session.
+
+Regression coverage reproduces the old error and executes server startup, world generation, character spawning, all machine factories, pickup, placement, income and an upgrade against limited API fakes. Roblox Studio rendering and engine behavior must still be tested locally.
+
 ## Open and play
 
-1. Download `build/SCRAPYARD-0.1.0.rbxlx` from this repository (open the file on GitHub, then choose **Download raw file**).
+1. Download `build/SCRAPYARD-0.1.1.rbxlx` from this repository (open the file on GitHub, then choose **Download raw file**).
 2. In Roblox Studio, choose **File → Open from File** and open it.
 3. Press **Play / F5**. Use Play, not Run: the game needs a player character. The map generates when the server starts, so an empty edit view is expected.
 4. Your yard starts with a radio generating Scrap. Walk to the central conveyor, hold **E** at a machine (or tap its prompt), and return to your green **Machine intake** pad. Use its prompt to place the machine.
@@ -51,7 +57,7 @@ Run the unit checks:
 
 ```sh
 python -m pip install -r requirements-dev.txt
-python tests/test_core.py
+python -m unittest discover -s tests -v
 ```
 
 These tests execute Lua-compatible Luau modules with faked Roblox services. They are not Roblox engine, rendering, network, touch-device or real Marketplace tests. See `docs/TEST_PLAN.md` for required Studio tests.

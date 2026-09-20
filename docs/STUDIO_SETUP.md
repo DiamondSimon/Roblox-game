@@ -1,4 +1,4 @@
-# Studio setup — version 0.1.0
+# Studio setup — version 0.1.1
 
 ## First test (no publishing)
 
@@ -22,6 +22,6 @@ Follow `MONETIZATION.md`. Use products owned by this same experience. Supply the
 
 ## Report a problem
 
-Open Studio's Output panel (usually Window or View → Output, depending on layout). Send the **first red error in full**, including script name and line, and describe what you did immediately before it. For layout issues, send a screenshot and the device/viewport used. Always identify this version as **0.1.0**.
+Open Studio's Output panel (usually Window or View → Output, depending on layout). Send the **first red error in full**, including script name and line, and describe what you did immediately before it. For layout issues, send a screenshot and the device/viewport used. Always identify this version as **0.1.1**.
 
 Do not test different source versions and old place builds together. The XML embeds the exact source from the same milestone.

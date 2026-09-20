@@ -2,9 +2,22 @@
 
 ## Automated checks performed
 
-11 tests pass: source parse, catalog/economy checks, failed load, competing lease, release/rejoin, expired-lease write rejection, failed-save recovery, receipt deduplication/rejoin, receipt retry, ambiguous receipt recovery after autosave, unsupported schema preservation. Tests use Python/Lupa and mocked Roblox services; they do not run Studio or Roblox networking.
+The original 11 tests cover: source parse, catalog/economy checks, failed load, competing lease, release/rejoin, expired-lease write rejection, failed-save recovery, receipt deduplication/rejoin, receipt retry, ambiguous receipt recovery after autosave, unsupported schema preservation. Tests use Python/Lupa and mocked Roblox services; they do not run Studio or Roblox networking.
 
 The generated place is XML-parsed and checked for all embedded source scripts. No Studio render or device benchmark has been performed.
+
+## 0.1.1 regression checks
+
+- Original 0.1.0 save module reproduces the unpublished-place DataStore error.
+- Studio practice loads, saves in memory, and releases with zero DataStore opens.
+- Persistent-mode DataStore initialization failure retries and fails closed.
+- Actual server entrypoint runs with unavailable DataStores in practice mode.
+- Eight yards, map geometry, six initial salvage items, assigned spawn and income tick.
+- Every one of the 18 collectible model factories executes.
+- Actual pickup → deposit → upgrade flow executes.
+- Packaged Studio source exactly matches the current source files and required hierarchy.
+
+18 tests total. Server execution uses a limited API harness, not Studio. It does not validate engine rendering, physics, replication, or live service behavior.
 
 ## Required Studio / private experience tests
 
