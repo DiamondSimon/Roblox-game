@@ -1,0 +1,851 @@
+<?xml version='1.0' encoding='utf-8'?>
+<roblox version="4">
+  <External>null</External>
+  <External>nil</External>
+  <Item class="Workspace" referent="RBX1">
+    <Properties>
+      <string name="Name">Workspace</string>
+      <bool name="StreamingEnabled">true</bool>
+    </Properties>
+  </Item>
+  <Item class="Lighting" referent="RBX2">
+    <Properties>
+      <string name="Name">Lighting</string>
+    </Properties>
+  </Item>
+  <Item class="ReplicatedStorage" referent="RBX3">
+    <Properties>
+      <string name="Name">ReplicatedStorage</string>
+    </Properties>
+    <Item class="Folder" referent="RBX4">
+      <Properties>
+        <string name="Name">Shared</string>
+      </Properties>
+      <Item class="Folder" referent="RBX5">
+        <Properties>
+          <string name="Name">Config</string>
+        </Properties>
+        <Item class="ModuleScript" referent="RBX6">
+          <Properties>
+            <string name="Name">EconomyConfig</string>
+            <ProtectedString name="Source">local Economy = {}
+function Economy.upgradeCost(level) return math.floor(100 * 1.65 ^ level) end
+function Economy.slotCost(level) return math.floor(250 * 1.8 ^ level) end
+function Economy.income(base, level, doubleScrap)
+ return base * (1 + 0.15 * level) * (doubleScrap and 2 or 1)
+end
+Economy.MaxIncomeLevel = 20
+Economy.MaxSlotLevel = 7
+Economy.CurrencyLimit = 1e12
+return Economy
+</ProtectedString>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="RBX7">
+          <Properties>
+            <string name="Name">GameConfig</string>
+            <ProtectedString name="Source">return {
+ Version = "0.1.0", MaxPlayers = 8,
+ -- Studio is deliberately isolated from live saves and receipts.
+ StudioPersistence = false, DataStoreName = "SCRAPYARD_Alpha_v1",
+ AutosaveSeconds = 30, LeaseSeconds = 180,
+ SpawnInterval = 7, MaxSalvage = 12, SalvageLifetime = 120,
+ BaseSlots = 6, MaxSlots = 18, PickupDistance = 12,
+ CarrySpeed = 12, WalkSpeed = 16,
+}
+</ProtectedString>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="RBX8">
+          <Properties>
+            <string name="Name">MachineConfig</string>
+            <ProtectedString name="Source">local rows = {
+ {"radio", "Broken Radio", "Common", 1, 100, "Electronics"},
+ {"microwave", "Microwave", "Common", 2, 80, "Electronics"},
+ {"television", "Old Television", "Common", 3, 65, "Electronics"},
+ {"cart", "Shopping Cart", "Common", 4, 50, "Tools"},
+ {"mower", "Lawnmower", "Uncommon", 6, 38, "Tools"},
+ {"generator", "Scrap Generator", "Uncommon", 8, 30, "Industrial"},
+ {"scooter", "Scooter", "Uncommon", 10, 25, "Vehicles"},
+ {"motorcycle", "Motorcycle", "Rare", 14, 18, "Vehicles"},
+ {"forklift", "Forklift", "Rare", 18, 14, "Industrial"},
+ {"compact", "Compact Car", "Rare", 22, 11, "Vehicles"},
+ {"compressor", "Air Compressor", "Epic", 30, 7, "Industrial"},
+ {"sports", "Vortex Coupe", "Epic", 40, 5, "Vehicles"},
+ {"excavator", "Excavator", "Legendary", 60, 2.5, "Industrial"},
+ {"armored", "Armored Salvager", "Legendary", 75, 1.5, "Military"},
+ {"reactor", "Prototype Reactor", "Mythic", 110, 0.6, "Experimental"},
+ {"pod", "Alien Pod", "Mythic", 140, 0.3, "Alien"},
+ {"ufo", "UFO", "Secret", 220, 0.08, "Alien"},
+ {"singularity", "Singularity Engine", "Secret", 300, 0.02, "Secret"},
+}
+local config = {Order={}, ById={}, Rarities={
+ Common={Color=Color3.fromRGB(174,189,190)},
+ Uncommon={Color=Color3.fromRGB(120,223,138)},
+ Rare={Color=Color3.fromRGB(85,184,255)},
+ Epic={Color=Color3.fromRGB(191,120,255)},
+ Legendary={Color=Color3.fromRGB(255,184,55), Announce=true},
+ Mythic={Color=Color3.fromRGB(255,83,118), Announce=true},
+ Secret={Color=Color3.fromRGB(99,255,238), Announce=true},
+}}
+for _, row in ipairs(rows) do
+ local id=row[1]
+ table.insert(config.Order,id)
+ config.ById[id]={MachineId=id, DisplayName=row[2], Rarity=row[3], BaseIncome=row[4],
+ SellValue=row[4]*20, SpawnWeight=row[5], Category=row[6], ModelName=id,
+ CarrySpeedModifier=0.75, MutationEligibility=true, FusionTier=1,
+ UnlockZone=1, Thumbnail="", SoundProfile="Metal"}
+end
+return config
+</ProtectedString>
+          </Properties>
+        </Item>
+        <Item class="ModuleScript" referent="RBX9">
+          <Properties>
+            <string name="Name">MonetizationConfig</string>
+            <ProtectedString name="Source">return {
+ -- Enable only after private-server receipt and rejoin tests pass.
+ Enabled = false,
+ Passes = {
+  {Key="DoubleScrap", Id=0, Name="2X SCRAP", Description="Double passive machine income. Forever."},
+  {Key="ExtraSlots", Id=0, Name="+5 MACHINE SLOTS", Description="Five additional machine display slots."},
+ },
+ Products = {
+  {Key="SmallScrap", Id=0, Name="500 SCRAP", Description="A fixed 500 Scrap top-up.", Scrap=500},
+  {Key="MediumScrap", Id=0, Name="2,000 SCRAP", Description="A fixed 2,000 Scrap top-up.", Scrap=2000},
+  {Key="LargeScrap", Id=0, Name="6,000 SCRAP", Description="A fixed 6,000 Scrap top-up.", Scrap=6000},
+ },
+ -- VIP, timed boosts, shields and paid luck are intentionally not offered yet.
+}
+</ProtectedString>
+          </Properties>
+        </Item>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="ServerScriptService" referent="RBX10">
+    <Properties>
+      <string name="Name">ServerScriptService</string>
+    </Properties>
+    <Item class="Script" referent="RBX11">
+      <Properties>
+        <string name="Name">ServerMain</string>
+        <ProtectedString name="Source">local Players=game:GetService("Players")
+Players.CharacterAutoLoads=false
+local services=script.Parent.Services
+local Data=require(services.PlayerDataService)
+local World=require(services.WorldService)
+local Yard=require(services.YardService)
+local Game=require(services.GameplayService)
+local Purchase=require(services.PurchaseService)
+local folder=Instance.new("Folder");folder.Name="Remotes";folder.Parent=game.ReplicatedStorage
+local remote=Instance.new("RemoteEvent");remote.Name="Game";remote.Parent=folder
+World:Build();Data:Start();Game:Start(remote);Purchase:Start()
+local joining={}
+local function join(player)
+ if joining[player] then return end;joining[player]=true
+ local d=Data:Load(player)
+ if not d then joining[player]=nil;return end
+ if not player.Parent then Data:Release(player);joining[player]=nil;return end
+ local yard=Yard:Claim(player)
+ if not yard then player:Kick("All eight yards are occupied. Please join another server.");return end
+ Yard:Refresh(player,d)
+ player.CharacterAdded:Connect(function(character)
+  local humanoid=character:WaitForChild("Humanoid")
+  character:WaitForChild("HumanoidRootPart")
+  character:PivotTo(yard.Spawn.CFrame*CFrame.new(0,4,0))
+  humanoid.Died:Connect(function()
+   Game:ClearCarry(player)
+   task.delay(3,function() if player.Parent then player:LoadCharacterAsync() end end)
+  end)
+ end)
+ player:LoadCharacterAsync()
+ task.spawn(function() Purchase:RefreshPasses(player) end)
+ Game:State(player)
+end
+Players.PlayerAdded:Connect(join)
+Players.PlayerRemoving:Connect(function(player)
+ Game:ClearCarry(player);Game.LastAction[player]=nil;Yard:Release(player)
+ -- Load() owns cleanup if the player departed while its request was in flight.
+ local s=Data.Sessions[player]
+ if s and s.Data then Data:Release(player) end
+ joining[player]=nil
+end)
+for _,player in ipairs(Players:GetPlayers()) do task.spawn(join,player) end
+print("SCRAPYARD 0.1.0 • First playable loop loaded")
+</ProtectedString>
+      </Properties>
+    </Item>
+    <Item class="Folder" referent="RBX12">
+      <Properties>
+        <string name="Name">Services</string>
+      </Properties>
+      <Item class="ModuleScript" referent="RBX13">
+        <Properties>
+          <string name="Name">GameplayService</string>
+          <ProtectedString name="Source">local Players=game:GetService("Players")
+local Http=game:GetService("HttpService")
+local Shared=game.ReplicatedStorage.Shared.Config
+local Config=require(Shared.GameConfig)
+local Definitions=require(Shared.MachineConfig)
+local Economy=require(Shared.EconomyConfig)
+local Data=require(script.Parent.PlayerDataService)
+local World=require(script.Parent.WorldService)
+local Yard=require(script.Parent.YardService)
+local Machine=require(script.Parent.MachineService)
+local Game={Carrying={},Salvage={},LastAction={},Random=Random.new()}
+function Game:Notify(player,text) self.Remote:FireClient(player,"Notice",text) end
+function Game:Near(player,part,distance)
+ local char=player.Character;local root=char and char:FindFirstChild("HumanoidRootPart")
+ local hum=char and char:FindFirstChildOfClass("Humanoid")
+ return root and hum and hum.Health&gt;0 and (root.Position-part.Position).Magnitude&lt;=(distance or Config.PickupDistance)
+end
+function Game:Allow(player)
+ local now=os.clock()
+ if now-(self.LastAction[player] or 0)&lt;0.35 then return false end
+ self.LastAction[player]=now;return true
+end
+function Game:Income(player,d)
+ local total=0
+ for _,item in ipairs(d.MachineInventory) do total=total+Definitions.ById[item.MachineId].BaseIncome end
+ return Economy.income(total,d.Upgrades.Income,player:GetAttribute("DoubleScrap")==true)
+end
+function Game:State(player)
+ local d=Data:Get(player);if not d then return end
+ self.Remote:FireClient(player,"State",{Scrap=d.Scrap,Income=self:Income(player,d),Count=#d.MachineInventory,
+ Capacity=Yard:Capacity(player,d),IncomeLevel=d.Upgrades.Income,SlotLevel=d.Upgrades.Slots,
+ UpgradeCost=Economy.upgradeCost(d.Upgrades.Income),SlotCost=Economy.slotCost(d.Upgrades.Slots),
+ Carrying=self.Carrying[player] and Definitions.ById[self.Carrying[player].Id].DisplayName or false,
+ Discovered=d.DiscoveredMachines, Persistent=Data:IsPersistent()})
+end
+function Game:ClearCarry(player)
+ local carry=self.Carrying[player];if not carry then return end
+ carry.Model:Destroy();self.Carrying[player]=nil
+ local hum=player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+ if hum then hum.WalkSpeed=Config.WalkSpeed end
+end
+function Game:Pickup(player,model)
+ if not self:Allow(player) then return end
+ local entry=self.Salvage[model];local d=Data:Get(player)
+ if not entry or not d or self.Carrying[player] or not self:Near(player,model.PrimaryPart) then return end
+ if #d.MachineInventory&gt;=Yard:Capacity(player,d) then self:Notify(player,"YARD FULL • Expand at your terminal");return end
+ local root=player.Character:FindFirstChild("HumanoidRootPart");if not root then return end
+ self.Salvage[model]=nil
+ local id=entry.Id;model:Destroy()
+ local carry=Machine:Create(id,Vector3.zero,workspace)
+ carry:PivotTo(root.CFrame*CFrame.new(0,1,-3.5))
+ for _,p in ipairs(carry:GetDescendants()) do
+  if p:IsA("BasePart") then
+   p.Anchored=false;p.Massless=true
+   local weld=Instance.new("WeldConstraint");weld.Part0=root;weld.Part1=p;weld.Parent=p
+  end
+ end
+ self.Carrying[player]={Id=id,Model=carry,PickedAt=os.clock(),Origin=root.Position}
+ player.Character:FindFirstChildOfClass("Humanoid").WalkSpeed=Config.CarrySpeed
+ self:Notify(player,"BRING IT HOME • Use your green intake pad");self:State(player)
+end
+function Game:Deposit(player)
+ local yard=Yard.Owned[player];local carry=self.Carrying[player];local d=Data:Get(player)
+ if not self:Allow(player) or not yard or not carry or not d or not self:Near(player,yard.Deposit) then return end
+ if #d.MachineInventory&gt;=Yard:Capacity(player,d) then self:Notify(player,"YARD FULL");return end
+ -- Reject implausibly fast direct teleports; full movement auditing remains a release gate.
+ local root=player.Character.HumanoidRootPart
+ if (root.Position-carry.Origin).Magnitude&gt;Config.WalkSpeed*(os.clock()-carry.PickedAt)+15 then return end
+ table.insert(d.MachineInventory,{Uid=Http:GenerateGUID(false),MachineId=carry.Id,Protected=false})
+ d.DiscoveredMachines[carry.Id]=true
+ self:ClearCarry(player);Yard:Refresh(player,d)
+ self:Notify(player,"MACHINE ADDED • +"..self:Income(player,d).." SCRAP / SECOND");self:State(player)
+end
+function Game:Upgrade(player,kind)
+ local yard=Yard.Owned[player];local d=Data:Get(player)
+ if not self:Allow(player) or not yard or not d or not self:Near(player,yard.Terminal,15) then return end
+ local level,cost,cap
+ if kind=="Income" then level=d.Upgrades.Income;cost=Economy.upgradeCost(level);cap=Economy.MaxIncomeLevel
+ elseif kind=="Slots" then level=d.Upgrades.Slots;cost=Economy.slotCost(level);cap=Economy.MaxSlotLevel
+ else return end
+ if level&gt;=cap then self:Notify(player,"UPGRADE MAXED");return end
+ if d.Scrap&lt;cost then self:Notify(player,"NEED "..math.ceil(cost-d.Scrap).." MORE SCRAP");return end
+ d.Scrap=d.Scrap-cost;d.Upgrades[kind]=level+1
+ self:Notify(player,"UPGRADE INSTALLED");self:State(player)
+end
+function Game:Spawn(forcedId)
+ local count=0;for _ in pairs(self.Salvage) do count=count+1 end
+ if count&gt;=Config.MaxSalvage then return end
+ local total=0;for _,id in ipairs(Definitions.Order) do total=total+Definitions.ById[id].SpawnWeight end
+ local roll=self.Random:NextNumber(0,total);local selected=Definitions.Order[1]
+ for _,id in ipairs(Definitions.Order) do roll=roll-Definitions.ById[id].SpawnWeight;if roll&lt;=0 then selected=id;break end end
+ selected=forcedId or selected
+ local model=Machine:Create(selected,Vector3.new(self.Random:NextNumber(-6,6),3,self.Random:NextNumber(-54,54)),World.Root)
+ self.Salvage[model]={Id=selected,Expires=os.clock()+Config.SalvageLifetime}
+ World.prompt(model.PrimaryPart,"Carry machine",0.4,function(player) self:Pickup(player,model) end)
+ if Definitions.Rarities[Definitions.ById[selected].Rarity].Announce then self.Remote:FireAllClients("Notice",string.upper(Definitions.ById[selected].Rarity).." SALVAGE DETECTED") end
+end
+function Game:Start(remote)
+ self.Remote=remote
+ for _,yard in ipairs(World.Yards) do
+  World.prompt(yard.Deposit,"Place machine",0,function(player) if yard.Owner==player then self:Deposit(player) end end)
+  World.prompt(yard.Terminal,"Open upgrades",0,function(player)
+   if yard.Owner==player and self:Near(player,yard.Terminal) then self:State(player);self.Remote:FireClient(player,"Upgrades") end
+  end)
+ end
+ remote.OnServerEvent:Connect(function(player,action,arg)
+  if action=="Upgrade" then self:Upgrade(player,arg)
+  elseif action=="DiscardCarry" and self:Allow(player) then self:ClearCarry(player);self:State(player)
+  elseif action=="Sync" and self:Allow(player) then self:State(player) end
+ end)
+ for _,id in ipairs({"microwave","television","mower","generator","motorcycle","radio"}) do self:Spawn(id) end
+ task.spawn(function()
+  while true do
+   task.wait(Config.SpawnInterval)
+   for model,entry in pairs(self.Salvage) do if os.clock()&gt;entry.Expires then self.Salvage[model]=nil;model:Destroy() end end
+   self:Spawn()
+  end
+ end)
+ task.spawn(function()
+  while true do
+   local dt=task.wait(1);dt=math.min(dt,5)
+   for _,player in ipairs(Players:GetPlayers()) do
+    Data:Mutate(player,function(d)
+     local gain=self:Income(player,d)*dt
+     d.Scrap=math.max(d.Scrap,math.min(Economy.CurrencyLimit,d.Scrap+gain));d.LifetimeScrap=d.LifetimeScrap+gain
+    end)
+    self:State(player)
+   end
+  end
+ end)
+end
+return Game
+</ProtectedString>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="RBX14">
+        <Properties>
+          <string name="Name">MachineService</string>
+          <ProtectedString name="Source">local Config=require(game.ReplicatedStorage.Shared.Config.MachineConfig)
+local World=require(script.Parent.WorldService)
+local Machines={}
+function Machines:Create(id,position,parent)
+ local def=Config.ById[id];local color=Config.Rarities[def.Rarity].Color
+ local model=Instance.new("Model");model.Name=def.DisplayName
+ local function part(name,size,offset,tint,material)
+  local p=World.part(model,name,size,position+offset,tint or color,material)
+  p.CanCollide=false;p.CanTouch=false;p.CanQuery=false;return p
+ end
+ local base=part("Chassis",Vector3.new(3.5,1.2,2.6),Vector3.zero,Color3.fromRGB(55,65,70));model.PrimaryPart=base
+ local category=def.Category
+ if category=="Vehicles" or category=="Military" or id=="forklift" or id=="mower" then
+  part("Body",Vector3.new(3.8,0.9,2.3),Vector3.new(0,0.8,0))
+  part("Cab",Vector3.new(1.8,1.2,2),Vector3.new(-0.35,1.6,0),Color3.fromRGB(53,102,118),Enum.Material.Glass)
+  for _,x in ipairs({-1.2,1.2}) do for _,z in ipairs({-1.4,1.4}) do
+   local wheel=part("Wheel",Vector3.new(1.2,0.5,1.2),Vector3.new(x,-0.2,z),Color3.fromRGB(21,26,28),Enum.Material.Rubber)
+   wheel.Shape=Enum.PartType.Cylinder;wheel.Orientation=Vector3.new(0,90,90)
+  end end
+  if id=="forklift" then part("Fork mast",Vector3.new(0.4,3.5,2.8),Vector3.new(2,1.2,0)) end
+ elseif category=="Alien" or category=="Secret" or category=="Experimental" then
+  local core=part("Energy core",Vector3.new(2.4,2.4,2.4),Vector3.new(0,1.5,0),color,Enum.Material.Neon);core.Shape=Enum.PartType.Ball
+  for _,y in ipairs({0.7,2.3}) do
+   local ring=part("Containment ring",Vector3.new(0.25,4.2,4.2),Vector3.new(0,y,0));ring.Shape=Enum.PartType.Cylinder;ring.Orientation=Vector3.new(0,0,90)
+  end
+ elseif category=="Industrial" then
+  part("Housing",Vector3.new(3,2.3,2.2),Vector3.new(0,1.5,0))
+  for x=-1,1,0.5 do part("Cooling fin",Vector3.new(0.12,1.6,2.4),Vector3.new(x,1.5,0),Color3.fromRGB(32,40,44)) end
+  part("Exhaust",Vector3.new(0.5,1.5,0.5),Vector3.new(1,3,0),Color3.fromRGB(67,74,79))
+ else
+  part("Housing",Vector3.new(3.2,2.1,2.2),Vector3.new(0,1.2,0))
+  part("Display",Vector3.new(2.2,1.3,0.15),Vector3.new(-0.2,1.2,-1.2),Color3.fromRGB(25,41,46),Enum.Material.Glass)
+  for y=0.7,1.7,0.5 do part("Dial",Vector3.new(0.3,0.3,0.2),Vector3.new(1.2,y,-1.25),color) end
+ end
+ local label=World.label(base,def.DisplayName.."\n"..def.Rarity.."  •  +"..def.BaseIncome.." /s",color)
+ label.Parent.StudsOffset=Vector3.new(0,5,0)
+ if Config.Rarities[def.Rarity].Announce then
+  local h=Instance.new("Highlight");h.FillColor=color;h.FillTransparency=0.85;h.OutlineColor=color;h.DepthMode=Enum.HighlightDepthMode.Occluded;h.Parent=model
+ end
+ model.Parent=parent
+ return model
+end
+return Machines
+</ProtectedString>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="RBX15">
+        <Properties>
+          <string name="Name">PlayerDataService</string>
+          <ProtectedString name="Source">local DSS=game:GetService("DataStoreService")
+local Http=game:GetService("HttpService")
+local Run=game:GetService("RunService")
+local Config=require(game.ReplicatedStorage.Shared.Config.GameConfig)
+local Machines=require(game.ReplicatedStorage.Shared.Config.MachineConfig)
+local Store=DSS:GetDataStore(Config.DataStoreName)
+local Data={Sessions={}, Closing=false}
+local memoryMode=Run:IsStudio() and not Config.StudioPersistence
+local token=(game.JobId~="" and game.JobId or "studio")..Http:GenerateGUID(false)
+local function clone(t)
+ local n={} for k,v in pairs(t) do n[k]=type(v)=="table" and clone(v) or v end return n
+end
+local function fresh()
+ return {SchemaVersion=1, Scrap=0, LifetimeScrap=0, Upgrades={Income=0,Slots=0},
+ MachineInventory={{Uid=Http:GenerateGUID(false),MachineId="radio",Protected=true}},
+ DiscoveredMachines={radio=true}, DiscoveredMutations={}, Settings={},
+ DailyRewardState={}, Statistics={}, Receipts={}}
+end
+local function validate(d)
+ assert(d.SchemaVersion==1,"Unsupported schema; never overwrite a newer save")
+ assert(type(d.Scrap)=="number" and d.Scrap==d.Scrap and d.Scrap&gt;=0 and d.Scrap&lt;math.huge,"Bad balance")
+ assert(type(d.MachineInventory)=="table" and #d.MachineInventory&lt;=18,"Bad inventory")
+ local ids={}
+ for _,item in ipairs(d.MachineInventory) do
+  assert(type(item.Uid)=="string" and not ids[item.Uid] and Machines.ById[item.MachineId],"Bad item")
+  ids[item.Uid]=true
+ end
+ assert(type(d.Upgrades)=="table" and type(d.Receipts)=="table","Bad schema")
+ assert(type(d.Upgrades.Income)=="number" and d.Upgrades.Income%1==0 and d.Upgrades.Income&gt;=0 and d.Upgrades.Income&lt;=20,"Bad upgrade")
+ assert(type(d.Upgrades.Slots)=="number" and d.Upgrades.Slots%1==0 and d.Upgrades.Slots&gt;=0 and d.Upgrades.Slots&lt;=7,"Bad slots")
+ return d
+end
+local function update(key, transform)
+ for attempt=1,3 do
+  local ok,result=pcall(function() return Store:UpdateAsync(key,transform) end)
+  if ok then return true,result end
+  warn("SCRAPYARD save attempt failed",attempt)
+  task.wait(attempt)
+ end
+ return false,nil
+end
+function Data:Load(player)
+ if self.Closing then return nil end
+ local session={Busy=true,Active=true,Key="player_"..player.UserId,LeaseUntil=0}
+ self.Sessions[player]=session
+ if memoryMode then session.Data=fresh();session.Busy=false;return session.Data end
+ local ok,record=update(session.Key,function(old)
+  if old and old.Lease and old.Lease.Token~=token and old.Lease.Expires&gt;os.time() then return nil end
+  local d=old and validate(old.Data) or fresh()
+  return {Data=d,Lease={Token=token,Expires=os.time()+Config.LeaseSeconds}}
+ end)
+ if not ok or not record or record.Lease.Token~=token then
+  self.Sessions[player]=nil
+  player:Kick("Your save is unavailable or open on another server. Please rejoin shortly.")
+  return nil
+ end
+ session.Data=record.Data;session.LeaseUntil=record.Lease.Expires;session.Busy=false
+ return session.Data
+end
+function Data:Get(player)
+ local s=self.Sessions[player]
+ if not s or not s.Active or s.Busy then return nil end
+ if not memoryMode and os.time()&gt;=s.LeaseUntil-10 then
+  s.Active=false;player:Kick("Save connection interrupted. Please rejoin to protect your progress.");return nil
+ end
+ return s.Data
+end
+-- Mutations supplied here must not yield. Saving and receipts serialize on Busy.
+function Data:Mutate(player,fn)
+ local d=self:Get(player);if not d then return false end
+ fn(d);return true
+end
+function Data:Commit(player,transform,release)
+ local s=self.Sessions[player]
+ if not s or s.Busy or not s.Active or not s.Data then return false end
+ s.Busy=true
+ local candidate=clone(s.Data)
+ local transformOK=pcall(function() if transform then transform(candidate) end;validate(candidate) end)
+ if not transformOK then s.Busy=false;return false end
+ if memoryMode then
+  if transform then s.Busy=false;return false end -- No real receipts in mock mode.
+  s.Busy=false;return true
+ end
+ local ok,record=update(s.Key,function(old)
+  if not old or not old.Lease or old.Lease.Token~=token or old.Lease.Expires&lt;=os.time() then return nil end
+  -- An UpdateAsync error can be ambiguous: a previous attempt may have committed.
+  -- Merge durable receipts missing from memory before any subsequent profile save.
+  local merged=clone(candidate)
+  for purchaseId,amount in pairs(old.Data.Receipts) do
+   if not merged.Receipts[purchaseId] then
+    merged.Receipts[purchaseId]=amount
+    merged.Scrap=merged.Scrap+amount
+   end
+  end
+  local lease=nil
+  if not release then lease={Token=token,Expires=os.time()+Config.LeaseSeconds} end
+  return {Data=merged,Lease=lease}
+ end)
+ if ok and record then
+  s.Data=record.Data;s.LeaseUntil=record.Lease and record.Lease.Expires or 0
+ end
+ s.Busy=false
+ return ok and record~=nil
+end
+function Data:Release(player)
+ local s=self.Sessions[player];if not s then return end
+ local deadline=os.clock()+20
+ while s.Busy and os.clock()&lt;deadline do task.wait(0.1) end
+ if s.Data and not s.Busy then self:Commit(player,nil,true) end
+ s.Active=false;self.Sessions[player]=nil
+end
+function Data:IsPersistent() return not memoryMode end
+function Data:Start()
+ task.spawn(function()
+  while not self.Closing do
+   task.wait(Config.AutosaveSeconds)
+   for player in pairs(self.Sessions) do task.spawn(function() self:Commit(player) end) end
+  end
+ end)
+ game:BindToClose(function()
+  self.Closing=true
+  local pending=0
+  for player in pairs(self.Sessions) do
+   pending=pending+1
+   task.spawn(function() self:Release(player);pending=pending-1 end)
+  end
+  local deadline=os.clock()+25
+  while pending&gt;0 and os.clock()&lt;deadline do task.wait(0.1) end
+ end)
+end
+return Data
+</ProtectedString>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="RBX16">
+        <Properties>
+          <string name="Name">PurchaseService</string>
+          <ProtectedString name="Source">local Marketplace=game:GetService("MarketplaceService")
+local Players=game:GetService("Players")
+local Config=require(game.ReplicatedStorage.Shared.Config.MonetizationConfig)
+local Data=require(script.Parent.PlayerDataService)
+local Purchase={}
+function Purchase:RefreshPasses(player)
+ for _,pass in ipairs(Config.Passes) do
+  if pass.Id&gt;0 then
+   local ok,owned=pcall(function() return Marketplace:UserOwnsGamePassAsync(player.UserId,pass.Id) end)
+   if ok then player:SetAttribute(pass.Key,owned) end
+  end
+ end
+end
+function Purchase:Start()
+ local products={};local ids={}
+ for _,p in ipairs(Config.Products) do
+  if p.Id&gt;0 then assert(not ids[p.Id],"Duplicate product ID");ids[p.Id]=true;products[p.Id]=p end
+ end
+ Marketplace.ProcessReceipt=function(receipt)
+  local product=products[receipt.ProductId]
+  local player=Players:GetPlayerByUserId(receipt.PlayerId)
+  if not product or not player or not Data:IsPersistent() then return Enum.ProductPurchaseDecision.NotProcessedYet end
+  local d=Data:Get(player)
+  if not d then return Enum.ProductPurchaseDecision.NotProcessedYet end
+  -- Receipt marker and reward share ONE atomic profile write, never separate keys.
+  if d.Receipts[receipt.PurchaseId] then return Enum.ProductPurchaseDecision.PurchaseGranted end
+  local committed=Data:Commit(player,function(candidate)
+   if candidate.Receipts[receipt.PurchaseId] then return end
+   candidate.Scrap=candidate.Scrap+product.Scrap
+   candidate.Receipts[receipt.PurchaseId]=product.Scrap
+  end)
+  if committed then return Enum.ProductPurchaseDecision.PurchaseGranted end
+  return Enum.ProductPurchaseDecision.NotProcessedYet
+ end
+ Marketplace.PromptGamePassPurchaseFinished:Connect(function(player,id,purchased)
+  if purchased then
+   -- Verify entitlement with Roblox before activating it.
+   task.spawn(function() self:RefreshPasses(player) end)
+  end
+ end)
+end
+return Purchase
+</ProtectedString>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="RBX17">
+        <Properties>
+          <string name="Name">WorldService</string>
+          <ProtectedString name="Source">local Lighting=game:GetService("Lighting")
+local World={Yards={}}
+local amber=Color3.fromRGB(255,184,55)
+function World.part(parent,name,size,pos,color,material)
+ local p=Instance.new("Part");p.Name=name;p.Anchored=true;p.Size=size;p.Position=pos
+ p.Color=color;p.Material=material or Enum.Material.Metal;p.TopSurface=Enum.SurfaceType.Smooth;p.BottomSurface=Enum.SurfaceType.Smooth;p.Parent=parent
+ return p
+end
+function World.label(part,text,color)
+ local gui=Instance.new("BillboardGui");gui.Size=UDim2.fromOffset(240,65);gui.StudsOffset=Vector3.new(0,4,0);gui.MaxDistance=110;gui.AlwaysOnTop=false;gui.Parent=part
+ local t=Instance.new("TextLabel");t.Size=UDim2.fromScale(1,1);t.BackgroundTransparency=1;t.Text=text;t.TextColor3=color or amber;t.TextStrokeTransparency=0.4;t.Font=Enum.Font.GothamBold;t.TextSize=17;t.Parent=gui
+ return t
+end
+function World.prompt(part,text,hold,fn)
+ local p=Instance.new("ProximityPrompt");p.ActionText=text;p.ObjectText=part.Name;p.HoldDuration=hold or 0;p.MaxActivationDistance=10;p.RequiresLineOfSight=false;p.Parent=part
+ p.Triggered:Connect(fn);return p
+end
+function World:Build()
+ local root=Instance.new("Folder");root.Name="Map";root.Parent=workspace;self.Root=root
+ self.part(root,"Ground",Vector3.new(350,2,350),Vector3.new(0,-1,0),Color3.fromRGB(42,49,52),Enum.Material.Asphalt)
+ self.part(root,"Salvage floor",Vector3.new(58,0.5,150),Vector3.new(0,0.25,0),Color3.fromRGB(64,73,77),Enum.Material.Concrete)
+ local belt=self.part(root,"CENTRAL SALVAGE",Vector3.new(18,1,122),Vector3.new(0,0.8,0),Color3.fromRGB(27,33,39),Enum.Material.DiamondPlate)
+ self.label(belt,"CENTRAL SALVAGE\nFIND IT. HAUL IT. OWN IT.")
+ for z=-58,58,8 do self.part(root,"Conveyor roller",Vector3.new(17,0.2,0.3),Vector3.new(0,1.4,z),Color3.fromRGB(99,109,111)) end
+ for _,x in ipairs({-10,10}) do self.part(root,"Belt trim",Vector3.new(0.5,1,124),Vector3.new(x,1,0),amber) end
+ for i=1,8 do
+  local side=i&lt;=4 and -1 or 1;local index=(i-1)%4
+  local center=Vector3.new(side*68,0,-66+index*44)
+  local folder=Instance.new("Folder");folder.Name="Yard_"..i;folder.Parent=root
+  self.part(folder,"Yard foundation",Vector3.new(62,0.6,39),center+Vector3.new(0,0.3,0),Color3.fromRGB(84,83,77),Enum.Material.Concrete)
+  for _,z in ipairs({-19,19}) do
+   self.part(folder,"Safety rail",Vector3.new(62,0.25,0.25),center+Vector3.new(0,3,z),amber)
+   for x=-30,30,10 do self.part(folder,"Fence post",Vector3.new(0.4,5,0.4),center+Vector3.new(x,2.5,z),Color3.fromRGB(39,46,50)) end
+  end
+  local spawn=Instance.new("SpawnLocation");spawn.Name="YardSpawn";spawn.Size=Vector3.new(6,0.5,6);spawn.Position=center+Vector3.new(-side*20,0.8,10);spawn.Anchored=true;spawn.Neutral=true;spawn.Transparency=0.5;spawn.Color=amber;spawn.Parent=folder
+  local sign=self.part(folder,"Yard sign",Vector3.new(1,5,1),center+Vector3.new(-side*25,2.5,-14),amber)
+  local name=self.label(sign,"YARD "..i.." • AVAILABLE")
+  local deposit=self.part(folder,"Machine intake",Vector3.new(7,1,7),center+Vector3.new(-side*20,0.8,0),Color3.fromRGB(61,170,154),Enum.Material.Neon)
+  self.label(deposit,"PLACE MACHINE",Color3.fromRGB(119,255,217))
+  local terminal=self.part(folder,"Upgrade terminal",Vector3.new(3,4,3),center+Vector3.new(-side*20,2,-10),Color3.fromRGB(33,42,51))
+  self.part(folder,"Terminal screen",Vector3.new(3.1,2,0.15),terminal.Position+Vector3.new(0,0.4,1.55),amber,Enum.Material.Neon)
+  self.label(terminal,"UPGRADES")
+  local slots={}
+  for n=1,18 do
+   local row=math.floor((n-1)/6);local col=(n-1)%6
+   local pos=center+Vector3.new(side*4+(col-2.5)*6,0.7,(row-1)*10)
+   slots[n]=pos+Vector3.new(0,1.7,0)
+   self.part(folder,"Slot_"..n,Vector3.new(5,0.2,7),pos,Color3.fromRGB(54,61,62),Enum.Material.DiamondPlate)
+  end
+  self.Yards[i]={Index=i,Folder=folder,Center=center,Spawn=spawn,Label=name,Deposit=deposit,Terminal=terminal,Slots=slots,Models={}}
+ end
+ for i=1,16 do
+  local x=(i%2==0 and 1 or -1)*(115+(i%3)*8);local z=-140+math.floor((i-1)/2)*39
+  local color=i%2==0 and Color3.fromRGB(37,93,104) or Color3.fromRGB(162,86,49)
+  self.part(root,"Freight container",Vector3.new(18,12,30),Vector3.new(x,6,z),color,Enum.Material.CorrodedMetal)
+  for dz=-12,12,4 do self.part(root,"Container rib",Vector3.new(18.3,11,0.4),Vector3.new(x,6,z+dz),color) end
+ end
+ for _,x in ipairs({-26,26}) do
+  for _,z in ipairs({-77,0,77}) do
+   self.part(root,"Worklight mast",Vector3.new(0.7,20,0.7),Vector3.new(x,10,z),Color3.fromRGB(49,56,60))
+   local lamp=self.part(root,"Worklight",Vector3.new(4,0.5,2),Vector3.new(x,20,z),Color3.fromRGB(255,227,165),Enum.Material.Neon)
+   local light=Instance.new("PointLight");light.Brightness=1;light.Range=30;light.Color=lamp.Color;light.Shadows=false;light.Parent=lamp
+  end
+ end
+ for _,z in ipairs({-130,130}) do
+  self.part(root,"Gantry beam",Vector3.new(110,4,4),Vector3.new(0,42,z),amber)
+  for _,x in ipairs({-52,52}) do self.part(root,"Gantry leg",Vector3.new(4,42,4),Vector3.new(x,21,z),amber) end
+  self.part(root,"Hoist cable",Vector3.new(0.35,23,0.35),Vector3.new(0,29,z),Color3.fromRGB(30,34,37))
+ end
+ Lighting.ClockTime=16.8;Lighting.Brightness=2;Lighting.Ambient=Color3.fromRGB(80,88,105);Lighting.OutdoorAmbient=Color3.fromRGB(110,115,125)
+ local atmosphere=Instance.new("Atmosphere");atmosphere.Density=0.28;atmosphere.Offset=0.15;atmosphere.Color=Color3.fromRGB(190,205,215);atmosphere.Parent=Lighting
+ local bloom=Instance.new("BloomEffect");bloom.Intensity=0.15;bloom.Size=20;bloom.Threshold=1.8;bloom.Parent=Lighting
+ local cc=Instance.new("ColorCorrectionEffect");cc.Contrast=0.12;cc.Saturation=0.08;cc.Parent=Lighting
+end
+return World
+</ProtectedString>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="RBX18">
+        <Properties>
+          <string name="Name">YardService</string>
+          <ProtectedString name="Source">local World=require(script.Parent.WorldService)
+local Machine=require(script.Parent.MachineService)
+local Config=require(game.ReplicatedStorage.Shared.Config.GameConfig)
+local Yard={Owned={}}
+function Yard:Claim(player)
+ for _,yard in ipairs(World.Yards) do
+  if not yard.Owner then
+   yard.Owner=player;yard.Label.Text=player.DisplayName.."'S YARD";self.Owned[player]=yard
+   player.RespawnLocation=yard.Spawn
+   player:SetAttribute("YardIndex",yard.Index)
+   return yard
+  end
+ end
+ return nil
+end
+function Yard:Capacity(player,data)
+ return math.min(Config.MaxSlots,Config.BaseSlots+data.Upgrades.Slots+(player:GetAttribute("ExtraSlots") and 5 or 0))
+end
+function Yard:Refresh(player,data)
+ local yard=self.Owned[player];if not yard then return end
+ for _,model in ipairs(yard.Models) do model:Destroy() end;yard.Models={}
+ for i,item in ipairs(data.MachineInventory) do
+  if yard.Slots[i] then table.insert(yard.Models,Machine:Create(item.MachineId,yard.Slots[i],yard.Folder)) end
+ end
+end
+function Yard:Release(player)
+ local yard=self.Owned[player];if not yard then return end
+ for _,model in ipairs(yard.Models) do model:Destroy() end
+ yard.Models={};yard.Owner=nil;yard.Label.Text="YARD "..yard.Index.." • AVAILABLE";self.Owned[player]=nil
+end
+return Yard
+</ProtectedString>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="StarterPlayer" referent="RBX19">
+    <Properties>
+      <string name="Name">StarterPlayer</string>
+    </Properties>
+    <Item class="StarterPlayerScripts" referent="RBX20">
+      <Properties>
+        <string name="Name">StarterPlayerScripts</string>
+      </Properties>
+      <Item class="LocalScript" referent="RBX21">
+        <Properties>
+          <string name="Name">ClientMain</string>
+          <ProtectedString name="Source">local Players=game:GetService("Players")
+local Tween=game:GetService("TweenService")
+local Marketplace=game:GetService("MarketplaceService")
+local player=Players.LocalPlayer
+local remote=game.ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Game")
+local Config=require(game.ReplicatedStorage.Shared.Config.MonetizationConfig)
+local Machines=require(game.ReplicatedStorage.Shared.Config.MachineConfig)
+local amber=Color3.fromRGB(255,184,55)
+local ink=Color3.fromRGB(19,27,34)
+local muted=Color3.fromRGB(155,175,183)
+local white=Color3.fromRGB(240,245,241)
+local state=nil
+local gui=Instance.new("ScreenGui");gui.Name="ScrapyardHUD";gui.ResetOnSpawn=false;gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling;gui.Parent=player:WaitForChild("PlayerGui")
+local function round(obj,r)
+ local c=Instance.new("UICorner");c.CornerRadius=UDim.new(0,r or 10);c.Parent=obj
+end
+local function text(parent,content,size,pos,dim,color)
+ local l=Instance.new("TextLabel");l.BackgroundTransparency=1;l.Text=content;l.TextSize=size;l.TextColor3=color or white;l.Font=Enum.Font.GothamBold;l.TextXAlignment=Enum.TextXAlignment.Left;l.Position=pos;l.Size=dim;l.Parent=parent;return l
+end
+local function panel(parent,pos,size)
+ local p=Instance.new("Frame");p.Position=pos;p.Size=size;p.BackgroundColor3=ink;p.BackgroundTransparency=0.06;p.BorderSizePixel=0;p.Parent=parent;round(p)
+ local stroke=Instance.new("UIStroke");stroke.Color=Color3.fromRGB(67,83,87);stroke.Thickness=1;stroke.Parent=p;return p
+end
+local function button(parent,label,pos,size,fn)
+ local b=Instance.new("TextButton");b.Text=label;b.Position=pos;b.Size=size;b.TextSize=15;b.Font=Enum.Font.GothamBold;b.TextColor3=ink;b.BackgroundColor3=amber;b.BorderSizePixel=0;b.Parent=parent;round(b,8)
+ b.Activated:Connect(fn)
+ b.MouseEnter:Connect(function() Tween:Create(b,TweenInfo.new(0.12),{BackgroundColor3=Color3.fromRGB(255,209,113)}):Play() end)
+ b.MouseLeave:Connect(function() Tween:Create(b,TweenInfo.new(0.12),{BackgroundColor3=amber}):Play() end)
+ return b
+end
+local hud=panel(gui,UDim2.fromOffset(14,12),UDim2.fromOffset(300,126))
+text(hud,"SCRAPYARD  /  SALVAGE CO.",13,UDim2.fromOffset(16,10),UDim2.fromOffset(275,22),amber)
+local balance=text(hud,"0 SCRAP",29,UDim2.fromOffset(16,37),UDim2.fromOffset(275,38))
+local income=text(hud,"+1 / SEC",15,UDim2.fromOffset(16,83),UDim2.fromOffset(135,26),Color3.fromRGB(115,240,195))
+local capacity=text(hud,"1 / 6 SLOTS",14,UDim2.fromOffset(170,83),UDim2.fromOffset(120,26),muted)
+local hint=panel(gui,UDim2.new(0.5,0,0,150),UDim2.new(0.85,0,0,54));hint.AnchorPoint=Vector2.new(0.5,0)
+local hintLimit=Instance.new("UISizeConstraint");hintLimit.MaxSize=Vector2.new(620,54);hintLimit.Parent=hint
+local instruction=text(hint,"HEAD TO CENTRAL SALVAGE • Hold E or tap a machine",14,UDim2.fromOffset(12,4),UDim2.new(1,-24,1,-8));instruction.TextWrapped=true;instruction.TextXAlignment=Enum.TextXAlignment.Center
+local shopButton=button(gui,"SHOP",UDim2.new(1,-124,0,12),UDim2.fromOffset(110,48),function() end)
+local indexButton=button(gui,"INDEX",UDim2.new(1,-124,0,68),UDim2.fromOffset(110,48),function() end)
+local drop=button(gui,"DROP",UDim2.new(1,-124,0,124),UDim2.fromOffset(110,48),function() remote:FireServer("DiscardCarry") end);drop.Visible=false
+local notice=panel(gui,UDim2.new(0.5,0,0,216),UDim2.new(0.85,0,0,60));notice.AnchorPoint=Vector2.new(0.5,0);notice.Visible=false
+local noticeLimit=Instance.new("UISizeConstraint");noticeLimit.MaxSize=Vector2.new(620,60);noticeLimit.Parent=notice
+local noticeText=text(notice,"",17,UDim2.fromOffset(12,4),UDim2.new(1,-24,1,-8),amber);noticeText.TextWrapped=true;noticeText.TextXAlignment=Enum.TextXAlignment.Center
+local noticeToken=0
+local function notify(message)
+ noticeToken=noticeToken+1;local n=noticeToken;notice.Visible=true;noticeText.Text=message
+ task.delay(4,function() if noticeToken==n then notice.Visible=false end end)
+end
+local modal=panel(gui,UDim2.fromScale(0.5,0.52),UDim2.fromScale(0.9,0.78));modal.AnchorPoint=Vector2.new(0.5,0.5);modal.Visible=false;modal.ZIndex=5
+local limit=Instance.new("UISizeConstraint");limit.MaxSize=Vector2.new(580,590);limit.Parent=modal
+local title=text(modal,"SHOP",22,UDim2.fromOffset(20,12),UDim2.new(1,-100,0,40))
+button(modal,"X",UDim2.new(1,-62,0,10),UDim2.fromOffset(48,44),function() modal.Visible=false end)
+local scroll=Instance.new("ScrollingFrame");scroll.Position=UDim2.fromOffset(16,70);scroll.Size=UDim2.new(1,-32,1,-85);scroll.BackgroundTransparency=1;scroll.BorderSizePixel=0;scroll.ScrollBarThickness=5;scroll.AutomaticCanvasSize=Enum.AutomaticSize.Y;scroll.CanvasSize=UDim2.new();scroll.Parent=modal
+local layout=Instance.new("UIListLayout");layout.Padding=UDim.new(0,10);layout.SortOrder=Enum.SortOrder.LayoutOrder;layout.Parent=scroll
+local function open(name)
+ title.Text=name;for _,child in ipairs(scroll:GetChildren()) do if child:IsA("GuiObject") then child:Destroy() end end
+ modal.Visible=true
+end
+local function card(name,description,label,fn)
+ local row=panel(scroll,UDim2.new(),UDim2.new(1,-7,0,142))
+ local nameLabel=text(row,name,17,UDim2.fromOffset(14,10),UDim2.new(1,-28,0,25))
+ local desc=text(row,description,13,UDim2.fromOffset(14,38),UDim2.new(1,-28,0,43),muted);desc.TextWrapped=true;desc.Font=Enum.Font.Gotham
+ local b=button(row,label,UDim2.fromOffset(14,88),UDim2.new(1,-28,0,44),fn)
+ return b,nameLabel
+end
+local function openShop()
+ open("THE SUPPLY DEPOT")
+ for _,group in ipairs({{Items=Config.Passes,Pass=true},{Items=Config.Products,Pass=false}}) do
+  for _,item in ipairs(group.Items) do
+   local isPass=group.Pass;local configured=Config.Enabled and item.Id&gt;0 and state and state.Persistent
+   local canBuy=false
+   local b=card(item.Name,item.Description,configured and "LOADING PRICE…" or "NOT AVAILABLE IN THIS BUILD",function()
+    if not canBuy then return end
+    local ok=pcall(function()
+     if isPass then Marketplace:PromptGamePassPurchase(player,item.Id) else Marketplace:PromptProductPurchase(player,item.Id) end
+    end)
+    if not ok then notify("SHOP UNAVAILABLE • Please try again later") end
+   end)
+   if configured then
+    task.spawn(function()
+     local ok,info=pcall(function() return Marketplace:GetProductInfo(item.Id,isPass and Enum.InfoType.GamePass or Enum.InfoType.Product) end)
+     if not b.Parent then return end
+     if isPass and player:GetAttribute(item.Key) then b.Text="OWNED"
+     elseif ok and info.IsForSale and type(info.PriceInRobux)=="number" then b.Text=tostring(info.PriceInRobux).." ROBUX";canBuy=true
+     else b.Text="UNAVAILABLE" end
+    end)
+   end
+  end
+ end
+end
+local function openIndex()
+ open("COLLECTION INDEX")
+ for _,id in ipairs(Machines.Order) do
+  local def=Machines.ById[id];local found=state and state.Discovered[id]
+  local b,name=card(def.DisplayName,def.Rarity.." • "..def.BaseIncome.." Scrap / sec",found and "DISCOVERED" or "FIND IN CENTRAL SALVAGE",function() end)
+  name.TextColor3=Machines.Rarities[def.Rarity].Color;b.BackgroundColor3=found and Color3.fromRGB(112,223,180) or muted
+ end
+end
+local function openUpgrades()
+ if not state then return end
+ open("YARD WORKSHOP")
+ local b1,b2
+ b1=card("INCOME TUNING • LV "..state.IncomeLevel,"+15% of base machine income per level.",tostring(state.UpgradeCost).." SCRAP",function() remote:FireServer("Upgrade","Income") end)
+ b2=card("EXPAND STORAGE • LV "..state.SlotLevel,"Add one machine slot to your yard.",tostring(state.SlotCost).." SCRAP",function() remote:FireServer("Upgrade","Slots") end)
+end
+shopButton.Activated:Connect(openShop);indexButton.Activated:Connect(openIndex)
+local function fmt(n)
+ if n&gt;=1e6 then return string.format("%.2fM",n/1e6) end
+ if n&gt;=1e3 then return string.format("%.1fK",n/1e3) end
+ return tostring(math.floor(n))
+end
+local function render()
+ balance.Text=fmt(state.Scrap).." SCRAP";income.Text="+"..string.format("%.1f",state.Income).." / SEC"
+ capacity.Text=state.Count.." / "..state.Capacity.." SLOTS";drop.Visible=state.Carrying~=false
+ if state.Carrying then instruction.Text="CARRYING "..string.upper(state.Carrying).." • Return to YOUR green intake"
+ elseif state.Count&lt;=1 then instruction.Text="HEAD TO CENTRAL SALVAGE • Hold E or tap a machine"
+ elseif state.Scrap&gt;=state.UpgradeCost then instruction.Text="UPGRADE READY • Use the amber terminal in YOUR yard"
+ else instruction.Text="COLLECT • EARN • UPGRADE  |  YOUR YARD: "..tostring(player:GetAttribute("YardIndex") or "…") end
+end
+remote.OnClientEvent:Connect(function(kind,payload)
+ if kind=="State" then
+  local old=state;state=payload;render()
+  if modal.Visible and title.Text=="YARD WORKSHOP" and old and (old.IncomeLevel~=state.IncomeLevel or old.SlotLevel~=state.SlotLevel) then openUpgrades() end
+ elseif kind=="Notice" then notify(payload)
+ elseif kind=="Upgrades" then openUpgrades() end
+end)
+local mode=text(gui,"ALPHA 0.1 • STUDIO PRACTICE DOES NOT SAVE",10,UDim2.new(0.5,0,1,-23),UDim2.new(0.75,0,0,18),muted);mode.AnchorPoint=Vector2.new(0.5,0);mode.TextXAlignment=Enum.TextXAlignment.Center
+local function resize()
+ local camera=workspace.CurrentCamera;if not camera then return end
+ local small=camera.ViewportSize.X&lt;520
+ hud.Size=UDim2.fromOffset(small and 220 or 300,126)
+ capacity.Position=UDim2.fromOffset(small and 116 or 170,83);capacity.TextSize=small and 11 or 14
+ balance.TextSize=small and 25 or 29
+end
+workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(resize)
+if workspace.CurrentCamera then workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(resize) end
+resize()
+task.spawn(function()
+ while true do
+  if state then mode.Text=state.Persistent and "ALPHA 0.1 • PRIVATE TEST BUILD" or "ALPHA 0.1 • PRACTICE MODE — PROGRESS RESETS" end
+  task.wait(3)
+ end
+end)
+remote:FireServer("Sync")
+</ProtectedString>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="StarterGui" referent="RBX22">
+    <Properties>
+      <string name="Name">StarterGui</string>
+    </Properties>
+  </Item>
+  <Item class="ServerStorage" referent="RBX23">
+    <Properties>
+      <string name="Name">ServerStorage</string>
+    </Properties>
+  </Item>
+  <Item class="Players" referent="RBX24">
+    <Properties>
+      <string name="Name">Players</string>
+    </Properties>
+  </Item>
+</roblox>
