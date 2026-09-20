@@ -1,19 +1,17 @@
-# Milestone roadmap
+# Roadmap
 
-## 0.1 — current: first playable foundation
+## V0.2 systems playtest — implemented, acceptance pending
 
-Repository, source hierarchy, generated Studio place, yards, spawning/carry/placement, passive income, upgrades, save foundation, purchase foundation, rarity blockouts and basic discovery index. Automated checks passed; Studio playtest pending.
+Expanded map, slower progression, five upgrade categories, dual currency, daily contracts, deterministic Core cosmetics, safe Core purchase foundation, schema migration, right-side HUD and environmental motion. Local regression checks and mathematical scenarios completed. Studio mobile/two-client visual/physics tests and published persistence/purchase tests remain.
 
-## 0.2 — after Studio feedback
+## Next, based on V0.2 testing
 
-Fix runtime/UI issues. Add item sell/replacement flow, deterministic three-duplicate fusion, protection metadata and recovery-tested cross-profile theft journal. Validate contested steals, disconnects, owner departure, shield timing and paid-item protection. Do not bolt theft onto two independent saves.
+Tune actual travel and time-to-first-upgrade, improve confusing paths/UI, evaluate available salvage under eight-player contention and refine cosmetic value. Add owned/cleared audio. Complete movement auditing and instrument published analytics. Do not sell packs beyond useful content.
 
-## 0.3 — visual and gameplay MVP
+## Later gameplay
 
-One custom Fusion Crusher hero, distinctive machine assets, licensed/owned audio, interaction VFX, guide arrows, visual yard upgrades, mobile profiling. Real configured purchase tested in private experience. Complete all user-specified MVP acceptance criteria.
+Deterministic fusion, recovery-tested cross-player theft, security and paid-item protection. No quests or paid upgrades for these systems until they exist. Events/rotating contracts/collection rewards after core pacing is validated.
 
-## 0.4 — retention and launch preparation
+## Higgsfield
 
-Config-driven mutations/events, daily quests, robust analytics funnels and economy balancing. Measure join→first pickup→placement→upgrade time, 5/10 minute play, return rate and shop conversion. Treat launch as an experiment, never a profitability promise.
-
-Not publishing publicly is intentional until the playable, purchase and visual gates are met.
+HOLD. Explicit user approval required after systems acceptance. Do not generate hero art or marketing content in this phase.

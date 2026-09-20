@@ -1,38 +1,19 @@
-# Verification and next gate
+# V0.2 validation
 
-## Automated checks performed
+Run build then `python -m unittest discover -s tests -v`. Local checks cover source/XML consistency, economy formulas, map/server startup, every machine factory, unpublished practice mode, income/upgrade loop, leases/save failures, old schema preservation, receipt retry/deduplication, Cores, claim replay/UTC rollover, styles, protected replacement, ownership/distance rejection, distinct yards/contested pickups and client menu callbacks.
 
-The original 11 tests cover: source parse, catalog/economy checks, failed load, competing lease, release/rejoin, expired-lease write rejection, failed-save recovery, receipt deduplication/rejoin, receipt retry, ambiguous receipt recovery after autosave, unsupported schema preservation. Tests use Python/Lupa and mocked Roblox services; they do not run Studio or Roblox networking.
+The UI test executes callbacks against API stubs; it does not render text or verify touch hit targets. The two-player test simulates shared server state; it does not exercise Roblox networking or physics. The map test checks distances and generated instances, not collision navigation. Environment animation source parses; visual effects require the engine.
 
-The generated place is XML-parsed and checked for all embedded source scripts. No Studio render or device benchmark has been performed.
+Economy simulator: 200 seeded runs for each new/average/efficient scenario with and without 2X, plus a greedy-efficient 2X policy. Explicit schedules, selection strategy and purchase assumptions appear in ECONOMY_V2.md. These are not measured player retention or statistically calibrated forecasts.
 
-## 0.1.1 regression checks
+## Acceptance gates still required
 
-- Original 0.1.0 save module reproduces the unpublished-place DataStore error.
-- Studio practice loads, saves in memory, and releases with zero DataStore opens.
-- Persistent-mode DataStore initialization failure retries and fails closed.
-- Actual server entrypoint runs with unavailable DataStores in practice mode.
-- Eight yards, map geometry, six initial salvage items, assigned spawn and income tick.
-- Every one of the 18 collectible model factories executes.
-- Actual pickup → deposit → upgrade flow executes.
-- Packaged Studio source exactly matches the current source files and required hierarchy.
+- Actual Studio startup/render and timed first haul/first upgrade.
+- Phone portrait/landscape layout, touch, streaming and frame rate.
+- Two actual clients racing, carrying, respawning and leaving.
+- Published schema migration, daily reset, durable claim/style replay.
+- Owner-configured low-cost real products, pass entitlements and current prices.
+- Published Roblox analytics event delivery and usefulness.
+- Route collision and eight-player salvage supply/competition.
 
-18 tests total. Server execution uses a limited API harness, not Studio. It does not validate engine rendering, physics, replication, or live service behavior.
-
-## Required Studio / private experience tests
-
-- Play: one assigned yard, one starter radio, increasing Scrap.
-- Collect and deliver: prompt works with keyboard and touch; machine follows player; owned count increments once; income changes.
-- Full capacity: additional pickup refused, storage upgrade creates capacity.
-- Income upgrade: charges once, fails with insufficient funds, increases income by 15% of base, respects cap.
-- Two clients: distinct yards; simultaneous pickup yields only one carried model; other players cannot deposit into or upgrade your yard.
-- Reset while carrying; leave while carrying: model removed, no ghost owner, normal speed on respawn.
-- Phone portrait/landscape: HUD, modal, prices and prompts remain readable; controls not obstructed; measure actual frame rate.
-- Published private game: collect/upgrade, wait 35 seconds, rejoin, verify restore.
-- Fail DataStore/unknown schema: no writable default profile; no overwrite.
-- Configured low-cost test product: one grant, correct current price, persistence, reconnect and duplicate receipt recovery.
-- Configured passes: verified entitlement activates and survives fresh server join.
-
-## Known release blockers
-
-No stealing, fusion, mutation system, full-yard item replacement, retention systems, analytics delivery, custom hero meshes, audio, movement auditing or mobile performance profiling. Purchase IDs remain unset. First playable foundation must not be described as the complete commercial MVP.
+Do not mark V0.2 fully accepted or ready to sell until the relevant checks pass. No fake audio IDs, generated assets, public publication or paid generation performed.

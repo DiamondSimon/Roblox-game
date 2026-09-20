@@ -1,71 +1,44 @@
-# SCRAPYARD
+# SCRAPYARD — V0.2 playtest build
 
-**0.1.1 — first playable loop, ready for Studio testing. Not a public-release MVP.**
+Larger industrial district, slower major progression, movement upgrades, daily quests, earnable Cores and a clean right-side menu. The user confirmed V0.1.1 gameplay works; V0.2 is ready for the next Studio acceptance test. No Higgsfield credits used. No public publishing performed.
 
-Find salvage, carry it home, earn Scrap, and upgrade an industrial yard. Eight players share a central salvage strip.
+## Play
 
-## 0.1.1 startup fix
+Download **build/SCRAPYARD-0.2.0.rbxlx**, open it in Studio with File → Open from File, then press F5 / Play. Map generation happens at runtime. Practice mode requires no publishing or DataStore API access and resets on Stop.
 
-The original practice build opened a DataStore while requiring the save module, before checking Studio practice mode. An unpublished place could fail before constructing the map or spawning the player. DataStores now open lazily, only inside protected persistent operations. Practice mode makes zero DataStore requests. Startup failures now log a traceback and disconnect with an explicit error instead of silently leaving a sky-only session.
+1. Start at your named yard with 0 Scrap, 0 Cores, no bought upgrades and a 0.30/sec radio.
+2. Follow the direct concrete haul path toward CENTRAL SALVAGE. The expected fresh walk is roughly 18–23 seconds, depending on yard/target and route.
+3. Hold E or tap a machine, carry it home, and use your teal intake pad. If full, explicitly select/confirm a replaceable machine. The protected starter cannot be replaced.
+4. At 240 Scrap, buy Income efficiency while standing near your yard's amber terminal. You can browse upgrades from the right-hand menu anywhere.
+5. Open QUESTS, complete an active contract, and claim Cores. SHOP → STYLES contains three permanent exact-price cosmetic choices. SHOP → PASSES / CORES is prepared but real purchases remain disabled.
 
-Regression coverage reproduces the old error and executes server startup, world generation, character spawning, all machine factories, pickup, placement, income and an upgrade against limited API fakes. Roblox Studio rendering and engine behavior must still be tested locally.
+## What changed
 
-## Open and play
+- World floor 350×350 → 1000×880 studs; eight larger fenced lots, direct haul paths, cross roads, freight areas, crane, water tower, depot and future gates.
+- Income rebalanced; five upgrade branches: Income, Capacity, Walking, Carrying, Expansion.
+- Four daily quests, UTC reset, durable Core claims; no paid random rewards.
+- Cosmetic Core spending and Core pack receipt support, retaining hidden old Scrap fulfillment definitions.
+- Compact currency HUD; right-side Shop, Upgrades, Quests and Collection; progress/claim indicators.
+- Centralized client fan/hoist animations, restrained steam, warm lighting and spawn-label animation.
+- Schema 1→2 migration preserving existing Scrap, machines, receipts and upgrades. Existing players are not fresh-economy test cases.
 
-1. Download `build/SCRAPYARD-0.1.1.rbxlx` from this repository (open the file on GitHub, then choose **Download raw file**).
-2. In Roblox Studio, choose **File → Open from File** and open it.
-3. Press **Play / F5**. Use Play, not Run: the game needs a player character. The map generates when the server starts, so an empty edit view is expected.
-4. Your yard starts with a radio generating Scrap. Walk to the central conveyor, hold **E** at a machine (or tap its prompt), and return to your green **Machine intake** pad. Use its prompt to place the machine.
-5. At 100 Scrap, use your amber **Upgrade terminal**, then choose **Income tuning**.
+## Source and tools
 
-Studio defaults to **practice mode**. Progress resets after Stop; purchases are disabled. You do not need to publish or configure API access for this first playtest.
-
-## Included
-
-- Procedural industrial map: eight named yards, conveyor, freight containers, gantries, worklights, atmosphere.
-- 18 data-driven machines, seven rarity colors, category-based blockout models and rare announcements.
-- Server-validated pickup, carry, placement, capacity, income, upgrades; death/disconnect carry cleanup.
-- Amber industrial HUD, workshop, collection index and disabled shop; touch-compatible prompts and buttons.
-- DataStore session leases, retries, autosaves, save validation and shutdown release.
-- One atomic developer-product receipt handler, durable receipt deduplication, verified gamepass entitlements.
-- Two prepared passes and three fixed Scrap products. IDs are zero, never invented.
-
-## Source map
-
-| Location | Responsibility |
-|---|---|
-| `src/shared/Config` | Machine catalog, economy, game settings, purchase IDs |
-| `src/server/Services/PlayerDataService.lua` | Profile ownership, persistence, atomic writes |
-| `WorldService.lua`, `YardService.lua`, `MachineService.lua` | Environment, yard assignment, collectible presentation |
-| `GameplayService.lua` | Server gameplay rules, income and spawning |
-| `PurchaseService.lua` | Receipt processing and entitlements |
-| `src/client/ClientMain.client.lua` | HUD, panels, current product prices and prompts |
-| `tools/build.py` | Deterministic source-to-Studio XML build |
-| `tests/test_core.py` | Executable module tests with mocked Roblox services |
-
-## Development
-
-Python 3 is sufficient to build the place:
-
-```sh
-python tools/build.py
-```
-
-Optional Rojo workflow: use `default.project.json`. The packaged XML build requires no Studio plugins.
-
-Run the unit checks:
+Shared Config modules define economy/catalog/quests/shop. Server Services own data, schema, gameplay, quests, Core shop, purchases, world, yards and telemetry. ClientMain is the UI; Environment owns non-gameplay animation. All IDs remain zero. DataStore name remains `SCRAPYARD_Alpha_v1` intentionally.
 
 ```sh
 python -m pip install -r requirements-dev.txt
+python tools/build.py
 python -m unittest discover -s tests -v
+python tools/simulate_economy.py
 ```
 
-These tests execute Lua-compatible Luau modules with faked Roblox services. They are not Roblox engine, rendering, network, touch-device or real Marketplace tests. See `docs/TEST_PLAN.md` for required Studio tests.
+Optional Rojo project: `default.project.json`. The XML file works without plugins. Archived old builds remain only for regression reproduction; use 0.2.0.
 
-## Current scope
+## Verification status
 
-Stealing, fusion, mutation effects, events, daily rewards, sale/removal of placed machines, analytics delivery, custom meshes and sound are not implemented. Collection discovery is implemented. Income is online only. Machines automatically occupy the next display slot. Save schema intentionally uses one authoritative inventory, not two separately mutable copies of ownership.
+Automated module, startup, transaction, gameplay, client-callback and packaged-source checks pass. Six modeled progression scenarios plus an efficient 2X stress policy are documented in `docs/ECONOMY_V2.md`. These are simulated assumptions, not actual retention results.
 
-Do not publicly launch or sell products yet. First complete the private Studio and published-server checklist, then implement the next gameplay milestones. No profitability or performance claim has been validated.
+**V0.2 acceptance is pending:** actual Studio rendering, phone portrait/landscape, two-client networking/physics, published persistence and configured Marketplace tests cannot run in this workspace. Follow `docs/STUDIO_SETUP.md` and `docs/TEST_PLAN.md`. No claim of measured FPS, optimal retention or profitability.
 
-See `docs/STUDIO_SETUP.md`, `docs/ARCHITECTURE.md`, `docs/MONETIZATION.md`, and `docs/ROADMAP.md`.
+Stealing, security mechanics, functional fusion, events, licensed audio and custom hero assets are later work. Their upgrades/passes are not sold. Higgsfield requires explicit approval after this systems phase.

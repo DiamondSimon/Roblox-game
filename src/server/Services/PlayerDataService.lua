@@ -3,6 +3,7 @@ local Http=game:GetService("HttpService")
 local Run=game:GetService("RunService")
 local Config=require(game.ReplicatedStorage.Shared.Config.GameConfig)
 local Machines=require(game.ReplicatedStorage.Shared.Config.MachineConfig)
+local Schema=require(script.Parent.ProfileSchema)
 local Store=nil -- Open lazily inside the protected persistent-write path.
 local Data={Sessions={}, Closing=false}
 local memoryMode=Run:IsStudio() and not Config.StudioPersistence
@@ -10,16 +11,11 @@ local token=(game.JobId~="" and game.JobId or "studio")..Http:GenerateGUID(false
 local function clone(t)
  local n={} for k,v in pairs(t) do n[k]=type(v)=="table" and clone(v) or v end return n
 end
-local function fresh()
- return {SchemaVersion=1, Scrap=0, LifetimeScrap=0, Upgrades={Income=0,Slots=0},
- MachineInventory={{Uid=Http:GenerateGUID(false),MachineId="radio",Protected=true}},
- DiscoveredMachines={radio=true}, DiscoveredMutations={}, Settings={},
- DailyRewardState={}, Statistics={}, Receipts={}}
-end
+local function fresh() return Schema.fresh(Http:GenerateGUID(false)) end
 local function validate(d)
- assert(d.SchemaVersion==1,"Unsupported schema; never overwrite a newer save")
+ assert(d.SchemaVersion==2,"Unsupported schema; never overwrite a newer save")
  assert(type(d.Scrap)=="number" and d.Scrap==d.Scrap and d.Scrap>=0 and d.Scrap<math.huge,"Bad balance")
- assert(type(d.MachineInventory)=="table" and #d.MachineInventory<=18,"Bad inventory")
+ assert(type(d.MachineInventory)=="table" and #d.MachineInventory<=24,"Bad inventory")
  local ids={}
  for _,item in ipairs(d.MachineInventory) do
   assert(type(item.Uid)=="string" and not ids[item.Uid] and Machines.ById[item.MachineId],"Bad item")
@@ -28,6 +24,11 @@ local function validate(d)
  assert(type(d.Upgrades)=="table" and type(d.Receipts)=="table","Bad schema")
  assert(type(d.Upgrades.Income)=="number" and d.Upgrades.Income%1==0 and d.Upgrades.Income>=0 and d.Upgrades.Income<=20,"Bad upgrade")
  assert(type(d.Upgrades.Slots)=="number" and d.Upgrades.Slots%1==0 and d.Upgrades.Slots>=0 and d.Upgrades.Slots<=7,"Bad slots")
+ assert(type(d.Cores)=="number" and d.Cores==d.Cores and d.Cores>=0 and d.Cores<math.huge,"Bad Cores")
+ for _,key in ipairs({"Speed","Carry","Expansion"}) do
+  assert(type(d.Upgrades[key])=="number" and d.Upgrades[key]>=0 and d.Upgrades[key]%1==0 and d.Upgrades[key]<=4,"Bad utility upgrade")
+ end
+ assert(type(d.QuestState)=="table" and type(d.Cosmetics)=="table","Bad v2 state")
  return d
 end
 local function update(key, transform)
@@ -49,7 +50,7 @@ function Data:Load(player)
  if memoryMode then session.Data=fresh();session.Busy=false;return session.Data end
  local ok,record=update(session.Key,function(old)
   if old and old.Lease and old.Lease.Token~=token and old.Lease.Expires>os.time() then return nil end
-  local d=old and validate(old.Data) or fresh()
+  local d=old and validate(Schema.migrate(old.Data)) or fresh()
   return {Data=d,Lease={Token=token,Expires=os.time()+Config.LeaseSeconds}}
  end)
  if not ok or not record or record.Lease.Token~=token then
@@ -81,8 +82,7 @@ function Data:Commit(player,transform,release)
  local transformOK=pcall(function() if transform then transform(candidate) end;validate(candidate) end)
  if not transformOK then s.Busy=false;return false end
  if memoryMode then
-  if transform then s.Busy=false;return false end -- No real receipts in mock mode.
-  s.Busy=false;return true
+  s.Data=candidate;s.Busy=false;return true
  end
  local ok,record=update(s.Key,function(old)
   if not old or not old.Lease or old.Lease.Token~=token or old.Lease.Expires<=os.time() then return nil end
@@ -92,7 +92,9 @@ function Data:Commit(player,transform,release)
   for purchaseId,amount in pairs(old.Data.Receipts) do
    if not merged.Receipts[purchaseId] then
     merged.Receipts[purchaseId]=amount
-    merged.Scrap=merged.Scrap+amount
+    local currency=type(amount)=="number" and "Scrap" or amount.Currency
+    local value=type(amount)=="number" and amount or amount.Amount
+    merged[currency]=merged[currency]+value
    end
   end
   local lease=nil
@@ -103,6 +105,11 @@ function Data:Commit(player,transform,release)
   s.Data=record.Data;s.LeaseUntil=record.Lease and record.Lease.Expires or 0
  end
  s.Busy=false
+ if transform and not (ok and record) then
+  -- A failed response may hide a successful spend/claim. Freeze until durable reload.
+  s.Active=false
+  player:Kick("Could not confirm this transaction. Rejoin shortly to restore the saved result.")
+ end
  return ok and record~=nil
 end
 function Data:Release(player)

@@ -1,25 +1,13 @@
-# Architecture
+# V0.2 architecture
 
-ServerMain loads data before spawning a character, allocates one of eight yards, starts centralized income/spawn loops, and installs the single receipt callback. The client requests actions; it never sends currency, ownership or item values.
+ServerMain owns startup/player lifecycle; startup errors log tracebacks and fail explicitly. PlayerDataService lazily opens storage only for persistent operations, owns leases and serializes writes. ProfileSchema handles fresh defaults and migration. EconomyConfig is the source for upgrade costs, benefits and caps; MachineConfig defines base incomes and spawn weights.
 
-The server creates Remotes/Game. Accepted client requests are `Sync`, `DiscardCarry`, and `Upgrade` with a validated `Income` or `Slots` key. Pickup and intake are server-handled ProximityPrompts. All proximity-dependent actions check a living character and distance; action requests are rate-limited. Successful pickup removes the world entry before attaching its model. There is one carry record per player.
+GameplayService owns pickup/carry/deposit/replacement, upgrade validation, passive income, spawn lifecycle and server action routing. YardService owns allocation/capacity/style. QuestService owns UTC daily progress and atomic reward claims. CoreShopService owns exact-price cosmetic unlock/equip. PurchaseService owns the only ProcessReceipt callback and verified pass benefits. TelemetryService provides best-effort Roblox custom events and session milestone deduplication.
 
-WorldService generates inexpensive anchored Parts. MachineService generates category-based temporary art with a shared model factory, avoiding per-item scripts. GameplayService owns state transitions. YardService owns allocation and visual reconstruction. ClientMain owns the mobile-friendly interface; move its panels into controller modules when the next milestone grows them.
+Remote requests: Sync, Upgrade, Replace, DiscardCarry, ClaimQuest, CoreShop, and allowlisted Telemetry. Clients cannot provide reward amounts or paid ownership. Mutable game actions are server validated and rate-limited. In-world inspection/upgrade/intake prompts require player proximity; upgrades/intake also require the player's own yard. Replacement IDs must belong to this inventory and must not be protected. No cross-player ownership transfer exists.
 
-## Authority and limits
+ClientMain owns the currency HUD, right navigation and modal pages. Environment owns tagged cosmetic animation. No public dev-grant remote; `tools/simulate_economy.py` is the isolated developer economy utility.
 
-Distance checks and a minimum haul-time check reject basic prompt/teleport abuse, but are not a complete movement anti-cheat. Robust movement validation, remote abuse load tests, and latency testing remain release gates. Prompt hold duration is not a secure theft timer; stealing will need a separately validated server timer.
+Telemetry records joined/yard, first pickup/placement/upgrade, first quest claim/free Cores, ShopOpened, PassPrompted, CorePurchasePrompted, verified PassPurchased, committed CorePurchaseCompleted, Played5/10/20Minutes, PlayerLeft. Client shop/prompt events are intent-only (untrusted, allowlisted, session-deduplicated); grant events are server-side. APIs are pcall-protected, disabled in Studio, never block economy. No external analytics or personal payload collection. Delivery/dashboard behavior needs a published test.
 
-## Persistence
-
-Each player has one `player_<UserId>` DataStore record with `Data` and an expiring `Lease`. UpdateAsync atomically acquires a 180-second session lease; autosaves renew it every 30 seconds. A session stops gameplay near lease expiry. Different active session tokens cannot overwrite a profile. Read/validation failures never fall back to writable defaults.
-
-All gameplay mutations are non-yielding. Commit sets Busy, snapshots the profile, applies a non-yielding transform, and writes it atomically. Gameplay skips Busy sessions. Developer product rewards and receipt amounts live in the same record. Durable receipts missing from memory are merged on later saves to handle an ambiguous committed write followed by an error. Unknown receipts remain pending.
-
-## Deliberate milestone boundaries
-
-No cross-player ownership transfer exists yet. Stealing must use a durable transfer journal with recovery before it can move saved inventory between two profiles; two unrelated saves are not an atomic transfer. Paid-content protection must persist through every grant, mutation, fusion and theft path. No paid random rewards or luck boosts are enabled.
-
-## Reproducibility
-
-Source is authoritative. `tools/build.py` rebuilds the XML place. GitHub Actions parses source, runs module tests, builds the place and uploads a build artifact. Studio runtime validation is still required and is not replaced by CI.
+Distance and minimum haul-time checks deter basic abuse but are not a full movement anti-cheat. Large-scale remote spam, physics/network latency, mobile performance and live analytics/Marketplace remain release gates. This milestone does not implement theft or multi-profile transfer transactions.

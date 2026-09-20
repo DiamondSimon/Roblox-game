@@ -12,8 +12,8 @@ def runtime(studio=False, datastore_unavailable=False, source=None):
  Color3={fromRGB=function(r,g,b) return {r=r,g=g,b=b} end}
  Config={DataStoreName="test",LeaseSeconds=180,AutosaveSeconds=30,StudioPersistence=false}
  Definitions={ById={radio={}}}
- game={ReplicatedStorage={Shared={Config={GameConfig="config",MachineConfig="machines",MonetizationConfig="money"}}},JobId="test-server"}
- script={Parent={PlayerDataService="data"}}
+ game={ReplicatedStorage={Shared={Config={GameConfig="config",MachineConfig="machines",MonetizationConfig="money",EconomyConfig="economy"}}},JobId="test-server"}
+ script={Parent={PlayerDataService="data",ProfileSchema="schema",TelemetryService="telemetry"}}
  task={wait=function() end,spawn=function() end}
  warn=function() end
  Enum={ProductPurchaseDecision={NotProcessedYet="pending",PurchaseGranted="granted"}}
@@ -36,8 +36,10 @@ def runtime(studio=False, datastore_unavailable=False, source=None):
  Services={DataStoreService={GetDataStore=function() return Store end},
  HttpService={GenerateGUID=function() return tostring(math.random()) end},RunService={IsStudio=function() return false end},MarketplaceService=Marketplace,Players=Players}
  function game:GetService(name) return Services[name] end
- function require(key) if key=="config" then return Config elseif key=="machines" then return Definitions elseif key=="money" then return Money elseif key=="data" then return Data end end
+ function require(key) if key=="economy" then return Economy elseif key=="schema" then return Schema elseif key=="telemetry" then return {Event=function() end} elseif key=="config" then return Config elseif key=="machines" then return Definitions elseif key=="money" then return Money elseif key=="data" then return Data end end
  ''')
+ lua.globals().Economy=lua.execute((ROOT/"src/shared/Config/EconomyConfig.lua").read_text())
+ lua.globals().Schema=lua.execute((ROOT/"src/server/Services/ProfileSchema.lua").read_text())
  if studio: lua.execute('Services.RunService.IsStudio=function() return true end')
  if datastore_unavailable: lua.execute('Store.openCalls=0;Services.DataStoreService.GetDataStore=function() Store.openCalls=Store.openCalls+1;error("Publish this place to access DataStore") end')
  lua.globals().Data=lua.execute(source or (ROOT/'src/server/Services/PlayerDataService.lua').read_text())
@@ -63,9 +65,9 @@ class CoreTests(unittest.TestCase):
    ok,error=compile(p.read_text());self.assertTrue(ok,f'{p}: {error}')
  def test_economy_and_catalog(self):
   lua=runtime();e=lua.execute((ROOT/'src/shared/Config/EconomyConfig.lua').read_text())
-  self.assertEqual(e.upgradeCost(0),100)
+  self.assertEqual(e.upgradeCost(0),240)
   self.assertEqual(e.income(3,0,False),3)
-  self.assertAlmostEqual(e.income(3,1,True),6.9)
+  self.assertAlmostEqual(e.income(3,1,True),6.72)
   self.assertTrue(all(e.upgradeCost(i+1)>e.upgradeCost(i) for i in range(19)))
   catalog=lua.execute((ROOT/'src/shared/Config/MachineConfig.lua').read_text())
   self.assertEqual(len(catalog.Order),18)
@@ -93,16 +95,16 @@ class CoreTests(unittest.TestCase):
   lua=runtime();lua.globals().Purchase=lua.execute((ROOT/'src/server/Services/PurchaseService.lua').read_text())
   lua.execute('''Data:Load(Player);Purchase:Start();Store.fail=true
    local r={PlayerId=42,ProductId=123,PurchaseId="receipt-B"}
-   assert(Marketplace.ProcessReceipt(r)=="pending");assert(Data:Get(Player).Scrap==0)
-   Store.fail=false;assert(Marketplace.ProcessReceipt(r)=="granted");assert(Data:Get(Player).Scrap==500)''')
+   assert(Marketplace.ProcessReceipt(r)=="pending");assert(Data:Get(Player)==nil)
+   Store.fail=false;Data:Load(Player);assert(Marketplace.ProcessReceipt(r)=="granted");assert(Data:Get(Player).Scrap==500)''')
  def test_ambiguous_receipt_survives_autosave(self):
   lua=runtime();lua.globals().Purchase=lua.execute((ROOT/'src/server/Services/PurchaseService.lua').read_text())
   lua.execute('''Data:Load(Player);Purchase:Start();Store.ambiguous=true
    local r={PlayerId=42,ProductId=123,PurchaseId="receipt-C"}
-   assert(Marketplace.ProcessReceipt(r)=="pending");assert(Data:Get(Player).Scrap==0)
+   assert(Marketplace.ProcessReceipt(r)=="pending");assert(Data:Get(Player)==nil)
    assert(Store.records.player_42.Data.Scrap==500)
    Store.ambiguous=false;Store.failAfterCommit=false
-   Data:Get(Player).Scrap=10;assert(Data:Commit(Player));assert(Data:Get(Player).Scrap==510)
+   Data:Load(Player);assert(Data:Get(Player).Scrap==500);Data:Get(Player).Scrap=510;assert(Data:Commit(Player));assert(Data:Get(Player).Scrap==510)
    assert(Marketplace.ProcessReceipt(r)=="granted");assert(Data:Get(Player).Scrap==510)''')
  def test_unknown_schema_is_not_replaced(self):
   lua=runtime();lua.execute('Data:Load(Player);Data:Release(Player);Store.records.player_42.Data.SchemaVersion=999;assert(Data:Load(Player)==nil);assert(Store.records.player_42.Data.SchemaVersion==999)')

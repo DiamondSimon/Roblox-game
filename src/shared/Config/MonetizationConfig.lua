@@ -1,14 +1,20 @@
 return {
- -- Enable only after private-server receipt and rejoin tests pass.
- Enabled = false,
- Passes = {
-  {Key="DoubleScrap", Id=0, Name="2X SCRAP", Description="Double passive machine income. Forever."},
-  {Key="ExtraSlots", Id=0, Name="+5 MACHINE SLOTS", Description="Five additional machine display slots."},
+ Enabled=false,
+ Passes={
+  {Key="DoubleScrap",Id=0,Name="2X SCRAP",Description="PERMANENT • Double passive machine income."},
+  {Key="ExtraSlots",Id=0,Name="+5 MACHINE SLOTS",Description="PERMANENT • Five extra display positions."},
  },
- Products = {
-  {Key="SmallScrap", Id=0, Name="500 SCRAP", Description="A fixed 500 Scrap top-up.", Scrap=500},
-  {Key="MediumScrap", Id=0, Name="2,000 SCRAP", Description="A fixed 2,000 Scrap top-up.", Scrap=2000},
-  {Key="LargeScrap", Id=0, Name="6,000 SCRAP", Description="A fixed 6,000 Scrap top-up.", Scrap=6000},
+ Products={
+  {Key="Cores80",Id=0,Name="80 CORES",Description="80 Cores for exact-price yard cosmetics.",Currency="Cores",Amount=80},
+  {Key="Cores250",Id=0,Name="250 CORES",Description="250 Cores. Also earn Cores from daily quests.",Currency="Cores",Amount=250},
+  {Key="Cores600",Id=0,Name="600 CORES",Description="600 Cores. Cosmetic catalog will expand.",Currency="Cores",Amount=600,Hidden=true},
+  {Key="Cores1400",Id=0,Name="1,400 CORES",Description="Future catalog pack; hidden until more useful sinks exist.",Currency="Cores",Amount=1400,Hidden=true},
+  {Key="Cores3000",Id=0,Name="3,000 CORES",Description="Future catalog pack; hidden until more useful sinks exist.",Currency="Cores",Amount=3000,Hidden=true},
  },
- -- VIP, timed boosts, shields and paid luck are intentionally not offered yet.
+ -- Preserve fulfillment if real legacy IDs were ever configured; never reuse them for Cores.
+ LegacyProducts={
+  {Key="SmallScrap",Id=0,Currency="Scrap",Amount=500},
+  {Key="MediumScrap",Id=0,Currency="Scrap",Amount=2000},
+  {Key="LargeScrap",Id=0,Currency="Scrap",Amount=6000},
+ },
 }

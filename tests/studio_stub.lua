@@ -7,13 +7,14 @@ Vector3={new=function(x,y,z) return setmetatable({X=x or 0,Y=y or 0,Z=z or 0},vm
 Vector2={new=function(x,y) return {X=x,Y=y} end}
 local cmt={__mul=function(a,b) return CFrame.new(a.Position.X+b.Position.X,a.Position.Y+b.Position.Y,a.Position.Z+b.Position.Z) end}
 CFrame={new=function(x,y,z) return setmetatable({Position=Vector3.new(x,y,z)},cmt) end}
+CFrame.lookAt=function(position,target) return CFrame.new(position.X,position.Y,position.Z) end
 Color3={fromRGB=function(r,g,b) return {R=r/255,G=g/255,B=b/255} end}
 UDim2={new=function(...) return {...} end,fromOffset=function(...) return {...} end,fromScale=function(...) return {...} end}
 local function enumeration(names)
  local result={} for word in string.gmatch(names,"%S+") do result[word]=word end
  return setmetatable(result,{__index=function(_,k) error("Invalid enum: "..k) end})
 end
-Enum={Material=enumeration("Metal Asphalt Concrete DiamondPlate Neon CorrodedMetal Rubber Glass"),SurfaceType=enumeration("Smooth"),Font=enumeration("GothamBold"),PartType=enumeration("Cylinder Ball"),HighlightDepthMode=enumeration("Occluded"),ProductPurchaseDecision=enumeration("PurchaseGranted NotProcessedYet")}
+Enum={Material=enumeration("Ground Wood Metal Asphalt Concrete DiamondPlate Neon CorrodedMetal Rubber Glass"),SurfaceType=enumeration("Smooth"),Font=enumeration("GothamBold"),PartType=enumeration("Cylinder Ball"),HighlightDepthMode=enumeration("Occluded"),ProductPurchaseDecision=enumeration("PurchaseGranted NotProcessedYet")}
 local function signal()
  return {callbacks={},Connect=function(self,fn) table.insert(self.callbacks,fn);return {Disconnect=function() end} end,
  Fire=function(self,...) for _,fn in ipairs(self.callbacks) do fn(...) end end}
@@ -36,6 +37,7 @@ end
 function methods:FireClient(player,kind,payload) self.LastMessage={player,kind,payload} end
 function methods:FireAllClients(kind,payload) self.LastBroadcast={kind,payload} end
 local mt={__index=function(o,k)
+ if o._props[k]~=nil then return o._props[k] end
  if methods[k] then return methods[k] end
  if k=="CFrame" and o._props.Position then local p=o._props.Position;return CFrame.new(p.X,p.Y,p.Z) end
  if o._props[k]~=nil then return o._props[k] end
@@ -83,7 +85,7 @@ end
 function players:GetPlayers() return {player} end
 function players:GetPlayerByUserId(id) if id==42 then return player end end
 local guid=0;DataStoreOpenCalls=0
-local services={ReplicatedStorage=rep,ServerScriptService=server,Players=players,Lighting=Instance.new("Lighting"),
+local services={AnalyticsService={LogCustomEvent=function() end},CollectionService={AddTag=function() end},ReplicatedStorage=rep,ServerScriptService=server,Players=players,Lighting=Instance.new("Lighting"),
  RunService={IsStudio=function() return true end},
  HttpService={GenerateGUID=function() guid=guid+1;return "guid-"..guid end},
  DataStoreService={GetDataStore=function() DataStoreOpenCalls=DataStoreOpenCalls+1;error("Publish this place to access DataStore") end},

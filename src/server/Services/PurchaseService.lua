@@ -2,6 +2,7 @@ local Marketplace=game:GetService("MarketplaceService")
 local Players=game:GetService("Players")
 local Config=require(game.ReplicatedStorage.Shared.Config.MonetizationConfig)
 local Data=require(script.Parent.PlayerDataService)
+local T=require(script.Parent.TelemetryService)
 local Purchase={}
 function Purchase:RefreshPasses(player)
  for _,pass in ipairs(Config.Passes) do
@@ -13,7 +14,9 @@ function Purchase:RefreshPasses(player)
 end
 function Purchase:Start()
  local products={};local ids={}
- for _,p in ipairs(Config.Products) do
+ local catalog={}
+ for _,list in ipairs({Config.Products,Config.LegacyProducts or {}}) do for _,p in ipairs(list) do table.insert(catalog,p) end end
+ for _,p in ipairs(catalog) do
   if p.Id>0 then assert(not ids[p.Id],"Duplicate product ID");ids[p.Id]=true;products[p.Id]=p end
  end
  Marketplace.ProcessReceipt=function(receipt)
@@ -26,16 +29,22 @@ function Purchase:Start()
   if d.Receipts[receipt.PurchaseId] then return Enum.ProductPurchaseDecision.PurchaseGranted end
   local committed=Data:Commit(player,function(candidate)
    if candidate.Receipts[receipt.PurchaseId] then return end
-   candidate.Scrap=candidate.Scrap+product.Scrap
-   candidate.Receipts[receipt.PurchaseId]=product.Scrap
+   local currency=product.Currency or "Scrap"
+   local amount=product.Amount or product.Scrap
+   assert(currency=="Cores" or currency=="Scrap","Unsupported currency")
+   candidate[currency]=candidate[currency]+amount
+   candidate.Receipts[receipt.PurchaseId]={Currency=currency,Amount=amount}
   end)
-  if committed then return Enum.ProductPurchaseDecision.PurchaseGranted end
+  if committed then
+   T:Event(player,product.Currency=="Cores" and "CorePurchaseCompleted" or "LegacyPurchaseCompleted",product.Amount or product.Scrap)
+   return Enum.ProductPurchaseDecision.PurchaseGranted
+  end
   return Enum.ProductPurchaseDecision.NotProcessedYet
  end
  Marketplace.PromptGamePassPurchaseFinished:Connect(function(player,id,purchased)
   if purchased then
    -- Verify entitlement with Roblox before activating it.
-   task.spawn(function() self:RefreshPasses(player) end)
+   task.spawn(function() self:RefreshPasses(player);T:Event(player,"PassPurchased") end)
   end
  end)
 end

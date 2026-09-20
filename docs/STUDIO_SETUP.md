@@ -1,27 +1,29 @@
-# Studio setup — version 0.1.1
+# Studio test — V0.2.0
 
-## First test (no publishing)
+Download build/SCRAPYARD-0.2.0.rbxlx → File → Open from File → F5 / Play. Close the old place to avoid testing the wrong version. Practice mode needs no publishing and always starts fresh. The map is built on Play.
 
-Download the `.rbxlx` in `build/`. In Studio use File → Open from File. Press F5 / Play. The map appears at runtime. The player begins at an assigned yard; the radio generates 1 Scrap/sec. Collect a free machine from central salvage and place it at your own intake. Use the upgrade terminal after earning 100 Scrap.
+## First 5 minutes
 
-Use the Test tab's server/client simulation with two players to check distinct yards and contested pickups. Names of Studio controls may vary by version; choose the mode that starts one server with two clients. Use the device emulator for a narrow phone viewport.
+1. Confirm top-left shows 0 Cores and income +0.30/sec, one machine/four slots, and right-side Shop / Upgrades / Quests / Collection.
+2. Walk from your spawn through your gate along the direct concrete path to the conveyor. Time this trip; expected ~18–25 seconds without speed upgrades.
+3. Pick up a machine and bring it to your green intake. Note your first-delivery time and updated income.
+4. Keep delivering. At 240 Scrap, stand by your amber terminal and buy Income efficiency. Tell us the elapsed time and which machines you collected. Average modeled first purchase is ~3.6 minutes, not a guarantee.
+5. Deliver five total machines. If full, choose and confirm replacement at intake. Open Quests and claim 10 Cores. A second claim must award nothing.
 
-## Test durable saves
+## Exploration and styles
 
-1. Use File → Publish to Roblox As to create a **separate private test experience** named SCRAPYARD Test. Keep access private in Creator Hub. Do not enable public access.
-2. Set maximum players to 8 in experience/place settings.
-3. Test by joining the published experience through the Roblox app. Published servers use real DataStores automatically. Studio's practice flag has no effect on live servers.
-4. Pick up and place a machine, buy an upgrade, wait 35 seconds, leave, and rejoin. Verify inventory and upgrades restore. Scrap should retain the saved balance plus income earned after the rejoin; offline income is not implemented.
-5. For Studio DataStore tests only: in Game Settings → Security, enable **Studio Access to API Services** on this separate test experience. In Explorer, go to ReplicatedStorage → Shared → Config → GameConfig and set `StudioPersistence = true`. Never point Studio at a production economy for destructive tests.
+Inspect the crane station (-86,-88), tower station (108,240), and depot station (-45,280), using X/Z coordinates. Claim its 10 Cores. Buy two upgrades for another 8 Cores or deliver two Rare+ for 12. At 30 Cores open Shop → Styles → Foundry Teal. Confirm balance drops by 30 and your yard sign/intake changes color. Re-equipping must be free.
 
-If a save fails to load, the server disconnects the player instead of creating an empty replacement. A crashed session can take up to 180 seconds to expire. Retry after that interval.
+## Phone and multiplayer gates
 
-## Configure purchases only after persistence passes
+Use Studio's device emulator in portrait and landscape. Confirm currency cards and four right buttons fit, menus scroll, claim/close buttons are tappable and carrying controls remain usable. Send a screenshot of each problematic layout.
 
-Follow `MONETIZATION.md`. Use products owned by this same experience. Supply the actual IDs so the source and packaged place can be updated consistently. Do not simply paste product IDs into unrelated scripts.
+Use Test → Server & Clients with two clients. Verify distinct yards, race for one machine (only one wins), try the other player's terminal/intake (must fail), carry then reset character (carry removed), leave/rejoin where persistence is enabled. The mocked two-player test is not a network test.
 
-## Report a problem
+## Persistent test
 
-Open Studio's Output panel (usually Window or View → Output, depending on layout). Send the **first red error in full**, including script name and line, and describe what you did immediately before it. For layout issues, send a screenshot and the device/viewport used. Always identify this version as **0.1.1**.
+Publish as a separate private test experience; max players 8. Published servers use real storage automatically. Studio remains practice unless GameConfig.StudioPersistence=true and Game Settings → Security → Studio Access to API Services is enabled on this private test experience. Do not test against a production economy.
 
-Do not test different source versions and old place builds together. The XML embeds the exact source from the same milestone.
+Earn Cores, claim once, buy a style, wait 35 seconds, leave and rejoin. Verify currency, style, inventory, upgrades and claimed quest survive. Use an old schema-1 private test save to verify migration; never reset its data. A retired server lease can take up to 180 seconds to expire. Close old V0.1 servers before testing V0.2 saves.
+
+Purchase setup remains in MONETIZATION.md; no IDs are needed for this free gameplay test. Errors: open Output, send the first full red error plus version and what action caused it.

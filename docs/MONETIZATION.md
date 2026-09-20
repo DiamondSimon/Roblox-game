@@ -1,20 +1,30 @@
-# Purchase foundation — disabled until tested
+# V0.2 monetization
 
-All IDs are in ReplicatedStorage/Shared/Config/MonetizationConfig. Enabled=false and Id=0 are safe defaults. The client only offers configured, enabled purchases in persistent mode and retrieves current Roblox prices; it never displays made-up prices.
+`MonetizationConfig` holds all IDs and grants. Enabled=false; all IDs=0. No live transaction has been performed in this workspace.
 
-Prepared passes: DoubleScrap (2× passive income), ExtraSlots (+5 display slots). Prepared Developer Products: 500, 2,000 and 6,000 Scrap. No VIP or extra fusion slot is sold until its promised benefit exists.
+## Passes
 
-## Owner setup
+- DoubleScrap: permanent 2× passive machine income; verified with UserOwnsGamePassAsync.
+- ExtraSlots: permanent five extra positions. Same benefit as V0.1.
 
-1. Publish a private test experience and verify its saves.
-2. In Creator Hub → Creations → your experience → Monetization → Passes, create the two passes and copy their IDs. Configure their prices there.
-3. In Monetization → Developer Products, create the three fixed Scrap packs and copy their IDs. Use products for this same experience.
-4. Supply all five IDs. Update the central config and rebuild the place. Enable the catalog only in the test build when ready to test it.
-5. Verify pass entitlements immediately after purchase and on a fresh join. Verify a repeatable product grants the exact amount once, persists across rejoin and survives simulated duplicate callback / save failure.
-6. Only make products available to the public after the full game and purchase test gates pass.
+VIP, extra fusion queues and double quest rewards are deferred until there is enough implemented value. No stacked 4×/8× earnings, instant best machine, or paid random rewards.
 
-One server script assigns MarketplaceService.ProcessReceipt. The handler returns NotProcessedYet if the profile is unavailable, the product is unknown or the durable write fails. It acknowledges only an existing durable receipt or an atomic reward-and-marker write. It continues fulfilling configured old products even when the storefront is disabled; never remove an old product mapping while receipts might remain pending. PromptProductPurchaseFinished is not used for fulfillment.
+## Developer Products
 
-No paid luck, randomized rewards, timed server boosts, emergency shields, event summons or subscriptions are offered. Those require separate recovery and policy design. Real purchases are not verified in this workspace, and Roblox external-sales test mode can cost actual Robux.
+Core packages configured at 80, 250, 600, 1,400, 3,000. Only 80 and 250 are visible; larger packs are hidden because the first style catalog costs only 220 total. None is purchasable until configured and enabled in a persistent experience. Robux prices are fetched from Roblox on the client and are not hardcoded. A pack always grants its stated fixed Core amount.
 
-Official reference checked for this milestone: https://create.roblox.com/docs/production/monetization/developer-products
+## Free and paid Cores
+
+Four daily active quests award up to 40/day. Styles cost 30 / 70 / 120 Cores, unlock permanently and can be re-equipped free. They change the yard sign color and intake lighting. They do not multiply income or roll for random loot. An 80-Core pack can buy Teal or Violet; a 250-Core pack covers all three current styles. More sinks should precede larger paid packs.
+
+## Legacy Scrap products
+
+Audited V0.1 IDs were all zero and storefront disabled. The three old 500 / 2,000 / 6,000 definitions remain hidden under LegacyProducts. If real IDs were configured outside this repository, copy them into those same legacy definitions. Never reuse a Scrap product ID for a Core reward. Fulfillment remains active for mapped legacy IDs even if storefront is off.
+
+## Safety and verification
+
+One PurchaseService owns ProcessReceipt. Rewards and currency-tagged receipt records are persisted together before acknowledging. Unknown products and unavailable profiles return NotProcessedYet. No PromptProductPurchaseFinished grant. Duplicate grants, ambiguous commit results, rejoin and insufficient-funds cases have mocked-service regression checks; actual Marketplace verification is still required.
+
+Owner steps after private save tests: Creator Hub → Creations → this experience → Monetization → Passes / Developer Products. Create only the two passes and desired visible Core packs, copy their real IDs, and provide them for the central config. Configure prices in Creator Hub. Test privately before public availability. Real external-sale test mode may cost Robux.
+
+Official API reference: https://create.roblox.com/docs/production/monetization/developer-products

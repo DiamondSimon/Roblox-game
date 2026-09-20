@@ -21,7 +21,7 @@ class StartupTests(unittest.TestCase):
    assert(DataStoreOpenCalls==0)
    assert(game.ReplicatedStorage:GetAttribute("BootStatus")=="Ready")
    local world=require(TestModules.WorldService)
-   assert(#world.Yards==8);assert(workspace.Map);assert(workspace.Map.Ground)
+   assert(#world.Yards==8);assert(workspace.Map);assert(workspace.Map["District ground"])
    assert(#workspace.Map:GetDescendants()>500)
    assert(TestPlayer.Character);assert(TestPlayer.RespawnLocation)
    assert(TestPlayer:GetAttribute("YardIndex")==1)
@@ -56,7 +56,7 @@ class StartupTests(unittest.TestCase):
    TestPlayer.Character.HumanoidRootPart.Position=yard.Deposit.Position
    gameplay:Deposit(TestPlayer);assert(not gameplay.Carrying[TestPlayer])
    assert(#data:Get(TestPlayer).MachineInventory==2)
-   Clock=Clock+1;data:Get(TestPlayer).Scrap=100
+   Clock=Clock+1;data:Get(TestPlayer).Scrap=240
    TestPlayer.Character.HumanoidRootPart.Position=yard.Terminal.Position
    gameplay:Upgrade(TestPlayer,"Income")
    assert(data:Get(TestPlayer).Upgrades.Income==1);assert(data:Get(TestPlayer).Scrap==0)

@@ -1,11 +1,7 @@
-# Visual direction
+# V0.2 art direction — Higgsfield on hold
 
-Amber safety paint, charcoal machinery, cool teal screens, warm afternoon worklights, desaturated concrete, chunky fictional machine silhouettes. Rarity accents must remain readable against dark industrial materials.
+Golden afternoon sun, cool blue shadows, amber safety infrastructure, teal technology, rust-colored freight and readable rarity accents. Larger lots and several tall landmarks give orientation. Empty pads and annex strips show growth potential without hiding future space.
 
-0.1 uses authored procedural blockouts: vehicle, electronics, industrial, energy/alien silhouettes. These are not finished individual assets. The world is generated at runtime and has eight clearly separated lots around a long salvage conveyor.
+All assets remain Roblox primitives, materials, Smoke and built-in lighting effects. Client-only fan rotation, magnet movement and spawn-label animation add motion without authoritative physics overhead. No external mesh, image, texture, sound or paid generation was imported.
 
-## Next hero asset brief — Fusion Crusher
-
-Purpose: recognizable gameplay landmark for deterministic duplicate fusion. Use concept art first, mesh only after gameplay footprint is accepted. One three-quarter view concept, square 1024px, neutral backdrop, amber/charcoal industrial palette, broad intake hopper and visible teal core. No UI text, logos or unrelated decorative scene. Gameplay footprint 8×8 studs, height ~10 studs; front at local -Z, pivot bottom center. Target under 6,000 triangles, one 1024px texture atlas, simple separate collision proxies and an intake attachment. Inspect topology, dimensions, material slots and mobile cost before importing.
-
-No Higgsfield credits have been spent. This hero should be generated after the first Studio loop test, when its interaction dimensions can be confirmed. Marketing assets follow implemented gameplay, not aspirational features.
+Visual acceptance still needs Studio screenshots and device checks. No claim that mock tests validate appearance. No Higgsfield generation until the user explicitly approves the map/economy/quests/UI systems phase. Future Fusion Crusher brief is postponed; no credits spent.

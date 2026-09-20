@@ -9,6 +9,8 @@ local World=require(services.WorldService)
 local Yard=require(services.YardService)
 local Game=require(services.GameplayService)
 local Purchase=require(services.PurchaseService)
+local Telemetry=require(services.TelemetryService)
+local Economy=require(game.ReplicatedStorage.Shared.Config.EconomyConfig)
 local folder=Instance.new("Folder");folder.Name="Remotes";folder.Parent=game.ReplicatedStorage
 local remote=Instance.new("RemoteEvent");remote.Name="Game";remote.Parent=folder
 ReplicatedStorage:SetAttribute("BootStatus","Building map")
@@ -16,16 +18,18 @@ World:Build();Data:Start();Game:Start(remote);Purchase:Start()
 local joining={}
 local function join(player)
  if joining[player] then return end;joining[player]=true
+ Telemetry:Join(player)
  local d=Data:Load(player)
  if not d then joining[player]=nil;return end
  if not player.Parent then Data:Release(player);joining[player]=nil;return end
  local yard=Yard:Claim(player)
  if not yard then player:Kick("All eight yards are occupied. Please join another server.");return end
- Yard:Refresh(player,d)
+ Yard:Refresh(player,d);Telemetry:Event(player,"YardClaimed",1,true)
  player.CharacterAdded:Connect(function(character)
   local humanoid=character:WaitForChild("Humanoid")
   character:WaitForChild("HumanoidRootPart")
   character:PivotTo(yard.Spawn.CFrame*CFrame.new(0,4,0))
+  local current=Data:Get(player);if current then humanoid.WalkSpeed=Economy.speed(current.Upgrades,false) end
   humanoid.Died:Connect(function()
    Game:ClearCarry(player)
    task.delay(3,function() if player.Parent then player:LoadCharacterAsync() end end)
@@ -46,6 +50,7 @@ local function safeJoin(player)
 end
 Players.PlayerAdded:Connect(safeJoin)
 Players.PlayerRemoving:Connect(function(player)
+ Telemetry:Leave(player)
  Game:ClearCarry(player);Game.LastAction[player]=nil;Yard:Release(player)
  -- Load() owns cleanup if the player departed while its request was in flight.
  local s=Data.Sessions[player]
@@ -54,7 +59,7 @@ Players.PlayerRemoving:Connect(function(player)
 end)
 for _,player in ipairs(Players:GetPlayers()) do task.spawn(safeJoin,player) end
 ReplicatedStorage:SetAttribute("BootStatus","Ready")
-print("SCRAPYARD 0.1.1 • First playable loop loaded")
+print("SCRAPYARD 0.2.0 • First playable loop loaded")
 end
 local ok,err=xpcall(boot,debug.traceback)
 if not ok then
