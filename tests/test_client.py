@@ -16,9 +16,12 @@ class ClientSmokeTests(unittest.TestCase):
    click("SHOP →");Clock=Clock+6;click("HOME →")
    remote:FireClient(TestPlayer,"Open","Shop");click("CORES");click("STYLES");click("X")
    remote:FireClient(TestPlayer,"Open","Upgrades");click("X");click("QUESTS");click("X");click("COLLECTION");click("X")
-   for _,menu in ipairs({"Sell","Spin","Rebirth"}) do remote:FireClient(TestPlayer,"Open",menu);click("X") end
+   for _,menu in ipairs({"Sell","Spin","Rebirth","Pets"}) do remote:FireClient(TestPlayer,"Open",menu);click("X") end
    remote:FireClient(TestPlayer,"SpinResult",10)
    click("X")
+   remote:FireClient(TestPlayer,"SlapFX",Vector3.zero)
+   local audible=false;for _,obj in ipairs(workspace:GetDescendants()) do if obj.ClassName=="Sound" and obj.Name=="SlapImpact" then assert(obj.Played);audible=true end end;assert(audible)
+   click("PETS");click("CASES");click("VIEW CASE • 500 SCRAP / 25 CORES");click("X")
    local data=require(TestModules.PlayerDataService)
    require(TestModules.QuestService):Progress(data:Get(TestPlayer),"Collected",5)
    require(TestModules.GameplayService):State(TestPlayer)

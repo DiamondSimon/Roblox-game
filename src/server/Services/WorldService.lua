@@ -80,16 +80,38 @@ function World:Build()
  for _,x in ipairs({-14,14}) do self.part(root,"Shredder wall",Vector3.new(2,10,26),Vector3.new(x,5,76),amber) end
  self.part(root,"Shredder rear",Vector3.new(28,10,2),Vector3.new(0,5,89),amber)
  self.part(root,"Shredder mouth",Vector3.new(24,0.5,22),Vector3.new(0,2.2,76),Color3.fromRGB(17,24,30))
- for _,x in ipairs({-6,6}) do
-  local rotor=self.part(root,"Shredder rotor",Vector3.new(9,1,20),Vector3.new(x,3,76),Color3.fromRGB(180,193,199));rotor.CanCollide=false
-  Tags:AddTag(rotor,"ScrapyardShredder")
+ -- Twin-shaft industrial shredder: inset cutters, flared feed, drive housings and service deck.
+ for _,side in ipairs({-1,1}) do
+  local motor=self.part(root,"Shredder drive motor",Vector3.new(7,5,8),Vector3.new(side*19,4,83),Color3.fromRGB(64,123,145))
+  for z=80,86,1.5 do self.part(root,"Motor cooling rib",Vector3.new(7.3,5.2,0.25),Vector3.new(side*19,4,z),steel) end
+  local feed=self.part(root,"Flared feed wall",Vector3.new(1,7,25),Vector3.new(side*11,6,76),Color3.fromRGB(215,152,44));feed.Orientation=Vector3.new(0,0,-side*18)
+  self.part(root,"Service deck",Vector3.new(6,0.8,28),Vector3.new(side*18,1,74),steel,Enum.Material.DiamondPlate)
+  for z=63,87,8 do self.part(root,"Safety post",Vector3.new(0.5,6,0.5),Vector3.new(side*22,4,z),amber) end
+  self.part(root,"Safety rail",Vector3.new(0.5,0.5,26),Vector3.new(side*22,7,75),amber)
+  local rotor=Instance.new("Model");rotor.Name="CuttingRotor";rotor.Parent=root
+  local shaft=self.part(rotor,"Shaft",Vector3.new(1.4,1.4,22),Vector3.new(side*5,3.4,76),Color3.fromRGB(142,160,175));shaft.CanCollide=false;rotor.PrimaryPart=shaft
+  for z=67,85,3 do
+   local disc=self.part(rotor,"Cutter disc",Vector3.new(1.1,7,7),Vector3.new(side*5,3.4,z),Color3.fromRGB(146,163,172));disc.Shape=Enum.PartType.Cylinder;disc.Orientation=Vector3.new(0,90,0);disc.CanCollide=false
+   for tooth=0,5 do
+    local angle=tooth*math.pi/3+(z%2)*0.35
+    local blade=self.part(rotor,"Hook tooth",Vector3.new(1.5,1.5,1.5),Vector3.new(side*5+math.cos(angle)*3.5,3.4+math.sin(angle)*3.5,z),Color3.fromRGB(207,217,219));blade.Orientation=Vector3.new(0,0,math.deg(angle)+25);blade.CanCollide=false
+   end
+  end
+  rotor:SetAttribute("Direction",side);Tags:AddTag(rotor,"ScrapyardShredder")
  end
- self.label(self.Shredder,"SHREDDER • UNCLAIMED JUNK LOST",Color3.fromRGB(255,100,78))
+ for x=-12,12,3 do
+  local stripe=self.part(root,"Hazard stripe",Vector3.new(1.4,1.8,0.25),Vector3.new(x,8.7,62.8),Color3.fromRGB(29,35,40));stripe.Orientation=Vector3.new(0,0,-25)
+ end
+ self.part(root,"Feed warning beam",Vector3.new(27,2,1),Vector3.new(0,8.7,63.2),amber)
+ local control=self.part(root,"Shredder control box",Vector3.new(3,5,2),Vector3.new(24,3,64),steel)
+ self.part(root,"Emergency stop",Vector3.new(1,1,0.5),control.Position+Vector3.new(0,0.8,-1.2),Color3.fromRGB(245,67,53),Enum.Material.Neon)
+ self.part(root,"Status lamp",Vector3.new(0.7,0.7,0.5),control.Position+Vector3.new(0,-0.5,-1.2),Color3.fromRGB(86,255,147),Enum.Material.Neon)
+ self.label(self.Shredder,"TWIN-SHAFT SHREDDER • KEEP CLEAR",Color3.fromRGB(255,100,78)).Parent.StudsOffset=Vector3.new(0,15,0)
  self.ShopSpawn=Vector3.new(0,4,-196);self.Shops={}
- self.part(root,"Shop plaza",Vector3.new(180,0.6,88),Vector3.new(0,0.3,-229),Color3.fromRGB(188,183,161),Enum.Material.Concrete)
- for i,key in ipairs({"Upgrades","Sell","Spin","Rebirth","Shop"}) do
+ self.part(root,"Shop plaza",Vector3.new(224,0.6,88),Vector3.new(0,0.3,-229),Color3.fromRGB(188,183,161),Enum.Material.Concrete)
+ for i,key in ipairs({"Upgrades","Sell","Spin","Rebirth","Shop","Pets"}) do
   local x=(i-3)*34
-  local colors={Color3.fromRGB(100,193,255),Color3.fromRGB(93,224,131),Color3.fromRGB(255,202,67),Color3.fromRGB(201,130,255),Color3.fromRGB(255,143,83)}
+  local colors={Color3.fromRGB(100,193,255),Color3.fromRGB(93,224,131),Color3.fromRGB(255,202,67),Color3.fromRGB(201,130,255),Color3.fromRGB(255,143,83),Color3.fromRGB(255,147,203)}
   local stand=self.part(root,key.." stand",Vector3.new(22,4,8),Vector3.new(x,2,-234),colors[i])
   self.part(root,key.." canopy",Vector3.new(27,2,18),Vector3.new(x,13,-239),colors[i])
   for _,dx in ipairs({-11,11}) do self.part(root,"Stall post",Vector3.new(1,13,1),Vector3.new(x+dx,6.5,-245),steel) end
@@ -98,6 +120,10 @@ function World:Build()
  local wheel=self.part(root,"Daily wheel",Vector3.new(12,12,1),Vector3.new(0,8,-244),amber)
  for i=1,6 do local a=i*math.pi/3;self.part(root,"Wheel segment",Vector3.new(3,3,1.2),Vector3.new(math.cos(a)*4,8+math.sin(a)*4,-243),i%2==0 and teal or Color3.fromRGB(243,237,205)) end
  self.label(wheel,"FREE DAILY SPIN",amber).Parent.MaxDistance=60
+ for i,color in ipairs({Color3.fromRGB(128,182,195),Color3.fromRGB(172,103,250),Color3.fromRGB(255,185,51)}) do
+  local case=self.part(root,"Pet display case",Vector3.new(5,4,4),Vector3.new(94+(i-1)*8,6,-234),color)
+  self.part(root,"Case latch",Vector3.new(1,1.4,0.3),case.Position+Vector3.new(0,0,-2.1),steel)
+ end
  for i=1,8 do
   local side=i<=4 and -1 or 1;local index=(i-1)%4
   local center=Vector3.new(side*330,0,-210+index*140)

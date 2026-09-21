@@ -12,7 +12,7 @@ def runtime(studio=False, datastore_unavailable=False, source=None):
  Color3={fromRGB=function(r,g,b) return {r=r,g=g,b=b} end}
  Config={DataStoreName="test",LeaseSeconds=180,AutosaveSeconds=30,StudioPersistence=false}
  Definitions={ById={radio={}}}
- game={ReplicatedStorage={Shared={Config={GameConfig="config",MachineConfig="machines",MonetizationConfig="money",EconomyConfig="economy"}}},JobId="test-server"}
+ game={ReplicatedStorage={Shared={Config={GameConfig="config",MachineConfig="machines",MonetizationConfig="money",EconomyConfig="economy",PetConfig="pets"}}},JobId="test-server"}
  script={Parent={PlayerDataService="data",ProfileSchema="schema",TelemetryService="telemetry"}}
  task={wait=function() end,spawn=function() end}
  warn=function() end
@@ -36,9 +36,10 @@ def runtime(studio=False, datastore_unavailable=False, source=None):
  Services={DataStoreService={GetDataStore=function() return Store end},
  HttpService={GenerateGUID=function() return tostring(math.random()) end},RunService={IsStudio=function() return false end},MarketplaceService=Marketplace,Players=Players}
  function game:GetService(name) return Services[name] end
- function require(key) if key=="economy" then return Economy elseif key=="schema" then return Schema elseif key=="telemetry" then return {Event=function() end} elseif key=="config" then return Config elseif key=="machines" then return Definitions elseif key=="money" then return Money elseif key=="data" then return Data end end
+ function require(key) if key=="pets" then return PetConfig elseif key=="economy" then return Economy elseif key=="schema" then return Schema elseif key=="telemetry" then return {Event=function() end} elseif key=="config" then return Config elseif key=="machines" then return Definitions elseif key=="money" then return Money elseif key=="data" then return Data end end
  ''')
  lua.globals().Economy=lua.execute((ROOT/"src/shared/Config/EconomyConfig.lua").read_text())
+ lua.globals().PetConfig=lua.execute((ROOT/"src/shared/Config/PetConfig.lua").read_text())
  lua.globals().Schema=lua.execute((ROOT/"src/server/Services/ProfileSchema.lua").read_text())
  if studio: lua.execute('Services.RunService.IsStudio=function() return true end')
  if datastore_unavailable: lua.execute('Store.openCalls=0;Services.DataStoreService.GetDataStore=function() Store.openCalls=Store.openCalls+1;error("Publish this place to access DataStore") end')
@@ -70,8 +71,8 @@ class CoreTests(unittest.TestCase):
   self.assertAlmostEqual(e.income(3,1,True),6.36)
   self.assertTrue(all(e.upgradeCost(i+1)>e.upgradeCost(i) for i in range(19)))
   catalog=lua.execute((ROOT/'src/shared/Config/MachineConfig.lua').read_text())
-  self.assertEqual(len(catalog.Order),18)
-  self.assertEqual(len(set(catalog.Order.values())),18)
+  self.assertEqual(len(catalog.Order),30)
+  self.assertEqual(len(set(catalog.Order.values())),30)
  def test_load_failure_does_not_create_default_session(self):
   lua=runtime();lua.execute('Store.fail=true; assert(Data:Load(Player)==nil);assert(Data.Sessions[Player]==nil);assert(Player.Kicked)')
  def test_competing_server_cannot_load(self):

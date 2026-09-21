@@ -1,10 +1,10 @@
-# V0.3 verification
+# V0.3.1 verification
 
 ## Executed locally
 
-`python tools/build.py` packages all current source into SCRAPYARD-0.3.0.rbxlx. `python -m unittest discover -s tests -v`: **42 passing tests**. Source parsing uses Lua via Lupa, not Luau/Roblox execution. The startup harness uses narrow mocked Roblox APIs. `python tools/simulate_economy.py` generates eight synthetic 200-seed progression scenarios from shipped configs.
+`python tools/build.py` packages all current source into SCRAPYARD-0.3.1.rbxlx. `python -m unittest discover -s tests -v`: **54 passing tests**. Source parsing uses Lua via Lupa, not Luau/Roblox execution. The startup harness uses narrow mocked Roblox APIs. `python tools/simulate_economy.py` generates eight synthetic 200-seed progression scenarios from shipped configs.
 
-Coverage includes unpublished startup with no DataStore access; all 18 models; empty starter inventory/zero income; pickup/deposit/upgrade; competing pickup; protected replacement; dynamic eight-slot floors and pass capacity; 3 studs/sec belt motion, expiry and late pickup rejection; tutorial completion; carry/combat teleport blocks; slap range/line-of-sight/safe-zone/tutorial guards, single carry transfer and recovery; reclaimable drops; daily-spin odds boundaries, distance and once/day behavior; sale ownership/protected/duplicate handling; rebirth reset/preservation; schema 1/2 migration; lease contention, unknown schema, save failures and ambiguous transaction/receipt recovery; HUD/menu/waypoint callbacks; exact source parity inside the generated Studio place.
+Coverage includes unpublished startup with no DataStore access; all 30 scrap models and nine pets; empty starter inventory/zero income; pickup/deposit/upgrade; competing pickup; protected replacement; dynamic eight-slot floors and pass capacity; 3 studs/sec belt motion, expiry and late pickup rejection; tutorial completion; carry/combat teleport blocks; slap range/line-of-sight/safe-zone/tutorial guards, single carry transfer and recovery; reclaimable drops; daily-spin odds boundaries, distance and once/day behavior; sale ownership/protected/duplicate handling; rebirth reset/preservation; schema 1/2 migration; lease contention, unknown schema, save failures and ambiguous transaction/receipt recovery; HUD/menu/waypoint callbacks; exact source parity inside the generated Studio place.
 
 Mocks do not implement rendering, real scheduling/physics, streaming, network replication, DataStore throttling or Marketplace prompts. Tests that cover those APIs assert control flow only, not engine acceptance.
 
@@ -22,3 +22,5 @@ Mocks do not implement rendering, real scheduling/physics, streaming, network re
 10. Mobile emulator 390×844 and landscape: no overlap/cut-off objective, currency/buttons readable, scrolling and confirmation accessible, SLAP clear of Roblox jump controls. Test touch pickup and streaming at both extremes of map.
 11. Separate published private test universe: migration with schema 1 and 2 fixtures, lease contention, rejoin after transactions and receipt retries. Real-money prompts remain disabled in the shipped build. Never enable production API access merely to test fresh balance.
 12. Eight-player session: measure salvage contention, tutorial success, frame/server time and first-upgrade/floor/rebirth pacing. Adjust based on observed results. No FPS/retention target is claimed satisfied by the mock tests.
+
+Pet/audio/shredder acceptance steps and additional executed checks are listed in RELEASE_0.3.1.md.

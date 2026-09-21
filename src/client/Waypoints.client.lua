@@ -1,5 +1,6 @@
 -- Local-only tutorial guide, recreated on respawn and compatible with streaming.
 local Players=game:GetService("Players")
+local Audio=require(game.ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"):WaitForChild("AudioConfig"))
 local Tween=game:GetService("TweenService")
 local player=Players.LocalPlayer
 local marker=Instance.new("Part");marker.Name="TutorialWaypoint";marker.Anchored=true;marker.CanCollide=false;marker.CanTouch=false;marker.CanQuery=false;marker.Transparency=1;marker.Size=Vector3.new(1,1,1);marker.Parent=workspace
@@ -25,5 +26,9 @@ local remote=game.ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Game")
 remote.OnClientEvent:Connect(function(kind,pos)
  if kind~="ShredFX" and kind~="SlapFX" then return end
  local flash=Instance.new("Part");flash.Anchored=true;flash.CanCollide=false;flash.CanQuery=false;flash.CanTouch=false;flash.Shape=Enum.PartType.Ball;flash.Size=Vector3.new(2,2,2);flash.Position=pos+Vector3.new(0,3,0);flash.Material=Enum.Material.Neon;flash.Color=kind=="SlapFX" and Color3.fromRGB(255,255,225) or Color3.fromRGB(255,157,45);flash.Parent=workspace
+ if kind=="SlapFX" then
+  local sound=Instance.new("Sound");sound.Name="SlapImpact";sound.SoundId=Audio.Slap.SoundId;sound.Volume=Audio.Slap.Volume;sound.PlaybackSpeed=Audio.Slap.PlaybackSpeed;sound.RollOffMaxDistance=Audio.Slap.MaxDistance;sound.RollOffMinDistance=8;sound.Parent=flash;sound:Play()
+  task.delay(Audio.Slap.Duration,function() if sound.Parent then sound:Stop() end end)
+ end
  Tween:Create(flash,TweenInfo.new(0.35),{Size=Vector3.new(8,8,8),Transparency=1}):Play();task.delay(0.4,function() flash:Destroy() end)
 end)

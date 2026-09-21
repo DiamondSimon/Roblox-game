@@ -8,6 +8,7 @@ local Data=require(services.PlayerDataService)
 local World=require(services.WorldService)
 local Yard=require(services.YardService)
 local Game=require(services.GameplayService)
+local Pets=require(services.PetService)
 local Progression=require(services.ProgressionService)
 local Purchase=require(services.PurchaseService)
 local Telemetry=require(services.TelemetryService)
@@ -25,7 +26,7 @@ local function join(player)
  if not player.Parent then Data:Release(player);joining[player]=nil;return end
  local yard=Yard:Claim(player)
  if not yard then player:Kick("All eight yards are occupied. Please join another server.");return end
- Yard:Refresh(player,d);Telemetry:Event(player,"YardClaimed",1,true)
+ Yard:Refresh(player,d);Pets:Publish(player,d);task.spawn(function() Pets:RefreshPolicy(player);Game:State(player) end);Telemetry:Event(player,"YardClaimed",1,true)
  player.CharacterAdded:Connect(function(character)
   local humanoid=character:WaitForChild("Humanoid")
   character:WaitForChild("HumanoidRootPart")
@@ -53,7 +54,7 @@ end
 Players.PlayerAdded:Connect(safeJoin)
 Players.PlayerRemoving:Connect(function(player)
  Telemetry:Leave(player)
- Game:Drop(player);Progression:Cleanup(player);Game.LastAction[player]=nil;Yard:Release(player)
+ Game:Drop(player);Progression:Cleanup(player);Pets.Policies[player]=nil;Pets.Tokens[player]=nil;Game.LastAction[player]=nil;Yard:Release(player)
  -- Load() owns cleanup if the player departed while its request was in flight.
  local s=Data.Sessions[player]
  if s and s.Data then Data:Release(player) end
@@ -61,7 +62,7 @@ Players.PlayerRemoving:Connect(function(player)
 end)
 for _,player in ipairs(Players:GetPlayers()) do task.spawn(safeJoin,player) end
 ReplicatedStorage:SetAttribute("BootStatus","Ready")
-print("SCRAPYARD 0.3.0 • First playable loop loaded")
+print("SCRAPYARD 0.3.1 • First playable loop loaded")
 end
 local ok,err=xpcall(boot,debug.traceback)
 if not ok then

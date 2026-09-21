@@ -10,7 +10,7 @@ local P={LastSlap={},LastTeleport={},Stunned={},Immune={},Combat={}}
 function P:Safe(player)
  local root=player.Character and player.Character:FindFirstChild("HumanoidRootPart")
  if not root then return true end
- if (root.Position-World.ShopSpawn).Magnitude<100 then return true end
+ if (root.Position-World.ShopSpawn).Magnitude<140 then return true end
  for _,yard in ipairs(World.Yards) do
   local offset=root.Position-yard.Center
   if math.abs(offset.X)<40 and math.abs(offset.Z)<43 then return true end
@@ -135,6 +135,11 @@ function P:Start(g)
  for key,stand in pairs(World.Shops) do
   World.prompt(stand,"Open "..key,0,function(player)
    local d=Data:Get(player);if not d or not g:Near(player,stand,15) then return end
+   if key=="Pets" then
+    local pets=require(script.Parent.PetService);local record=pets.Policies[player]
+    if not record or os.clock()-record.Checked>300 or (not record.Allowed and os.clock()-record.Checked>30) then pets:RefreshPolicy(player) end
+    d=Data:Get(player);if not d or not g:Near(player,stand,15) then return end
+   end
    if key=="Upgrades" and d.TutorialStage==3 then d.TutorialStage=4;g:Notify(player,"TUTORIAL COMPLETE • Collect, upgrade, and compete!") end
    g:State(player);g.Remote:FireClient(player,"Open",key)
   end)

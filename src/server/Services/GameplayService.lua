@@ -11,6 +11,8 @@ local Machine=require(script.Parent.MachineService)
 local Quests=require(script.Parent.QuestService)
 local CoreShop=require(script.Parent.CoreShopService)
 local Telemetry=require(script.Parent.TelemetryService)
+local Pets=require(script.Parent.PetService)
+local PetConfig=require(Shared.PetConfig)
 local Progression=require(script.Parent.ProgressionService)
 local Game={Carrying={},Salvage={},LastAction={},Random=Random.new()}
 function Game:Notify(player,text) self.Remote:FireClient(player,"Notice",text) end
@@ -27,7 +29,7 @@ end
 function Game:Income(player,d)
  local total=0
  for _,item in ipairs(d.MachineInventory) do total=total+Definitions.ById[item.MachineId].BaseIncome end
- return Economy.income(total,d.Upgrades.Income,player:GetAttribute("DoubleScrap")==true,d.Rebirths)
+ return Economy.income(total,d.Upgrades.Income,player:GetAttribute("DoubleScrap")==true,d.Rebirths)*(1+PetConfig.bonus(d.Pets))
 end
 function Game:State(player)
  local d=Data:Get(player);if not d then return end
@@ -36,6 +38,7 @@ function Game:State(player)
  UpgradeCost=Economy.upgradeCost(d.Upgrades.Income),SlotCost=Economy.slotCost(d.Upgrades.Slots),
  Carrying=self.Carrying[player] and Definitions.ById[self.Carrying[player].Id].DisplayName or false,
  Discovered=d.DiscoveredMachines, Persistent=Data:IsPersistent()}
+ state.Pets=d.Pets;state.PetBonus=PetConfig.bonus(d.Pets);state.CasesAllowed=Pets:Allowed(player);state.PetOfferToken=Pets:Token(player)
  Progression:State(player,d,state);self.Remote:FireClient(player,"State",state)
 end
 function Game:ClearCarry(player)
@@ -96,7 +99,7 @@ function Game:Deposit(player,replacementUid)
  Quests:Progress(d,"Collected",1)
  local rarity=Definitions.ById[carry.Id].Rarity
  if rarity~="Common" and rarity~="Uncommon" then Quests:Progress(d,"RareCollected",1) end
- local added=Economy.income(Definitions.ById[carry.Id].BaseIncome,d.Upgrades.Income,player:GetAttribute("DoubleScrap")==true,d.Rebirths)
+ local added=Economy.income(Definitions.ById[carry.Id].BaseIncome,d.Upgrades.Income,player:GetAttribute("DoubleScrap")==true,d.Rebirths)*(1+PetConfig.bonus(d.Pets))
  Telemetry:Event(player,"FirstMachinePlaced",1,true)
  self:ClearCarry(player);Yard:Refresh(player,d)
  self:Notify(player,"MACHINE ADDED • +"..string.format("%.2f",added).." SCRAP / SECOND");self:State(player)
@@ -147,9 +150,13 @@ function Game:Start(remote)
   World.prompt(yard.Deposit,"Place machine",0,function(player) if yard.Owner==player then self:Deposit(player) end end)
 
  end
+ Pets.Game=self
  Progression:Start(self)
  remote.OnServerEvent:Connect(function(player,action,arg)
-  if action=="Teleport" then Progression:Teleport(player,arg)
+  if action=="BuyCase" then Pets:Buy(player,arg)
+  elseif action=="BuyPet" then Pets:Direct(player,arg)
+  elseif action=="EquipPet" then Pets:Equip(player,arg)
+  elseif action=="Teleport" then Progression:Teleport(player,arg)
   elseif action=="Slap" then Progression:Slap(player)
   elseif action=="Spin" then Progression:Spin(player)
   elseif action=="Sell" then Progression:Sell(player,arg)

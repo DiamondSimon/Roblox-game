@@ -39,3 +39,6 @@ local attributeSignals={}
 function TestPlayer:GetAttributeChangedSignal(key) attributeSignals[key]=attributeSignals[key] or sig();return attributeSignals[key] end
 local setAttribute=TestPlayer.SetAttribute
 function TestPlayer:SetAttribute(key,value) setAttribute(self,key,value);if attributeSignals[key] then attributeSignals[key]:Fire() end end
+TestServices.RunService.Heartbeat=sig()
+local frameMeta=getmetatable(CFrame.new())
+frameMeta.__index={Lerp=function(a,b,t) return CFrame.new(a.Position+(b.Position-a.Position)*t) end}

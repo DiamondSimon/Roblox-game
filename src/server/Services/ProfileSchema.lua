@@ -1,7 +1,7 @@
 local E=require(game.ReplicatedStorage.Shared.Config.EconomyConfig)
 local Schema={}
 function Schema.migrate(d)
- assert(d.SchemaVersion==1 or d.SchemaVersion==2 or d.SchemaVersion==3,"Unsupported schema")
+ assert(d.SchemaVersion==1 or d.SchemaVersion==2 or d.SchemaVersion==3 or d.SchemaVersion==4,"Unsupported schema")
  if d.SchemaVersion==1 then
   d.Cores=0;d.CapacityFloor=6+d.Upgrades.Slots
   d.Upgrades.Speed=0;d.Upgrades.Carry=0;d.Upgrades.Expansion=0
@@ -19,10 +19,11 @@ function Schema.migrate(d)
   d.TutorialStage=#d.MachineInventory>0 and 4 or 1
   d.SpinState={Day=-1,Reward=0};d.SchemaVersion=3
  end
+ if d.SchemaVersion==3 then d.Pets={Owned={},Equipped=""};d.SchemaVersion=4 end
  return d
 end
 function Schema.fresh(uid)
- return {SchemaVersion=3,Scrap=E.StartingScrap,LifetimeScrap=0,Cores=E.StartingCores,
+ return {SchemaVersion=4,Pets={Owned={},Equipped=""},Scrap=E.StartingScrap,LifetimeScrap=0,Cores=E.StartingCores,
  Upgrades={Income=0,Slots=0,Speed=0,Carry=0,Expansion=0,Floors=0},CapacityFloor=0,Rebirths=0,RunDelivered=0,TutorialStage=1,SpinState={Day=-1,Reward=0},
  MachineInventory={},DiscoveredMachines={},
  DiscoveredMutations={},Settings={},DailyRewardState={},Statistics={},Receipts={},

@@ -10,9 +10,10 @@ local Monetization=require(Shared.MonetizationConfig)
 local Machines=require(Shared.MachineConfig)
 local Economy=require(Shared.EconomyConfig)
 local Styles=require(Shared.CoreShopConfig)
+local PetConfig=require(Shared.PetConfig)
 local amber=Color3.fromRGB(255,187,68);local ink=Color3.fromRGB(19,28,36)
 local white=Color3.fromRGB(28,43,54);local muted=Color3.fromRGB(69,87,99);local teal=Color3.fromRGB(22,128,93)
-local state=nil;local page=nil;local shopTab="PASSES";local updaters={}
+local state=nil;local page=nil;local shopTab="PASSES";local petTab="CASES";local selectedCase=nil;local casePending=false;local updaters={}
 local gui=Instance.new("ScreenGui");gui.Name="ScrapyardHUD";gui.ResetOnSpawn=false;gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling;gui.Parent=player:WaitForChild("PlayerGui")
 local function round(o,n) local c=Instance.new("UICorner");c.CornerRadius=UDim.new(0,n or 10);c.Parent=o end
 local function label(parent,content,size,pos,dim,color)
@@ -121,6 +122,51 @@ renderMenu=function()
     b.Text=level>=def.Max and "MAX LEVEL" or fmt(cost).." SCRAP  •  "..math.min(100,math.floor(state.Scrap/cost*100)).."% FUNDED"
    end)
   end
+ elseif page=="Pets" then
+  title.Text="PET WORKSHOP"
+  for i,name in ipairs({"CASES","PETS"}) do button(tabs,name,UDim2.new((i-1)/2,0,0,0),UDim2.new(0.5,-6,1,0),function() petTab=name;renderMenu() end,petTab~=name) end
+  if petTab=="CASES" then
+   for _,key in ipairs(PetConfig.CaseOrder) do
+    local def=PetConfig.Cases[key];local odds={}
+    for _,outcome in ipairs(def.Outcomes) do local p=PetConfig.ById[outcome.Id];table.insert(odds,p.Name.." ("..p.Rarity..") "..outcome.Weight.."% • +"..math.floor(p.Bonus*100).."%") end
+    local b,desc,f=card(def.Name,table.concat(odds,"\n").."\nCopies can repeat. One equipped bonus; copies do not stack.","VIEW CASE • "..fmt(def.Scrap).." SCRAP / "..def.Cores.." CORES",function() selectedCase=key;open("Case") end)
+    f.Size=UDim2.new(1,-6,0,205);desc.Size=UDim2.new(1,-24,0,94);b.Position=UDim2.fromOffset(12,151)
+   end
+  else
+   card("One active companion","Equipped bonus: +"..math.floor(state.PetBonus*100).."% passive Scrap. Pets survive rebirth. Equip anywhere; guaranteed purchases require the Pet stand.","UNEQUIP",function() remote:FireServer("EquipPet","") end)
+   for _,id in ipairs(PetConfig.Order) do
+    local pet=PetConfig.ById[id]
+    local b,desc=card(pet.Name,pet.Rarity.." • +"..math.floor(pet.Bonus*100).."% passive income","",function()
+     if (state.Pets.Owned[id] or 0)>0 then remote:FireServer("EquipPet",id)
+     else
+      updaters={};for _,child in ipairs(scroll:GetChildren()) do if child:IsA("GuiObject") then child:Destroy() end end
+      card("Guaranteed "..pet.Name,"Receive this exact pet for "..fmt(pet.DirectScrap).." Scrap. No random outcome.","CONFIRM GUARANTEED PURCHASE",function() remote:FireServer("BuyPet",id) end)
+      card("Back to pets","No purchase.","CANCEL",renderMenu)
+     end
+    end,pet.Color)
+    table.insert(updaters,function()
+     local count=state.Pets.Owned[id] or 0
+     b.Text=state.Pets.Equipped==id and ("EQUIPPED • OWNED "..count) or count>0 and ("EQUIP • OWNED "..count) or ("GUARANTEED • "..fmt(pet.DirectScrap).." SCRAP")
+    end)
+   end
+  end
+ elseif page=="Case" then
+  local def=PetConfig.Cases[selectedCase];title.Text=def.Name
+  label(tabs,"Open here at the Pet stand. One pet per case.",12,UDim2.new(),UDim2.fromScale(1,1),muted)
+  for _,outcome in ipairs(def.Outcomes) do
+   local pet=PetConfig.ById[outcome.Id]
+   card(pet.Name,pet.Rarity.." • +"..math.floor(pet.Bonus*100).."% passive Scrap. Duplicate copies do not stack.",outcome.Weight.."% CHANCE",function() end,pet.Color)
+  end
+  for _,currencyName in ipairs({"Scrap","Cores"}) do
+   local currency=currencyName
+   local b=card("Pay with "..currency,"One random pet from the exact odds above. Copies can repeat. Charge and pet are saved together.","",function()
+    if casePending or not state.CasesAllowed then return end
+    casePending=true;remote:FireServer("BuyCase",{Case=selectedCase,Currency=currency,Token=state.PetOfferToken})
+    task.delay(3,function() casePending=false end)
+   end)
+   table.insert(updaters,function() b.Text=state.CasesAllowed and ("CONFIRM • "..fmt(def[currency]).." "..string.upper(currency)) or "CASES UNAVAILABLE • CHOOSE GUARANTEED PETS" end)
+  end
+  card("Guaranteed pets available","The PETS tab offers exact pets for Scrap, with no random outcome.","BACK TO PETS",function() petTab="PETS";open("Pets") end)
  elseif page=="Sell" then
   title.Text="JUNK BUYER"
   label(tabs,"Sell stored junk here. Its income stops when sold.",12,UDim2.new(),UDim2.fromScale(1,1),muted)
@@ -198,6 +244,7 @@ Input.InputBegan:Connect(function(input,processed) if not processed and input.Ke
 local quests=button(nav,"QUESTS",UDim2.fromOffset(0,108),UDim2.fromOffset(106,46),function() open("Quests") end,true)
 button(nav,"COLLECTION",UDim2.fromOffset(0,162),UDim2.fromOffset(106,46),function() open("Collection") end,true)
 local drop=button(nav,"DROP",UDim2.fromOffset(0,216),UDim2.fromOffset(106,44),function() remote:FireServer("DiscardCarry") end,true);drop.Visible=false
+button(nav,"PETS",UDim2.fromOffset(0,270),UDim2.fromOffset(106,44),function() petTab="PETS";open("Pets") end,true)
 local counter=Instance.new("NumberValue");local counterTween=nil
 counter.Changed:Connect(function(v) scrap.Text=fmt(v) end)
 local function render()
@@ -214,10 +261,11 @@ local function render()
  player:SetAttribute("TutorialTarget",state.Waypoint)
  for _,update in ipairs(updaters) do update() end
 end
-local mode=label(gui,"V0.3 • PRACTICE MODE",10,UDim2.new(0.5,0,1,-22),UDim2.new(0.7,0,0,18),muted);mode.AnchorPoint=Vector2.new(0.5,0);mode.TextXAlignment=Enum.TextXAlignment.Center
+local mode=label(gui,"V0.3.1 • PRACTICE MODE",10,UDim2.new(0.5,0,1,-22),UDim2.new(0.7,0,0,18),muted);mode.AnchorPoint=Vector2.new(0.5,0);mode.TextXAlignment=Enum.TextXAlignment.Center
 remote.OnClientEvent:Connect(function(kind,payload)
- if kind=="State" then local first=state==nil;state=payload;render();mode.Text=state.Persistent and "V0.3 • PRIVATE TEST" or "V0.3 • PRACTICE — PROGRESS RESETS";if first and page then renderMenu() end
- elseif kind=="Open" then open(payload)
+ if kind=="State" then local first=state==nil;state=payload;render();mode.Text=state.Persistent and "V0.3.1 • PRIVATE TEST" or "V0.3.1 • PRACTICE — PROGRESS RESETS";if first and page then renderMenu() end
+ elseif kind=="Open" then if payload=="Pets" then petTab="CASES" end;open(payload)
+ elseif kind=="PetResult" then casePending=false;petTab="PETS";open("Pets");local pet=PetConfig.ById[payload];notify("CASE / PET RECEIVED • "..pet.Name.." • "..pet.Rarity.." • +"..math.floor(pet.Bonus*100).."%")
  elseif kind=="SpinResult" then
   if page~="Spin" then open("Spin") end
   local disc=wheelDisc;local result=wheelResult

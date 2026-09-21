@@ -16,4 +16,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: SCRAPYARD-Studio
-          path: build/SCRAPYARD-0.3.0.rbxlx
+          path: build/SCRAPYARD-0.3.1.rbxlx

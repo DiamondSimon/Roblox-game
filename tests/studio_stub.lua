@@ -26,6 +26,9 @@ local methods={}
 function methods:IsDescendantOf(parent) local p=self.Parent;while p do if p==parent then return true end;p=p.Parent end;return false end
 function methods:SetNetworkOwner() end
 function methods:SetNetworkOwnershipAuto() end
+function methods:Play() self.Played=true end
+function methods:Stop() self.Stopped=true end
+function methods:GetPivot() return self.PrimaryPart.CFrame end
 function methods:ApplyImpulse(v) self.LastImpulse=v end
 function methods:ChangeState(v) self.LastState=v end
 
@@ -94,7 +97,7 @@ end
 function players:GetPlayers() return self:GetChildren() end
 function players:GetPlayerByUserId(id) if id==42 then return player end end
 local guid=0;DataStoreOpenCalls=0
-local services={AnalyticsService={LogCustomEvent=function() end},CollectionService={AddTag=function() end},ReplicatedStorage=rep,ServerScriptService=server,Players=players,Lighting=Instance.new("Lighting"),
+local services={PolicyService={GetPolicyInfoForPlayerAsync=function() return {ArePaidRandomItemsRestricted=false} end},AnalyticsService={LogCustomEvent=function() end},CollectionService={AddTag=function() end},ReplicatedStorage=rep,ServerScriptService=server,Players=players,Lighting=Instance.new("Lighting"),
  RunService={IsStudio=function() return true end},
  HttpService={GenerateGUID=function() guid=guid+1;return "guid-"..guid end},
  DataStoreService={GetDataStore=function() DataStoreOpenCalls=DataStoreOpenCalls+1;error("Publish this place to access DataStore") end},

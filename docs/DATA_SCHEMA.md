@@ -1,4 +1,9 @@
-# Save schema 3
+# Save schema 4 (release 0.3.1)
+
+Schema 3 → 4 adds `Pets={Owned={},Equipped=""}` without resetting existing progress. Owned maps known pet IDs to integer counts 1–10,000; Equipped is empty or an owned ID. Case spend/award and guaranteed pet purchases are atomic. Equipment is saved, published as an attribute for cosmetic companions and preserved through rebirth. Unknown future schemas fail closed. The release version is independent of the schema version. See RELEASE_0.3.1.md for full behavior.
+
+## Inherited schema-3 fields and migration
+
 
 Storage key remains `player_<UserId>` in `SCRAPYARD_Alpha_v1`; outer record `{Data, Lease}` is unchanged. Fresh Studio practice sessions remain memory-only. Persistent load/save uses UpdateAsync leases; unknown schemas fail closed.
 

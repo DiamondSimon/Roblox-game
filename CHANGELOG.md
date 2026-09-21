@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.1
+
+- Patch-only version increments adopted; complete source/build/docs recorded in GitHub.
+- Slap spatial impact audio using a bundled sound, configurable pitch/volume/duration.
+- Nine pets, three case tiers (Scrap or Cores), visible odds, server policy eligibility and guaranteed purchase fallback. One equipped income bonus, non-stacking copies, companion rendering, rebirth preservation.
+- Atomic case charge/award with one-use request tokens, schema 4 pet ownership migration and fail-closed save handling.
+- Twelve distinct new scrap models, 30 total, preserving aggregate rarity weights.
+- Twin-shaft shredder with 84 teeth, cutter discs, motors, flared intake, service rails and hazard details.
+- 54 passing automated tests; Studio audio/visual/physics/private persistence acceptance pending. See docs/RELEASE_0.3.1.md.
+
 ## 0.3.0
 
 - Server-driven conveyor with 42-second trip, shredder deletion and feedback; shorter nameplate range, fewer initial items, reclaimable drops.
