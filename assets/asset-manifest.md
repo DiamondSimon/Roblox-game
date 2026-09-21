@@ -7,3 +7,7 @@ Next: one Fusion Crusher hero. Record source, tool/model, date, rights, local fi
 ## 0.3.1 additions
 
 All 12 new scrap types, 9 companion species, pet cases and the detailed shredder are code-built Roblox primitives. No purchased models, generated art or external mesh dependencies. Slap sound reuses Roblox bundled `rbxasset://sounds/impact_water.mp3`, trimmed and pitched by AudioConfig. No external audio uploaded or asset license claimed; engine playback/timbre requires Studio acceptance.
+
+## 0.3.2 presentation
+
+Pet pictures are ViewportFrame renders of the shipped pet factory, not external thumbnails. The case reel uses those same models. New vegetation, benches, shop fixtures and service clutter are Roblox primitives. No new external audio or images.

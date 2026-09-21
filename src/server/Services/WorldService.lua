@@ -1,3 +1,4 @@
+local Config=require(game.ReplicatedStorage.Shared.Config.GameConfig)
 local Lighting=game:GetService("Lighting")
 local World={Yards={}}
 local amber=Color3.fromRGB(255,184,55)
@@ -68,27 +69,28 @@ function World:Build()
    path.CFrame=CFrame.lookAt(midpoint,finish)
   end
  end
- self.part(root,"Salvage plaza",Vector3.new(120,0.6,210),Vector3.new(0,0.3,0),Color3.fromRGB(71,82,84),Enum.Material.Concrete)
- local belt=self.part(root,"CENTRAL SALVAGE",Vector3.new(20,1,132),Vector3.new(0,1,0),steel,Enum.Material.DiamondPlate)
+ self.part(root,"Salvage plaza",Vector3.new(120,0.6,310),Vector3.new(0,0.3,50),Color3.fromRGB(71,82,84),Enum.Material.Concrete)
+ local belt=self.part(root,"CENTRAL SALVAGE",Vector3.new(20,1,226),Vector3.new(0,1,53),steel,Enum.Material.DiamondPlate)
  local title=self.label(belt,"CENTRAL SALVAGE\nGRAB IT BEFORE IT SHREDS",amber);title.Parent.MaxDistance=400;title.Parent.StudsOffset=Vector3.new(0,16,0)
- for z=-62,62,8 do self.part(root,"Conveyor roller",Vector3.new(19,0.2,0.35),Vector3.new(0,1.6,z),Color3.fromRGB(115,137,140)) end
- for _,x in ipairs({-11,11}) do self.part(root,"Conveyor rail",Vector3.new(0.5,1.2,134),Vector3.new(x,1,0),amber) end
+ for z=-60,164,8 do self.part(root,"Conveyor roller",Vector3.new(19,0.2,0.35),Vector3.new(0,1.6,z),Color3.fromRGB(115,137,140)) end
+ for _,x in ipairs({-11,11}) do self.part(root,"Conveyor rail",Vector3.new(0.5,1.2,226),Vector3.new(x,1,53),amber) end
  local hopper=self.part(root,"Salvage hopper",Vector3.new(28,12,18),Vector3.new(0,6,-82),teal)
  self.part(root,"Hopper intake",Vector3.new(18,8,1),Vector3.new(0,5,-72),Color3.fromRGB(15,23,27))
  self.label(hopper,"SALVAGE IN",amber).Parent.MaxDistance=150
- self.Shredder=self.part(root,"SHREDDER",Vector3.new(28,2,24),Vector3.new(0,1,76),steel)
- for _,x in ipairs({-14,14}) do self.part(root,"Shredder wall",Vector3.new(2,10,26),Vector3.new(x,5,76),amber) end
- self.part(root,"Shredder rear",Vector3.new(28,10,2),Vector3.new(0,5,89),amber)
- self.part(root,"Shredder mouth",Vector3.new(24,0.5,22),Vector3.new(0,2.2,76),Color3.fromRGB(17,24,30))
+ local assembly=Instance.new("Folder");assembly.Name="ShredderAssembly";assembly.Parent=root
+ self.Shredder=self.part(assembly,"SHREDDER",Vector3.new(28,2,24),Vector3.new(0,1,76),steel)
+ for _,x in ipairs({-14,14}) do self.part(assembly,"Shredder wall",Vector3.new(2,10,26),Vector3.new(x,5,76),amber) end
+ self.part(assembly,"Shredder rear",Vector3.new(28,10,2),Vector3.new(0,5,89),amber)
+ self.part(assembly,"Shredder mouth",Vector3.new(24,0.5,22),Vector3.new(0,2.2,76),Color3.fromRGB(17,24,30))
  -- Twin-shaft industrial shredder: inset cutters, flared feed, drive housings and service deck.
  for _,side in ipairs({-1,1}) do
-  local motor=self.part(root,"Shredder drive motor",Vector3.new(7,5,8),Vector3.new(side*19,4,83),Color3.fromRGB(64,123,145))
-  for z=80,86,1.5 do self.part(root,"Motor cooling rib",Vector3.new(7.3,5.2,0.25),Vector3.new(side*19,4,z),steel) end
-  local feed=self.part(root,"Flared feed wall",Vector3.new(1,7,25),Vector3.new(side*11,6,76),Color3.fromRGB(215,152,44));feed.Orientation=Vector3.new(0,0,-side*18)
-  self.part(root,"Service deck",Vector3.new(6,0.8,28),Vector3.new(side*18,1,74),steel,Enum.Material.DiamondPlate)
-  for z=63,87,8 do self.part(root,"Safety post",Vector3.new(0.5,6,0.5),Vector3.new(side*22,4,z),amber) end
-  self.part(root,"Safety rail",Vector3.new(0.5,0.5,26),Vector3.new(side*22,7,75),amber)
-  local rotor=Instance.new("Model");rotor.Name="CuttingRotor";rotor.Parent=root
+  local motor=self.part(assembly,"Shredder drive motor",Vector3.new(7,5,8),Vector3.new(side*19,4,83),Color3.fromRGB(64,123,145))
+  for z=80,86,1.5 do self.part(assembly,"Motor cooling rib",Vector3.new(7.3,5.2,0.25),Vector3.new(side*19,4,z),steel) end
+  local feed=self.part(assembly,"Flared feed wall",Vector3.new(1,7,25),Vector3.new(side*11,6,76),Color3.fromRGB(215,152,44));feed.Orientation=Vector3.new(0,0,-side*18)
+  self.part(assembly,"Service deck",Vector3.new(6,0.8,28),Vector3.new(side*18,1,74),steel,Enum.Material.DiamondPlate)
+  for z=63,87,8 do self.part(assembly,"Safety post",Vector3.new(0.5,6,0.5),Vector3.new(side*22,4,z),amber) end
+  self.part(assembly,"Safety rail",Vector3.new(0.5,0.5,26),Vector3.new(side*22,7,75),amber)
+  local rotor=Instance.new("Model");rotor.Name="CuttingRotor";rotor.Parent=assembly
   local shaft=self.part(rotor,"Shaft",Vector3.new(1.4,1.4,22),Vector3.new(side*5,3.4,76),Color3.fromRGB(142,160,175));shaft.CanCollide=false;rotor.PrimaryPart=shaft
   for z=67,85,3 do
    local disc=self.part(rotor,"Cutter disc",Vector3.new(1.1,7,7),Vector3.new(side*5,3.4,z),Color3.fromRGB(146,163,172));disc.Shape=Enum.PartType.Cylinder;disc.Orientation=Vector3.new(0,90,0);disc.CanCollide=false
@@ -100,13 +102,15 @@ function World:Build()
   rotor:SetAttribute("Direction",side);Tags:AddTag(rotor,"ScrapyardShredder")
  end
  for x=-12,12,3 do
-  local stripe=self.part(root,"Hazard stripe",Vector3.new(1.4,1.8,0.25),Vector3.new(x,8.7,62.8),Color3.fromRGB(29,35,40));stripe.Orientation=Vector3.new(0,0,-25)
+  local stripe=self.part(assembly,"Hazard stripe",Vector3.new(1.4,1.8,0.25),Vector3.new(x,8.7,62.8),Color3.fromRGB(29,35,40));stripe.Orientation=Vector3.new(0,0,-25)
  end
- self.part(root,"Feed warning beam",Vector3.new(27,2,1),Vector3.new(0,8.7,63.2),amber)
- local control=self.part(root,"Shredder control box",Vector3.new(3,5,2),Vector3.new(24,3,64),steel)
- self.part(root,"Emergency stop",Vector3.new(1,1,0.5),control.Position+Vector3.new(0,0.8,-1.2),Color3.fromRGB(245,67,53),Enum.Material.Neon)
- self.part(root,"Status lamp",Vector3.new(0.7,0.7,0.5),control.Position+Vector3.new(0,-0.5,-1.2),Color3.fromRGB(86,255,147),Enum.Material.Neon)
- self.label(self.Shredder,"TWIN-SHAFT SHREDDER • KEEP CLEAR",Color3.fromRGB(255,100,78)).Parent.StudsOffset=Vector3.new(0,15,0)
+ self.part(assembly,"Feed warning beam",Vector3.new(27,2,1),Vector3.new(0,8.7,63.2),amber)
+ local control=self.part(assembly,"Shredder control box",Vector3.new(3,5,2),Vector3.new(24,3,64),steel)
+ self.part(assembly,"Emergency stop",Vector3.new(1,1,0.5),control.Position+Vector3.new(0,0.8,-1.2),Color3.fromRGB(245,67,53),Enum.Material.Neon)
+ self.part(assembly,"Status lamp",Vector3.new(0.7,0.7,0.5),control.Position+Vector3.new(0,-0.5,-1.2),Color3.fromRGB(86,255,147),Enum.Material.Neon)
+ for _,piece in ipairs(assembly:GetDescendants()) do
+  if piece:IsA("BasePart") then piece.Position=piece.Position+Vector3.new(0,0,Config.BeltEnd-76) end
+ end
  self.ShopSpawn=Vector3.new(0,4,-196);self.Shops={}
  self.part(root,"Shop plaza",Vector3.new(224,0.6,88),Vector3.new(0,0.3,-229),Color3.fromRGB(188,183,161),Enum.Material.Concrete)
  for i,key in ipairs({"Upgrades","Sell","Spin","Rebirth","Shop","Pets"}) do
@@ -184,6 +188,33 @@ function World:Build()
  end
  local gate=self.part(root,"Restricted gate",Vector3.new(85,12,2),Vector3.new(0,6,-360),steel)
  self.label(gate,"RESTRICTED SECTOR • FUTURE UPDATE",Color3.fromRGB(145,236,103)).Parent.MaxDistance=400
+ -- District details: low planting beds, sidewalks, benches, bollards, service clutter.
+ local decor=Instance.new("Folder");decor.Name="DistrictDetails";decor.Parent=root
+ for _,side in ipairs({-1,1}) do
+  for z=-250,270,65 do
+   local x=side*435
+   self.part(decor,"Tree trunk",Vector3.new(2,12,2),Vector3.new(x,6,z),Color3.fromRGB(99,75,52),Enum.Material.Wood)
+   for _,offset in ipairs({Vector3.new(0,15,0),Vector3.new(-4,12,1),Vector3.new(4,12,-1)}) do
+    local crown=self.part(decor,"Tree crown",Vector3.new(13,12,13),Vector3.new(x,0,z)+offset,Color3.fromRGB(67,129,75),Enum.Material.Grass);crown.Shape=Enum.PartType.Ball
+   end
+  end
+  self.part(decor,"Shop sidewalk",Vector3.new(4,0.3,84),Vector3.new(side*117,0.6,-230),Color3.fromRGB(216,213,195),Enum.Material.Concrete)
+  for z=-260,-205,11 do self.part(decor,"Shop bollard",Vector3.new(1,3,1),Vector3.new(side*114,1.5,z),amber) end
+  self.part(decor,"Bench seat",Vector3.new(12,0.8,3),Vector3.new(side*85,2,-186),Color3.fromRGB(145,104,64),Enum.Material.Wood)
+  self.part(decor,"Bench back",Vector3.new(12,3,0.6),Vector3.new(side*85,3.5,-184.5),Color3.fromRGB(145,104,64),Enum.Material.Wood)
+  for _,dx in ipairs({-4,4}) do self.part(decor,"Bench leg",Vector3.new(0.7,2,2),Vector3.new(side*85+dx,1,-186),steel) end
+  for z=105,145,20 do
+   self.part(decor,"Pallet",Vector3.new(9,0.8,7),Vector3.new(side*42,0.8,z),Color3.fromRGB(146,114,73),Enum.Material.Wood)
+   for n=1,3 do self.part(decor,"Salvage crate",Vector3.new(2.5,2.5,4),Vector3.new(side*42+(n-2)*2.7,2.4,z),Color3.fromRGB(139,106+n*8,62)) end
+  end
+ end
+ for x=-62,62,31 do
+  self.part(decor,"Planter",Vector3.new(9,2,5),Vector3.new(x,1,-270),Color3.fromRGB(154,165,162),Enum.Material.Concrete)
+  for dx=-3,3,3 do local shrub=self.part(decor,"Shrub",Vector3.new(4,4,4),Vector3.new(x+dx,3,-270),Color3.fromRGB(71,156,93),Enum.Material.Grass);shrub.Shape=Enum.PartType.Ball end
+ end
+ for z=-50,150,20 do
+  for _,x in ipairs({-15,15}) do self.part(decor,"Belt guide lamp",Vector3.new(0.7,0.2,2),Vector3.new(x,0.9,z),Color3.fromRGB(106,239,199),Enum.Material.Neon) end
+ end
  Lighting.ClockTime=13.5;Lighting.Brightness=3;Lighting.Ambient=Color3.fromRGB(138,145,153);Lighting.OutdoorAmbient=Color3.fromRGB(165,172,177)
  local atmosphere=Instance.new("Atmosphere");atmosphere.Density=0.16;atmosphere.Offset=0.1;atmosphere.Color=Color3.fromRGB(196,211,222);atmosphere.Parent=Lighting
  local bloom=Instance.new("BloomEffect");bloom.Intensity=0.14;bloom.Size=20;bloom.Threshold=1.8;bloom.Parent=Lighting

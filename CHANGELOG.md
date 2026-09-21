@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.2
+
+- Move complete shredder to z=180 on an extended disposal conveyor; remove its BillboardGui. Retain roughly 42-second pickup opportunity.
+- Add live-model pet preview cards and animated horizontal case reel with a server-awarded winner, skip and reveal.
+- Add Studio-practice-only Test Lab: currencies, pass effects, configured product fulfillment, daily reset, sample yard, tutorial and case-policy simulation. Live/persistent access rejected.
+- Add Equip Best, permanent collection milestone gifts, release codes, and a server-timed +25% Scrap Rush.
+- Polish UI with gradient/stroked buttons, reward bars/event badge and revised layout; add trees, shrubs, sidewalks, benches, shop fixtures and service scenery.
+- Schema 5 preserves prior data and adds reward claim maps. 65 passing automated tests; real Studio visuals/physics/checkout remain acceptance gates.
+
+
 ## 0.3.1
 
 - Patch-only version increments adopted; complete source/build/docs recorded in GitHub.

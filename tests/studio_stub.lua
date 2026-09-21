@@ -15,7 +15,7 @@ local function enumeration(names)
  local result={} for word in string.gmatch(names,"%S+") do result[word]=word end
  return setmetatable(result,{__index=function(_,k) error("Invalid enum: "..k) end})
 end
-Enum={Material=enumeration("Ground Wood Metal Asphalt Concrete DiamondPlate Neon CorrodedMetal Rubber Glass"),SurfaceType=enumeration("Smooth"),Font=enumeration("GothamBold"),PartType=enumeration("Cylinder Ball"),HighlightDepthMode=enumeration("Occluded"),ProductPurchaseDecision=enumeration("PurchaseGranted NotProcessedYet")}
+Enum={Material=enumeration("Ground Grass Wood Metal Asphalt Concrete DiamondPlate Neon CorrodedMetal Rubber Glass"),SurfaceType=enumeration("Smooth"),Font=enumeration("GothamBold"),PartType=enumeration("Cylinder Ball"),HighlightDepthMode=enumeration("Occluded"),ProductPurchaseDecision=enumeration("PurchaseGranted NotProcessedYet")}
 local function signal()
  return {callbacks={},Connect=function(self,fn) table.insert(self.callbacks,fn);return {Disconnect=function() end} end,
  Fire=function(self,...) for _,fn in ipairs(self.callbacks) do fn(...) end end}

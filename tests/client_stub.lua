@@ -10,7 +10,7 @@ Instance.new=function(cls)
  if cls=="RemoteEvent" then obj.OnClientEvent=sig() end
  local inherited=obj.IsA
  function obj:IsA(kind)
-  if kind=="GuiObject" then return self.ClassName=="TextLabel" or self.ClassName=="TextButton" or self.ClassName=="Frame" or self.ClassName=="ScrollingFrame" end
+  if kind=="GuiObject" then return self.ClassName=="TextLabel" or self.ClassName=="TextButton" or self.ClassName=="Frame" or self.ClassName=="ScrollingFrame" or self.ClassName=="ViewportFrame" or self.ClassName=="TextBox" end
   return inherited(self,kind)
  end
  return obj
@@ -42,3 +42,5 @@ function TestPlayer:SetAttribute(key,value) setAttribute(self,key,value);if attr
 TestServices.RunService.Heartbeat=sig()
 local frameMeta=getmetatable(CFrame.new())
 frameMeta.__index={Lerp=function(a,b,t) return CFrame.new(a.Position+(b.Position-a.Position)*t) end}
+
+Enum.ApplyStrokeMode={Border="Border"}

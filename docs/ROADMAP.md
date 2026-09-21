@@ -1,4 +1,4 @@
-# Roadmap after V0.3.1
+# Roadmap after V0.3.2
 
 Implemented: moving conveyor and shredder, carried-junk slap theft, compact eight-slot floors, shared shops/selling, empty-start tutorial/waypoints, daily free wheel, weaker upgrades, home/shop teleports and rebirths. Local logic/package checks completed; Studio acceptance pending.
 
@@ -6,4 +6,6 @@ Next: complete two-player physics/stair/streaming and phone layout checks; gathe
 
 Higgsfield remains on hold until explicit user approval. No paid generation or public publishing in this phase. Large Core packs stay hidden pending useful content; no paid random spins.
 
-0.3.1 adds pet cases/companions, guaranteed pets, slap audio, 30 junk types and detailed shredder. Next version must be 0.3.2.
+0.3.1 adds pet cases/companions, guaranteed pets, slap audio, 30 junk types and detailed shredder. Next version must be 0.3.3.
+
+0.3.2 implements dedicated shredder lane, pet previews/reel, isolated Test Lab, code/milestone gifts, Scrap Rush, Equip Best and district/UI detail. Next priority remains actual Studio visual/mobile/performance and published transaction acceptance.

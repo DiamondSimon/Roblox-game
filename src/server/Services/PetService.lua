@@ -3,7 +3,7 @@ local Config=require(game.ReplicatedStorage.Shared.Config.PetConfig)
 local Data=require(script.Parent.PlayerDataService)
 local World=require(script.Parent.WorldService)
 local Http=game:GetService("HttpService")
-local Pets={Policies={},Checking={},Tokens={}}
+local Pets={Policies={},Checking={},Tokens={},PracticePolicy={}}
 function Pets:Token(player)
  if not self.Tokens[player] then self.Tokens[player]=Http:GenerateGUID(false) end
  return self.Tokens[player]
@@ -18,6 +18,9 @@ function Pets:RefreshPolicy(player)
  self.Checking[player]=nil
 end
 function Pets:Allowed(player)
+ if game:GetService("RunService"):IsStudio() and not Data:IsPersistent() then
+  if self.PracticePolicy[player]=="Allowed" then return true elseif self.PracticePolicy[player]=="Restricted" then return false end
+ end
  local record=self.Policies[player]
  if not record or os.clock()-record.Checked>300 then return false end
  return record.Allowed
@@ -54,7 +57,7 @@ function Pets:Buy(player,arg)
  end)
  if ok then
   d=Data:Get(player);if not d then return end
-  self:Publish(player,d);g:State(player);g.Remote:FireClient(player,"PetResult",id)
+  self:Publish(player,d);g:State(player);g.Remote:FireClient(player,"CaseResult",{Pet=id,Case=arg.Case})
  else g:Notify(player,"CASE SAVE COULD NOT BE CONFIRMED • Rejoin to restore the saved result") end
 end
 function Pets:Direct(player,id)
@@ -75,5 +78,11 @@ function Pets:Equip(player,id)
  if d.Pets.Equipped==id then return end
  local ok=Data:Commit(player,function(candidate) assert(id=="" or candidate.Pets.Owned[id]);candidate.Pets.Equipped=id end)
  if ok then d=Data:Get(player);if not d then return end;self:Publish(player,d);g:State(player) end
+end
+function Pets:EquipBest(player)
+ local d=Data:Get(player);if not d then return end
+ local best="";local bonus=-1
+ for _,id in ipairs(Config.Order) do if (d.Pets.Owned[id] or 0)>0 and Config.ById[id].Bonus>bonus then best=id;bonus=Config.ById[id].Bonus end end
+ self:Equip(player,best)
 end
 return Pets

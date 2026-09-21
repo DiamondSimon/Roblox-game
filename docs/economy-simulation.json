@@ -2,8 +2,8 @@
   "New / free / 0% loss": {
     "FirstUpgrade": 290.0,
     "FirstFloor": 990.0,
-    "RebirthEligible": 2490.0,
-    "Scrap60m": 59033.740000000005,
+    "RebirthEligible": 2390.0,
+    "Scrap60m": 62787.09,
     "Machines": 16.0,
     "RebirthReached": 200
   },
@@ -11,23 +11,23 @@
     "FirstUpgrade": 290.0,
     "FirstFloor": 690.0,
     "RebirthEligible": 1690.0,
-    "Scrap60m": 125517.4,
+    "Scrap60m": 132848.93,
     "Machines": 16.0,
     "RebirthReached": 200
   },
   "Average / free / 0% loss": {
     "FirstUpgrade": 215.0,
     "FirstFloor": 665.0,
-    "RebirthEligible": 1640.0,
-    "Scrap60m": 124511.59,
+    "RebirthEligible": 1565.0,
+    "Scrap60m": 131704.115,
     "Machines": 16.0,
     "RebirthReached": 200
   },
   "Average / free / 25% loss": {
     "FirstUpgrade": 215.0,
     "FirstFloor": 740.0,
-    "RebirthEligible": 1865.0,
-    "Scrap60m": 104009.97,
+    "RebirthEligible": 1790.0,
+    "Scrap60m": 110147.54500000001,
     "Machines": 16.0,
     "RebirthReached": 200
   },
@@ -35,31 +35,31 @@
     "FirstUpgrade": 215.0,
     "FirstFloor": 515.0,
     "RebirthEligible": 1115.0,
-    "Scrap60m": 256089.47999999998,
+    "Scrap60m": 270524.305,
     "Machines": 16.0,
     "RebirthReached": 200
   },
   "Average / 2X / 25% loss": {
     "FirstUpgrade": 215.0,
-    "FirstFloor": 590.0,
-    "RebirthEligible": 1340.0,
-    "Scrap60m": 215560.86,
+    "FirstFloor": 515.0,
+    "RebirthEligible": 1265.0,
+    "Scrap60m": 227641.315,
     "Machines": 16.0,
     "RebirthReached": 200
   },
   "Efficient / free / 0% loss": {
     "FirstUpgrade": 160.0,
     "FirstFloor": 490.0,
-    "RebirthEligible": 1205.0,
-    "Scrap60m": 183747.52500000002,
+    "RebirthEligible": 1150.0,
+    "Scrap60m": 194161.95500000002,
     "Machines": 16.0,
     "RebirthReached": 200
   },
   "Efficient / 2X / 0% loss": {
     "FirstUpgrade": 105.0,
     "FirstFloor": 380.0,
-    "RebirthEligible": 847.5,
-    "Scrap60m": 375623.19,
+    "RebirthEligible": 820.0,
+    "Scrap60m": 396523.19,
     "Machines": 16.0,
     "RebirthReached": 200
   }

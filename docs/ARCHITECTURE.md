@@ -1,4 +1,4 @@
-# V0.3.1 architecture
+# V0.3.2 architecture
 
 ServerMain controls boot, character spawning, profile/yard lifecycle, respawn immunity and death/disconnect drops. Lazy DataStore opening remains critical for unpublished Studio practice startup.
 
@@ -22,3 +22,5 @@ State includes balances, inventory, income, capacity, upgrade levels, daily cont
 Security scope: checks cover range, hit cone, line-of-sight, safe zones, state/cooldowns, deadline eligibility and duplicate UIDs/rewards. Minimal haul-time plausibility checks remain; full anti-speedhack/anti-teleport movement auditing is not implemented. Client visuals are not authoritative. Automated mocks verify logic but cannot prove Roblox replication, physics or performance.
 
 PetService owns policy caching, durable pet purchases/equipment, one-use case offer tokens and equipped attributes. PetConfig defines exact odds, bonuses and guaranteed prices; PetModelFactory builds species silhouettes; Pets.client.lua animates cosmetic companions. AudioConfig configures confirmed-hit spatial audio handled by Waypoints. New remotes: BuyCase({Case,Currency,Token}), BuyPet(id), EquipPet(id/empty). Pet state includes ownership/equipment, current bonus, case eligibility and offer token.
+
+0.3.2: RewardsService owns code/milestone claims and Scrap Rush clock/multiplier. StudioToolsService owns explicitly isolated practice cheats. PurchaseService:Grant is shared between verified live receipts and simulated practice products. PetPreview creates per-card cameras/WorldModels; CaseReel animates only after a CaseResult confirms the saved award. New remotes: StudioAction (server-gated), EquipBest, RedeemCode, ClaimMilestone. Schema 5 adds claim maps.

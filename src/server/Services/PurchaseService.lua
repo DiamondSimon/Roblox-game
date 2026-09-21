@@ -14,6 +14,18 @@ function Purchase:RefreshPasses(player)
  local d=Data:Get(player)
  if d then require(script.Parent.YardService):Refresh(player,d) end
 end
+-- Shared fulfillment used by verified receipts and isolated Studio test products.
+function Purchase:Grant(player,purchaseId,product)
+ local d=Data:Get(player);if not d then return false end
+ if d.Receipts[purchaseId] then return true end
+ return Data:Commit(player,function(candidate)
+  if candidate.Receipts[purchaseId] then return end
+  local currency=product.Currency or "Scrap";local amount=product.Amount or product.Scrap
+  assert(currency=="Cores" or currency=="Scrap","Unsupported currency")
+  candidate[currency]=candidate[currency]+amount
+  candidate.Receipts[purchaseId]={Currency=currency,Amount=amount}
+ end)
+end
 function Purchase:Start()
  local products={};local ids={}
  local catalog={}
@@ -27,16 +39,7 @@ function Purchase:Start()
   if not product or not player or not Data:IsPersistent() then return Enum.ProductPurchaseDecision.NotProcessedYet end
   local d=Data:Get(player)
   if not d then return Enum.ProductPurchaseDecision.NotProcessedYet end
-  -- Receipt marker and reward share ONE atomic profile write, never separate keys.
-  if d.Receipts[receipt.PurchaseId] then return Enum.ProductPurchaseDecision.PurchaseGranted end
-  local committed=Data:Commit(player,function(candidate)
-   if candidate.Receipts[receipt.PurchaseId] then return end
-   local currency=product.Currency or "Scrap"
-   local amount=product.Amount or product.Scrap
-   assert(currency=="Cores" or currency=="Scrap","Unsupported currency")
-   candidate[currency]=candidate[currency]+amount
-   candidate.Receipts[receipt.PurchaseId]={Currency=currency,Amount=amount}
-  end)
+  local committed=self:Grant(player,receipt.PurchaseId,product)
   if committed then
    T:Event(player,product.Currency=="Cores" and "CorePurchaseCompleted" or "LegacyPurchaseCompleted",product.Amount or product.Scrap)
    return Enum.ProductPurchaseDecision.PurchaseGranted

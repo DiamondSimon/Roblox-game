@@ -83,7 +83,7 @@ class Patch031Tests(unittest.TestCase):
   self.run_lua('''
    d.SchemaVersion=3;d.Pets=nil;d.Scrap=777;d.Cores=51;d.Rebirths=2
    d=require(TestModules.ProfileSchema).migrate(d)
-   assert(d.SchemaVersion==4 and d.Scrap==777 and d.Cores==51 and d.Rebirths==2 and next(d.Pets.Owned)==nil and d.Pets.Equipped=="")
+   assert(d.SchemaVersion==5 and d.Scrap==777 and d.Cores==51 and d.Rebirths==2 and next(d.Pets.Owned)==nil and d.Pets.Equipped=="")
   ''')
  def test_all_pet_models_and_scrap_rarity_budgets(self):
   self.run_lua('''

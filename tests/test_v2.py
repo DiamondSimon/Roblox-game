@@ -6,7 +6,7 @@ class V2Tests(unittest.TestCase):
  def test_fresh_player_and_movement_caps(self):
   lua=boot();lua.execute('''
    local d=require(TestModules.PlayerDataService):Get(TestPlayer)
-   assert(d.Cores==0 and d.Scrap==0 and d.SchemaVersion==4)
+   assert(d.Cores==0 and d.Scrap==0 and d.SchemaVersion==5)
    for _,level in pairs(d.Upgrades) do assert(level==0) end
    assert(require(TestModules.YardService):Capacity(TestPlayer,d)==8)
    local e=require(game.ReplicatedStorage.Shared.Config.EconomyConfig)
@@ -83,7 +83,7 @@ class V2Tests(unittest.TestCase):
    d.SchemaVersion=1;d.Cores=nil;d.QuestState=nil;d.Cosmetics=nil
    d.Upgrades={Income=15,Slots=7};d.Scrap=12345;d.Receipts.old=500
    local migrated=Data:Load(Player)
-   assert(migrated.SchemaVersion==4 and migrated.Scrap==12345 and migrated.Cores==0)
+   assert(migrated.SchemaVersion==5 and migrated.Scrap==12345 and migrated.Cores==0)
    assert(migrated.Upgrades.Income==15 and migrated.Upgrades.Floors==2)
    assert(migrated.Receipts.old.Currency=="Scrap" and migrated.Receipts.old.Amount==500)
   ''')

@@ -24,7 +24,7 @@ class V3Tests(unittest.TestCase):
  def test_conveyor_moves_expires_and_cannot_pickup_expired(self):
   self.run_lua('''
    local model,entry=next(g.Salvage);local before=model.PrimaryPart.Position.Z
-   g:MoveSalvage(entry.Started+2);assert(model.PrimaryPart.Position.Z==before+6)
+   g:MoveSalvage(entry.Started+2);assert(math.abs(model.PrimaryPart.Position.Z-before-11.4)<0.00001)
    Clock=entry.Expires;root.Position=model.PrimaryPart.Position;g:Pickup(TestPlayer,model)
    assert(not g.Carrying[TestPlayer]);g:MoveSalvage(Clock)
    assert(model.Destroyed and not g.Salvage[model]);assert(g.Remote.LastBroadcast[1]=="ShredFX")
@@ -121,7 +121,7 @@ class V3Tests(unittest.TestCase):
    d.SchemaVersion=2;d.Upgrades.Slots=4;d.Upgrades.Expansion=3;d.Upgrades.Floors=nil
    d.MachineInventory={{Uid="legacy",MachineId="radio",Protected=true}};d.Cores=37;d.Receipts.x={Currency="Cores",Amount=80}
    local migrated=require(TestModules.ProfileSchema).migrate(d)
-   assert(migrated.SchemaVersion==4 and migrated.Upgrades.Floors==2 and migrated.Cores==37)
+   assert(migrated.SchemaVersion==5 and migrated.Upgrades.Floors==2 and migrated.Cores==37)
    assert(migrated.MachineInventory[1].Uid=="legacy" and migrated.Receipts.x.Amount==80 and migrated.TutorialStage==4)
   ''')
 if __name__=='__main__':unittest.main(verbosity=2)

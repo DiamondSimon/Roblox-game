@@ -1,4 +1,9 @@
-# Save schema 4 (release 0.3.1)
+# Save schema 5 (release 0.3.2)
+
+Schema 4 → 5 adds `Rewards={Codes={},Milestones={}}`. Claims and Core grants are atomic; code/milestone markers survive rebirth and rejoin. No prior progress is reset. Studio simulation uses nonpersistent sessions only; no simulated entitlement or test-policy flag is written into live profiles. See RELEASE_0.3.2.md.
+
+## Inherited schema 4
+
 
 Schema 3 → 4 adds `Pets={Owned={},Equipped=""}` without resetting existing progress. Owned maps known pet IDs to integer counts 1–10,000; Equipped is empty or an owned ID. Case spend/award and guaranteed pet purchases are atomic. Equipment is saved, published as an attribute for cosmetic companions and preserved through rebirth. Unknown future schemas fail closed. The release version is independent of the schema version. See RELEASE_0.3.1.md for full behavior.
 

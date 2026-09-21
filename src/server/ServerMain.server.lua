@@ -54,7 +54,7 @@ end
 Players.PlayerAdded:Connect(safeJoin)
 Players.PlayerRemoving:Connect(function(player)
  Telemetry:Leave(player)
- Game:Drop(player);Progression:Cleanup(player);Pets.Policies[player]=nil;Pets.Tokens[player]=nil;Game.LastAction[player]=nil;Yard:Release(player)
+ Game:Drop(player);Progression:Cleanup(player);Pets.Policies[player]=nil;Pets.Tokens[player]=nil;Pets.PracticePolicy[player]=nil;Game.LastAction[player]=nil;Yard:Release(player)
  -- Load() owns cleanup if the player departed while its request was in flight.
  local s=Data.Sessions[player]
  if s and s.Data then Data:Release(player) end
@@ -62,7 +62,7 @@ Players.PlayerRemoving:Connect(function(player)
 end)
 for _,player in ipairs(Players:GetPlayers()) do task.spawn(safeJoin,player) end
 ReplicatedStorage:SetAttribute("BootStatus","Ready")
-print("SCRAPYARD 0.3.1 • First playable loop loaded")
+print("SCRAPYARD 0.3.2 • First playable loop loaded")
 end
 local ok,err=xpcall(boot,debug.traceback)
 if not ok then
