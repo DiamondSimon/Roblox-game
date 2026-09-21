@@ -13,7 +13,7 @@ function T:Allowed(player) return Run:IsStudio() and not Data:IsPersistent() and
 function T:Action(player,arg)
  if not self:Allowed(player) or type(arg)~="table" or not self.Game:Allow(player) then return end
  local d=Data:Get(player);local kind=arg.Kind
- if kind=="Scrap" then d.Scrap=math.min(1e12,d.Scrap+100000)
+ if kind=="Scrap" then d.Scrap=math.min(1e15,d.Scrap+100000000)
  elseif kind=="Cores" then d.Cores=d.Cores+1000
  elseif kind=="Pass" and (arg.Key=="DoubleScrap" or arg.Key=="ExtraSlots") then player:SetAttribute(arg.Key,not player:GetAttribute(arg.Key));Yard:Refresh(player,d)
  elseif kind=="Product" then

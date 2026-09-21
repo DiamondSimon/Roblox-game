@@ -41,7 +41,9 @@ local config = {Order={}, ById={}, Rarities={
 }}
 local rarityBudget={Common=295,Uncommon=93,Rare=43,Epic=12,Legendary=4,Mythic=0.9,Secret=0.1}
 local rawTotals={};for _,row in ipairs(rows) do rawTotals[row[3]]=(rawTotals[row[3]] or 0)+row[5] end
+local incomeScale={Common=1000,Uncommon=1500,Rare=2500,Epic=5000,Legendary=10000,Mythic=40000,Secret=250000}
 for _, row in ipairs(rows) do
+ row[4]=row[4]*incomeScale[row[3]]
  local id=row[1]
  table.insert(config.Order,id)
  config.ById[id]={MachineId=id, DisplayName=row[2], Rarity=row[3], BaseIncome=row[4],

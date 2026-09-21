@@ -21,7 +21,7 @@ class ClientSmokeTests(unittest.TestCase):
    click("X")
    remote:FireClient(TestPlayer,"SlapFX",Vector3.zero)
    local audible=false;for _,obj in ipairs(workspace:GetDescendants()) do if obj.ClassName=="Sound" and obj.Name=="SlapImpact" then assert(obj.Played);audible=true end end;assert(audible)
-   click("PETS");click("CASES");click("VIEW CASE • 500 SCRAP / 25 CORES");click("X")
+   click("PETS");click("CASES");click("VIEW CASE • 500.0K SCRAP / 25 CORES");click("X")
    local data=require(TestModules.PlayerDataService)
    require(TestModules.QuestService):Progress(data:Get(TestPlayer),"Collected",5)
    require(TestModules.GameplayService):State(TestPlayer)

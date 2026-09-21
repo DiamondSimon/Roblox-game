@@ -1,3 +1,9 @@
+# Save schema 6 (release 0.3.3)
+
+Schema 5 → 6 multiplies Scrap, LifetimeScrap and Scrap receipt Amount by 1,000 once. Cores and other progress are unchanged. Fresh saves use schema 6. Durable receipt merging migrates the stored profile first. Older releases fail closed on schema 6; use a backed-up pre-migration save for rollback testing. See RELEASE_0.3.3.md.
+
+## Previous migrations
+
 # Save schema 5 (release 0.3.2)
 
 Schema 4 → 5 adds `Rewards={Codes={},Milestones={}}`. Claims and Core grants are atomic; code/milestone markers survive rebirth and rejoin. No prior progress is reset. Studio simulation uses nonpersistent sessions only; no simulated entitlement or test-policy flag is written into live profiles. See RELEASE_0.3.2.md.

@@ -66,7 +66,7 @@ class CoreTests(unittest.TestCase):
    ok,error=compile(p.read_text());self.assertTrue(ok,f'{p}: {error}')
  def test_economy_and_catalog(self):
   lua=runtime();e=lua.execute((ROOT/'src/shared/Config/EconomyConfig.lua').read_text())
-  self.assertEqual(e.upgradeCost(0),240)
+  self.assertEqual(e.upgradeCost(0),180000)
   self.assertEqual(e.income(3,0,False),3)
   self.assertAlmostEqual(e.income(3,1,True),6.36)
   self.assertTrue(all(e.upgradeCost(i+1)>e.upgradeCost(i) for i in range(19)))

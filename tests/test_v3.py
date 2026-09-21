@@ -33,7 +33,7 @@ class V3Tests(unittest.TestCase):
   self.run_lua('''
    local yard=yards.Owned[TestPlayer];assert(#yard.Slots==8 and yard.FloorCount==1)
    assert(not yard.Folder:FindFirstChild("Upgrade terminal"))
-   root.Position=w.Shops.Upgrades.Position;d.Scrap=3500;g:Upgrade(TestPlayer,"Floors")
+   root.Position=w.Shops.Upgrades.Position;d.Scrap=3500000;g:Upgrade(TestPlayer,"Floors")
    assert(yards:Capacity(TestPlayer,d)==16 and #yard.Slots==16 and yard.FloorCount==2)
    assert(math.abs(yard.Slots[9].Y-yard.Slots[1].Y-16)<0.001)
    TestPlayer:SetAttribute("ExtraSlots",true);yards:Refresh(TestPlayer,d);assert(#yard.Slots==24)
@@ -76,15 +76,15 @@ class V3Tests(unittest.TestCase):
    d.MachineInventory={{Uid="a",MachineId="radio",Protected=false},{Uid="b",MachineId="radio",Protected=true}}
    p:Sell(TestPlayer,"a");assert(#data:Get(TestPlayer).MachineInventory==2)
    root.Position=w.Shops.Sell.Position;Clock=Clock+1;p:Sell(TestPlayer,"a")
-   d=data:Get(TestPlayer);assert(#d.MachineInventory==1 and d.Scrap==6)
-   Clock=Clock+1;p:Sell(TestPlayer,"a");Clock=Clock+1;p:Sell(TestPlayer,"b");assert(data:Get(TestPlayer).Scrap==6)
+   d=data:Get(TestPlayer);assert(#d.MachineInventory==1 and d.Scrap==6000)
+   Clock=Clock+1;p:Sell(TestPlayer,"a");Clock=Clock+1;p:Sell(TestPlayer,"b");assert(data:Get(TestPlayer).Scrap==6000)
   ''')
  def test_rebirth_reset_preserves_permanent_progress(self):
   self.run_lua('''
-   root.Position=w.Shops.Rebirth.Position;d.Scrap=25000;d.Cores=87;d.Upgrades.Floors=2;d.Upgrades.Income=4
+   root.Position=w.Shops.Rebirth.Position;d.Scrap=25000000;d.Cores=87;d.Upgrades.Floors=2;d.Upgrades.Income=4
    d.MachineInventory={{Uid="a",MachineId="radio",Protected=false},{Uid="b",MachineId="radio",Protected=true}}
    d.SpinState.Day=123;d.Cosmetics.Owned.Teal=true;d.DiscoveredMachines.radio=true
-   p:Rebirth(TestPlayer,false);assert(d.Scrap==25000)
+   p:Rebirth(TestPlayer,false);assert(d.Scrap==25000000)
    p:Rebirth(TestPlayer,true);d=data:Get(TestPlayer)
    assert(d.Scrap==0 and d.Rebirths==1 and d.Upgrades.Income==0 and d.Upgrades.Floors==0)
    assert(d.Cores==87 and d.SpinState.Day==123 and d.Cosmetics.Owned.Teal and d.DiscoveredMachines.radio)
@@ -121,7 +121,7 @@ class V3Tests(unittest.TestCase):
    d.SchemaVersion=2;d.Upgrades.Slots=4;d.Upgrades.Expansion=3;d.Upgrades.Floors=nil
    d.MachineInventory={{Uid="legacy",MachineId="radio",Protected=true}};d.Cores=37;d.Receipts.x={Currency="Cores",Amount=80}
    local migrated=require(TestModules.ProfileSchema).migrate(d)
-   assert(migrated.SchemaVersion==5 and migrated.Upgrades.Floors==2 and migrated.Cores==37)
+   assert(migrated.SchemaVersion==6 and migrated.Upgrades.Floors==2 and migrated.Cores==37)
    assert(migrated.MachineInventory[1].Uid=="legacy" and migrated.Receipts.x.Amount==80 and migrated.TutorialStage==4)
   ''')
 if __name__=='__main__':unittest.main(verbosity=2)

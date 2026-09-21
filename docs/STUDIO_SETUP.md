@@ -1,3 +1,5 @@
+Current release: **0.3.3**. See [release changes and acceptance checks](RELEASE_0.3.3.md). Open build/SCRAPYARD-0.3.3.rbxlx. Current automated suite: 70 tests; save schema 6. Earlier version-specific details below are historical where superseded.
+
 # Studio V0.3.2 setup
 
 1. Download `build/SCRAPYARD-0.3.2.rbxlx`. Open in Studio with **File → Open from File**. Do not open an archived V0.1/V0.2 build.

@@ -13,12 +13,12 @@ class Patch031Tests(unittest.TestCase):
   lua=boot();lua.execute(SETUP+s);return lua
  def test_case_prices_charge_selected_currency_and_token_replay(self):
   self.run_lua('''
-   d.Cores=100;d.Scrap=1000;local token=pets:Token(TestPlayer)
+   d.Cores=100;d.Scrap=1000000;local token=pets:Token(TestPlayer)
    pets:Buy(TestPlayer,{Case="Salvage",Currency="Cores",Token=token})
-   d=data:Get(TestPlayer);assert(d.Cores==75 and d.Scrap==1000 and d.Pets.Owned.bolt_mouse==1)
+   d=data:Get(TestPlayer);assert(d.Cores==75 and d.Scrap==1000000 and d.Pets.Owned.bolt_mouse==1)
    Clock=Clock+1;pets:Buy(TestPlayer,{Case="Salvage",Currency="Cores",Token=token});assert(data:Get(TestPlayer).Cores==75)
    Clock=Clock+1;pets:Buy(TestPlayer,{Case="Salvage",Currency="Scrap",Token=pets:Token(TestPlayer)})
-   d=data:Get(TestPlayer);assert(d.Scrap==500 and d.Cores==75 and d.Pets.Owned.bolt_mouse==2)
+   d=data:Get(TestPlayer);assert(d.Scrap==500000 and d.Cores==75 and d.Pets.Owned.bolt_mouse==2)
    assert(config.bonus(d.Pets)==0.03)
   ''')
  def test_unknown_case_currency_insufficient_and_distance(self):
@@ -31,15 +31,15 @@ class Patch031Tests(unittest.TestCase):
   ''')
  def test_restricted_and_policy_error_fail_closed_but_direct_allowed(self):
   self.run_lua('''
-   d.Cores=100;d.Scrap=5000
+   d.Cores=100;d.Scrap=5000000
    TestServices.PolicyService.GetPolicyInfoForPlayerAsync=function() return {ArePaidRandomItemsRestricted=true} end
    pets:RefreshPolicy(TestPlayer);pets:Buy(TestPlayer,{Case="Salvage",Currency="Cores",Token=pets:Token(TestPlayer)})
    assert(d.Cores==100 and next(d.Pets.Owned)==nil)
-   Clock=Clock+1;pets:Direct(TestPlayer,"bolt_mouse");d=data:Get(TestPlayer);assert(d.Scrap==3800 and d.Pets.Owned.bolt_mouse==1)
+   Clock=Clock+1;pets:Direct(TestPlayer,"bolt_mouse");d=data:Get(TestPlayer);assert(d.Scrap==3800000 and d.Pets.Owned.bolt_mouse==1)
    TestServices.PolicyService.GetPolicyInfoForPlayerAsync=function() error("unavailable") end
    pets:RefreshPolicy(TestPlayer);assert(not pets:Allowed(TestPlayer))
    Clock=Clock+1;pets:Buy(TestPlayer,{Case="Salvage",Currency="Scrap",Token=pets:Token(TestPlayer)})
-   assert(data:Get(TestPlayer).Scrap==3800)
+   assert(data:Get(TestPlayer).Scrap==3800000)
   ''')
  def test_policy_refresh_rechecks_distance_after_yield(self):
   self.run_lua('''
@@ -72,10 +72,10 @@ class Patch031Tests(unittest.TestCase):
   self.run_lua('''
    d.MachineInventory={{Uid="test",MachineId="radio",Protected=false}}
    d.Pets={Owned={bolt_mouse=8,cosmic_serpent=1},Equipped="cosmic_serpent"}
-   assert(math.abs(g:Income(TestPlayer,d)-0.36)<0.00001)
+   assert(math.abs(g:Income(TestPlayer,d)-360)<0.00001)
    pets:Equip(TestPlayer,"steel_tiger");assert(d.Pets.Equipped=="cosmic_serpent")
-   Clock=Clock+1;pets:Equip(TestPlayer,"bolt_mouse");d=data:Get(TestPlayer);assert(math.abs(g:Income(TestPlayer,d)-0.309)<0.00001)
-   Clock=Clock+1;d.Scrap=25000;root.Position=world.Shops.Rebirth.Position
+   Clock=Clock+1;pets:Equip(TestPlayer,"bolt_mouse");d=data:Get(TestPlayer);assert(math.abs(g:Income(TestPlayer,d)-309)<0.00001)
+   Clock=Clock+1;d.Scrap=25000000;root.Position=world.Shops.Rebirth.Position
    require(TestModules.ProgressionService):Rebirth(TestPlayer,true)
    d=data:Get(TestPlayer);assert(d.Pets.Owned.bolt_mouse==8 and d.Pets.Owned.cosmic_serpent==1 and d.Pets.Equipped=="bolt_mouse")
   ''')
@@ -83,7 +83,7 @@ class Patch031Tests(unittest.TestCase):
   self.run_lua('''
    d.SchemaVersion=3;d.Pets=nil;d.Scrap=777;d.Cores=51;d.Rebirths=2
    d=require(TestModules.ProfileSchema).migrate(d)
-   assert(d.SchemaVersion==5 and d.Scrap==777 and d.Cores==51 and d.Rebirths==2 and next(d.Pets.Owned)==nil and d.Pets.Equipped=="")
+   assert(d.SchemaVersion==6 and d.Scrap==777000 and d.Cores==51 and d.Rebirths==2 and next(d.Pets.Owned)==nil and d.Pets.Equipped=="")
   ''')
  def test_all_pet_models_and_scrap_rarity_budgets(self):
   self.run_lua('''

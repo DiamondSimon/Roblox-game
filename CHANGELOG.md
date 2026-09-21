@@ -1,3 +1,7 @@
+# 0.3.3
+
+Move the full conveyor 130 studs south; raise POI labels above roofs; increase actual earnings and rarity progression; scale prices and convert old saved Scrap once; add K/M/B/T HUD rates. 70 mocked-Lua tests and rebuilt place. See docs/RELEASE_0.3.3.md and docs/ECONOMY_0.3.3.md.
+
 # Changelog
 
 ## 0.3.2

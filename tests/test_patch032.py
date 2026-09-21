@@ -13,14 +13,14 @@ class Patch032Tests(unittest.TestCase):
  def test_shredder_whole_assembly_at_endpoint_no_overhead_text(self):
   self.run_lua('''
    local c=require(game.ReplicatedStorage.Shared.Config.GameConfig)
-   assert(world.Shredder.Position.Z==c.BeltEnd and c.BeltEnd==180)
-   local assembly=world.Root.ShredderAssembly;assert(assembly)
+   assert(world.Shredder.Position.Z==c.BeltEnd and c.BeltEnd==310)
+   local assembly=world.Root.ConveyorAssembly.ShredderAssembly;assert(assembly)
    for _,p in ipairs(assembly:GetDescendants()) do
     assert(not p:IsA("BillboardGui"))
-    if p:IsA("BasePart") then assert(p.Position.Z>=164 and p.Position.Z<=194) end
+    if p:IsA("BasePart") then assert(p.Position.Z>=294 and p.Position.Z<=324) end
    end
-   local belt=world.Root["CENTRAL SALVAGE"]
-   assert(belt.Position.Z+belt.Size.Z/2==166)
+   local belt=world.Root.ConveyorAssembly["CENTRAL SALVAGE"]
+   assert(belt.Position.Z+belt.Size.Z/2==296)
    assert(math.abs((c.BeltEnd-c.BeltStart)/c.BeltSpeed-42.105263)<0.001)
   ''')
  def test_studio_controls_fail_closed_on_live_and_persistent(self):
@@ -37,7 +37,7 @@ class Patch032Tests(unittest.TestCase):
   ''')
  def test_studio_currencies_passes_all_products(self):
   self.run_lua('''
-   lab:Action(TestPlayer,{Kind="Scrap"});assert(d.Scrap==100000)
+   lab:Action(TestPlayer,{Kind="Scrap"});assert(d.Scrap==100000000)
    Clock=Clock+1;lab:Action(TestPlayer,{Kind="Cores"});assert(d.Cores==1000)
    Clock=Clock+1;lab:Action(TestPlayer,{Kind="Pass",Key="DoubleScrap"});assert(TestPlayer:GetAttribute("DoubleScrap"))
    Clock=Clock+1;lab:Action(TestPlayer,{Kind="Pass",Key="ExtraSlots"});assert(#require(TestModules.YardService).Owned[TestPlayer].Slots==16)
@@ -73,7 +73,7 @@ class Patch032Tests(unittest.TestCase):
    d=data:Get(TestPlayer);local m=require(game.ReplicatedStorage.Shared.Config.MachineConfig)
    for i=1,5 do d.DiscoveredMachines[m.Order[i]]=true end
    Clock=Clock+1;rewards:Claim(TestPlayer,"Milestone","discover5");assert(data:Get(TestPlayer).Cores==30)
-   d=data:Get(TestPlayer);d.Scrap=25000;TestPlayer.Character.HumanoidRootPart.Position=world.Shops.Rebirth.Position
+   d=data:Get(TestPlayer);d.Scrap=25000000;TestPlayer.Character.HumanoidRootPart.Position=world.Shops.Rebirth.Position
    Clock=Clock+1;require(TestModules.ProgressionService):Rebirth(TestPlayer,true)
    Clock=Clock+1;rewards:Claim(TestPlayer,"Milestone","discover5");assert(data:Get(TestPlayer).Cores==30)
    assert(data:Get(TestPlayer).Rewards.Codes.FOUNDRY)
@@ -81,9 +81,9 @@ class Patch032Tests(unittest.TestCase):
  def test_rush_boundaries_and_income(self):
   self.run_lua('''
    d.MachineInventory={{Uid="a",MachineId="radio",Protected=false}}
-   rewards.Started=Clock;assert(not rewards:Event().Active);assert(math.abs(g:Income(TestPlayer,d)-0.3)<0.00001)
+   rewards.Started=Clock;assert(not rewards:Event().Active);assert(math.abs(g:Income(TestPlayer,d)-300)<0.00001)
    Clock=Clock+480;assert(rewards:Event().Active and rewards:Event().Remaining==120)
-   assert(math.abs(g:Income(TestPlayer,d)-0.375)<0.00001)
+   assert(math.abs(g:Income(TestPlayer,d)-375)<0.00001)
    Clock=Clock+120;assert(not rewards:Event().Active and rewards:Event().Remaining==480)
   ''')
  def test_equip_best_only_owned_strongest(self):
@@ -95,7 +95,7 @@ class Patch032Tests(unittest.TestCase):
   self.run_lua('''
    d.SchemaVersion=4;d.Rewards=nil;d.Pets.Owned.bolt_mouse=1;d.Pets.Equipped="bolt_mouse";d.Cores=38
    d=require(TestModules.ProfileSchema).migrate(d)
-   assert(d.SchemaVersion==5 and next(d.Rewards.Codes)==nil and d.Pets.Equipped=="bolt_mouse" and d.Cores==38)
+   assert(d.SchemaVersion==6 and next(d.Rewards.Codes)==nil and d.Pets.Equipped=="bolt_mouse" and d.Cores==38)
   ''')
  def test_case_reel_preview_winner_and_skip_no_additional_reward(self):
   lua=boot();lua.execute((ROOT/'tests/client_stub.lua').read_text())
@@ -117,7 +117,7 @@ class Patch032Tests(unittest.TestCase):
   lua=boot();lua.execute((ROOT/'tests/client_stub.lua').read_text());lua.execute((ROOT/'src/client/ClientMain.client.lua').read_text())
   lua.execute('''
    require(TestModules.GameplayService):State(TestPlayer)
-   click("TEST LAB");Clock=Clock+1;click("APPLY");assert(require(TestModules.PlayerDataService):Get(TestPlayer).Scrap==100000)
+   click("TEST LAB");Clock=Clock+1;click("APPLY");assert(require(TestModules.PlayerDataService):Get(TestPlayer).Scrap==100000000)
    click("X");click("PETS");local views=0
    for _,o in ipairs(TestPlayer.PlayerGui:GetDescendants()) do if o:IsA("ViewportFrame") then views=views+1 end end;assert(views==9)
    click("X");click("REWARDS")

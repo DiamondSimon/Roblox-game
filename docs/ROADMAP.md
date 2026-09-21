@@ -1,3 +1,5 @@
+Current release: **0.3.3**. See [release changes and acceptance checks](RELEASE_0.3.3.md). Open build/SCRAPYARD-0.3.3.rbxlx. Current automated suite: 70 tests; save schema 6. Earlier version-specific details below are historical where superseded.
+
 # Roadmap after V0.3.2
 
 Implemented: moving conveyor and shredder, carried-junk slap theft, compact eight-slot floors, shared shops/selling, empty-start tutorial/waypoints, daily free wheel, weaker upgrades, home/shop teleports and rebirths. Local logic/package checks completed; Studio acceptance pending.

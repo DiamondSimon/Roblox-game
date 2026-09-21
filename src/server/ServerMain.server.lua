@@ -62,7 +62,7 @@ Players.PlayerRemoving:Connect(function(player)
 end)
 for _,player in ipairs(Players:GetPlayers()) do task.spawn(safeJoin,player) end
 ReplicatedStorage:SetAttribute("BootStatus","Ready")
-print("SCRAPYARD 0.3.2 • First playable loop loaded")
+print("SCRAPYARD 0.3.3 • First playable loop loaded")
 end
 local ok,err=xpcall(boot,debug.traceback)
 if not ok then

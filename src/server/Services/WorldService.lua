@@ -8,7 +8,7 @@ function World.part(parent,name,size,pos,color,material)
  return p
 end
 function World.label(part,text,color)
- local gui=Instance.new("BillboardGui");gui.Size=UDim2.fromOffset(240,65);gui.StudsOffset=Vector3.new(0,4,0);gui.MaxDistance=110;gui.AlwaysOnTop=false;gui.Parent=part
+ local gui=Instance.new("BillboardGui");gui.Size=UDim2.fromOffset(240,65);gui.StudsOffsetWorldSpace=Vector3.new(0,part.Size.Y/2+7,0);gui.MaxDistance=110;gui.AlwaysOnTop=true;gui.Parent=part
  local t=Instance.new("TextLabel");t.Size=UDim2.fromScale(1,1);t.BackgroundTransparency=1;t.Text=text;t.TextColor3=color or amber;t.TextStrokeTransparency=0.4;t.Font=Enum.Font.GothamBold;t.TextSize=17;t.Parent=gui
  return t
 end
@@ -63,21 +63,22 @@ function World:Build()
  for _,side in ipairs({-1,1}) do
   for _,z in ipairs({-210,-70,70,210}) do
    local start=Vector3.new(side*276,0.45,z)
-   local finish=Vector3.new(side*20,0.45,math.max(-54,math.min(54,z)))
+   local finish=Vector3.new(side*20,0.45,math.max(Config.BeltStart,math.min(Config.BeltEnd-30,z)))
    local midpoint=Vector3.new((start.X+finish.X)/2,0.45,(start.Z+finish.Z)/2)
    local path=self.part(root,"Direct haul path",Vector3.new(14,0.25,(finish-start).Magnitude),midpoint,Color3.fromRGB(66,76,79),Enum.Material.Concrete)
    path.CFrame=CFrame.lookAt(midpoint,finish)
   end
  end
- self.part(root,"Salvage plaza",Vector3.new(120,0.6,310),Vector3.new(0,0.3,50),Color3.fromRGB(71,82,84),Enum.Material.Concrete)
- local belt=self.part(root,"CENTRAL SALVAGE",Vector3.new(20,1,226),Vector3.new(0,1,53),steel,Enum.Material.DiamondPlate)
- local title=self.label(belt,"CENTRAL SALVAGE\nGRAB IT BEFORE IT SHREDS",amber);title.Parent.MaxDistance=400;title.Parent.StudsOffset=Vector3.new(0,16,0)
- for z=-60,164,8 do self.part(root,"Conveyor roller",Vector3.new(19,0.2,0.35),Vector3.new(0,1.6,z),Color3.fromRGB(115,137,140)) end
- for _,x in ipairs({-11,11}) do self.part(root,"Conveyor rail",Vector3.new(0.5,1.2,226),Vector3.new(x,1,53),amber) end
- local hopper=self.part(root,"Salvage hopper",Vector3.new(28,12,18),Vector3.new(0,6,-82),teal)
- self.part(root,"Hopper intake",Vector3.new(18,8,1),Vector3.new(0,5,-72),Color3.fromRGB(15,23,27))
+ local conveyor=Instance.new("Folder");conveyor.Name="ConveyorAssembly";conveyor.Parent=root
+ self.part(conveyor,"Salvage plaza",Vector3.new(120,0.6,310),Vector3.new(0,0.3,50),Color3.fromRGB(71,82,84),Enum.Material.Concrete)
+ local belt=self.part(conveyor,"CENTRAL SALVAGE",Vector3.new(20,1,226),Vector3.new(0,1,53),steel,Enum.Material.DiamondPlate)
+ local title=self.label(belt,"CENTRAL SALVAGE\nGRAB IT BEFORE IT SHREDS",amber);title.Parent.MaxDistance=400;title.Parent.StudsOffsetWorldSpace=Vector3.new(0,16,0)
+ for z=-60,164,8 do self.part(conveyor,"Conveyor roller",Vector3.new(19,0.2,0.35),Vector3.new(0,1.6,z),Color3.fromRGB(115,137,140)) end
+ for _,x in ipairs({-11,11}) do self.part(conveyor,"Conveyor rail",Vector3.new(0.5,1.2,226),Vector3.new(x,1,53),amber) end
+ local hopper=self.part(conveyor,"Salvage hopper",Vector3.new(28,12,18),Vector3.new(0,6,-82),teal)
+ self.part(conveyor,"Hopper intake",Vector3.new(18,8,1),Vector3.new(0,5,-72),Color3.fromRGB(15,23,27))
  self.label(hopper,"SALVAGE IN",amber).Parent.MaxDistance=150
- local assembly=Instance.new("Folder");assembly.Name="ShredderAssembly";assembly.Parent=root
+ local assembly=Instance.new("Folder");assembly.Name="ShredderAssembly";assembly.Parent=conveyor
  self.Shredder=self.part(assembly,"SHREDDER",Vector3.new(28,2,24),Vector3.new(0,1,76),steel)
  for _,x in ipairs({-14,14}) do self.part(assembly,"Shredder wall",Vector3.new(2,10,26),Vector3.new(x,5,76),amber) end
  self.part(assembly,"Shredder rear",Vector3.new(28,10,2),Vector3.new(0,5,89),amber)
@@ -109,7 +110,7 @@ function World:Build()
  self.part(assembly,"Emergency stop",Vector3.new(1,1,0.5),control.Position+Vector3.new(0,0.8,-1.2),Color3.fromRGB(245,67,53),Enum.Material.Neon)
  self.part(assembly,"Status lamp",Vector3.new(0.7,0.7,0.5),control.Position+Vector3.new(0,-0.5,-1.2),Color3.fromRGB(86,255,147),Enum.Material.Neon)
  for _,piece in ipairs(assembly:GetDescendants()) do
-  if piece:IsA("BasePart") then piece.Position=piece.Position+Vector3.new(0,0,Config.BeltEnd-76) end
+  if piece:IsA("BasePart") then piece.Position=piece.Position+Vector3.new(0,0,180-76) end
  end
  self.ShopSpawn=Vector3.new(0,4,-196);self.Shops={}
  self.part(root,"Shop plaza",Vector3.new(224,0.6,88),Vector3.new(0,0.3,-229),Color3.fromRGB(188,183,161),Enum.Material.Concrete)
@@ -119,11 +120,11 @@ function World:Build()
   local stand=self.part(root,key.." stand",Vector3.new(22,4,8),Vector3.new(x,2,-234),colors[i])
   self.part(root,key.." canopy",Vector3.new(27,2,18),Vector3.new(x,13,-239),colors[i])
   for _,dx in ipairs({-11,11}) do self.part(root,"Stall post",Vector3.new(1,13,1),Vector3.new(x+dx,6.5,-245),steel) end
-  self.Shops[key]=stand;self.label(stand,string.upper(key=="Shop" and "SUPPLIES" or key),colors[i]).Parent.StudsOffset=Vector3.new(0,13,0)
+  self.Shops[key]=stand;self.label(stand,string.upper(key=="Shop" and "SUPPLIES" or key),colors[i]).Parent.StudsOffsetWorldSpace=Vector3.new(0,20,0)
  end
  local wheel=self.part(root,"Daily wheel",Vector3.new(12,12,1),Vector3.new(0,8,-244),amber)
  for i=1,6 do local a=i*math.pi/3;self.part(root,"Wheel segment",Vector3.new(3,3,1.2),Vector3.new(math.cos(a)*4,8+math.sin(a)*4,-243),i%2==0 and teal or Color3.fromRGB(243,237,205)) end
- self.label(wheel,"FREE DAILY SPIN",amber).Parent.MaxDistance=60
+ self.label(wheel,"FREE DAILY SPIN",amber).Parent.StudsOffsetWorldSpace=Vector3.new(0,25,0)
  for i,color in ipairs({Color3.fromRGB(128,182,195),Color3.fromRGB(172,103,250),Color3.fromRGB(255,185,51)}) do
   local case=self.part(root,"Pet display case",Vector3.new(5,4,4),Vector3.new(94+(i-1)*8,6,-234),color)
   self.part(root,"Case latch",Vector3.new(1,1.4,0.3),case.Position+Vector3.new(0,0,-2.1),steel)
@@ -213,7 +214,10 @@ function World:Build()
   for dx=-3,3,3 do local shrub=self.part(decor,"Shrub",Vector3.new(4,4,4),Vector3.new(x+dx,3,-270),Color3.fromRGB(71,156,93),Enum.Material.Grass);shrub.Shape=Enum.PartType.Ball end
  end
  for z=-50,150,20 do
-  for _,x in ipairs({-15,15}) do self.part(decor,"Belt guide lamp",Vector3.new(0.7,0.2,2),Vector3.new(x,0.9,z),Color3.fromRGB(106,239,199),Enum.Material.Neon) end
+  for _,x in ipairs({-15,15}) do self.part(conveyor,"Belt guide lamp",Vector3.new(0.7,0.2,2),Vector3.new(x,0.9,z),Color3.fromRGB(106,239,199),Enum.Material.Neon) end
+ end
+ for _,piece in ipairs(conveyor:GetDescendants()) do
+  if piece:IsA("BasePart") then piece.Position=piece.Position+Vector3.new(0,0,Config.BeltOffsetZ) end
  end
  Lighting.ClockTime=13.5;Lighting.Brightness=3;Lighting.Ambient=Color3.fromRGB(138,145,153);Lighting.OutdoorAmbient=Color3.fromRGB(165,172,177)
  local atmosphere=Instance.new("Atmosphere");atmosphere.Density=0.16;atmosphere.Offset=0.1;atmosphere.Color=Color3.fromRGB(196,211,222);atmosphere.Parent=Lighting

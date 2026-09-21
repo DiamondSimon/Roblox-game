@@ -14,7 +14,7 @@ local function clone(t)
 end
 local function fresh() return Schema.fresh(Http:GenerateGUID(false)) end
 local function validate(d)
- assert(d.SchemaVersion==5,"Unsupported schema; never overwrite a newer save")
+ assert(d.SchemaVersion==6,"Unsupported schema; never overwrite a newer save")
  assert(type(d.Scrap)=="number" and d.Scrap==d.Scrap and d.Scrap>=0 and d.Scrap<math.huge,"Bad balance")
  assert(type(d.MachineInventory)=="table" and #d.MachineInventory<=40,"Bad inventory")
  local ids={}
@@ -98,7 +98,7 @@ function Data:Commit(player,transform,release)
   -- An UpdateAsync error can be ambiguous: a previous attempt may have committed.
   -- Merge durable receipts missing from memory before any subsequent profile save.
   local merged=clone(candidate)
-  for purchaseId,amount in pairs(old.Data.Receipts) do
+  for purchaseId,amount in pairs(Schema.migrate(clone(old.Data)).Receipts) do
    if not merged.Receipts[purchaseId] then
     merged.Receipts[purchaseId]=amount
     local currency=type(amount)=="number" and "Scrap" or amount.Currency

@@ -1,3 +1,5 @@
+Current release: **0.3.3**. See [release changes and acceptance checks](RELEASE_0.3.3.md). Open build/SCRAPYARD-0.3.3.rbxlx. Current automated suite: 70 tests; save schema 6. Earlier version-specific details below are historical where superseded.
+
 # V0.3.2 verification
 
 ## Executed locally

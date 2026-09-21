@@ -82,7 +82,7 @@ function Machines:Create(id,position,parent)
   for y=0.7,1.7,0.5 do part("Dial",Vector3.new(0.3,0.3,0.2),Vector3.new(1.2,y,-1.25),color) end
  end
  local label=World.label(base,def.DisplayName.."\n"..def.Rarity.."  •  +"..def.BaseIncome.." /s",color)
- label.Parent.StudsOffset=Vector3.new(0,5,0)
+ label.Parent.StudsOffsetWorldSpace=Vector3.new(0,7,0)
  if Config.Rarities[def.Rarity].Announce then
   local h=Instance.new("Highlight");h.FillColor=color;h.FillTransparency=0.85;h.OutlineColor=color;h.DepthMode=Enum.HighlightDepthMode.Occluded;h.Parent=model
  end

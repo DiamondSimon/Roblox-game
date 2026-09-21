@@ -31,7 +31,7 @@ function P:State(player,d,state)
    local delta=root and (root.Position-model.PrimaryPart.Position).Magnitude or 0
    if delta<dist then dist=delta;nearest=model.PrimaryPart.Position end
   end
-  state.Waypoint=nearest or Vector3.new(0,3,-50);state.Objective="GRAB YOUR FIRST JUNK • HOLD E / TAP AT THE CONVEYOR"
+  state.Waypoint=nearest or Vector3.new(0,3,Config.BeltStart+10);state.Objective="GRAB YOUR FIRST JUNK • HOLD E / TAP AT THE CONVEYOR"
  elseif d.TutorialStage==3 then state.Waypoint=World.Shops.Upgrades.Position;state.Objective="VISIT THE UPGRADE STAND • TAP SHOP TO TELEPORT"
  else state.Objective=state.SpinReady and "FREE DAILY SPIN READY • VISIT THE SHOP DISTRICT" or "GRAB • HAUL • BUILD YOUR YARD" end
  state.Stunned=self:Blocked(player)

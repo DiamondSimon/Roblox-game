@@ -56,7 +56,7 @@ class StartupTests(unittest.TestCase):
    TestPlayer.Character.HumanoidRootPart.Position=yard.Deposit.Position
    gameplay:Deposit(TestPlayer);assert(not gameplay.Carrying[TestPlayer])
    assert(#data:Get(TestPlayer).MachineInventory==1)
-   Clock=Clock+1;data:Get(TestPlayer).Scrap=240
+   Clock=Clock+1;data:Get(TestPlayer).Scrap=180000
    TestPlayer.Character.HumanoidRootPart.Position=require(TestModules.WorldService).Shops.Upgrades.Position
    gameplay:Upgrade(TestPlayer,"Income")
    assert(data:Get(TestPlayer).Upgrades.Income==1);assert(data:Get(TestPlayer).Scrap==0)

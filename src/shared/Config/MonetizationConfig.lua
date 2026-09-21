@@ -13,8 +13,8 @@ return {
  },
  -- Preserve fulfillment if real legacy IDs were ever configured; never reuse them for Cores.
  LegacyProducts={
-  {Key="SmallScrap",Id=0,Currency="Scrap",Amount=500},
-  {Key="MediumScrap",Id=0,Currency="Scrap",Amount=2000},
-  {Key="LargeScrap",Id=0,Currency="Scrap",Amount=6000},
+  {Key="SmallScrap",Id=0,Currency="Scrap",Amount=500000},
+  {Key="MediumScrap",Id=0,Currency="Scrap",Amount=2000000},
+  {Key="LargeScrap",Id=0,Currency="Scrap",Amount=6000000},
  },
 }

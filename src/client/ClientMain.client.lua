@@ -34,7 +34,7 @@ local function button(parent,content,pos,size,fn,secondary)
  b.Activated:Connect(fn);return b
 end
 local function fmt(n)
- if n>=1e6 then return string.format("%.2fM",n/1e6) elseif n>=1e3 then return string.format("%.1fK",n/1e3) end
+ if n>=1e12 then return string.format("%.2fT",n/1e12) elseif n>=1e9 then return string.format("%.2fB",n/1e9) elseif n>=1e6 then return string.format("%.2fM",n/1e6) elseif n>=1e3 then return string.format("%.1fK",n/1e3) end
  return tostring(math.floor(n))
 end
 local currency=panel(gui,UDim2.fromOffset(14,12),UDim2.fromOffset(228,122))
@@ -204,7 +204,7 @@ renderMenu=function()
  elseif page=="Studio" and state.StudioTools then
   title.Text="STUDIO TEST LAB"
   label(tabs,"Local practice only • No Robux • Resets on Stop",12,UDim2.new(),UDim2.fromScale(1,1),teal)
-  for _,entry in ipairs({{"Scrap","+100,000 SCRAP"},{"Cores","+1,000 CORES"},{"Loadout","32 SLOTS + 8 MACHINES"},{"Tutorial","FINISH TUTORIAL"},{"Daily","RESET DAILY CLAIMS"}}) do
+  for _,entry in ipairs({{"Scrap","+100,000,000 SCRAP"},{"Cores","+1,000 CORES"},{"Loadout","32 SLOTS + 8 MACHINES"},{"Tutorial","FINISH TUTORIAL"},{"Daily","RESET DAILY CLAIMS"}}) do
    local kind=entry[1];card(entry[2],"Applies only to this practice profile.","APPLY",function() remote:FireServer("StudioAction",{Kind=kind}) end)
   end
   for _,pass in ipairs(Monetization.Passes) do local key=pass.Key;card(pass.Name,"Toggle the entitlement effect for testing.","TOGGLE TEST PASS",function() remote:FireServer("StudioAction",{Kind="Pass",Key=key}) end) end
@@ -296,7 +296,7 @@ counter.Changed:Connect(function(v) scrap.Text=fmt(v) end)
 local function render()
  if counterTween then counterTween:Cancel() end
  counterTween=Tween:Create(counter,TweenInfo.new(0.35),{Value=state.Scrap});counterTween:Play()
- cores.Text="CORES  "..fmt(state.Cores);rate.Text=string.format("+%.2f / sec  •  %d/%d slots",state.Income,state.Count,state.Capacity)
+ cores.Text="CORES  "..fmt(state.Cores);rate.Text=string.format("+%s / sec  •  %d/%d slots",fmt(state.Income),state.Count,state.Capacity)
  drop.Visible=state.Carrying~=false
  testButton.Visible=state.StudioTools==true
  eventText.Text=state.Rush.Active and ("SCRAP RUSH • +25% • "..state.Rush.Remaining.."s") or ("NEXT SCRAP RUSH • "..math.floor(state.Rush.Remaining/60)..":"..string.format("%02d",state.Rush.Remaining%60))
@@ -311,9 +311,9 @@ local function render()
  player:SetAttribute("TutorialTarget",state.Waypoint)
  for _,update in ipairs(updaters) do update() end
 end
-local mode=label(gui,"V0.3.2 • PRACTICE MODE",10,UDim2.new(0.5,0,1,-22),UDim2.new(0.7,0,0,18),muted);mode.AnchorPoint=Vector2.new(0.5,0);mode.TextXAlignment=Enum.TextXAlignment.Center
+local mode=label(gui,"V0.3.3 • PRACTICE MODE",10,UDim2.new(0.5,0,1,-22),UDim2.new(0.7,0,0,18),muted);mode.AnchorPoint=Vector2.new(0.5,0);mode.TextXAlignment=Enum.TextXAlignment.Center
 remote.OnClientEvent:Connect(function(kind,payload)
- if kind=="State" then local first=state==nil;state=payload;render();mode.Text=state.Persistent and "V0.3.2 • PRIVATE TEST" or "V0.3.2 • PRACTICE — PROGRESS RESETS";if first and page then renderMenu() end
+ if kind=="State" then local first=state==nil;state=payload;render();mode.Text=state.Persistent and "V0.3.3 • PRIVATE TEST" or "V0.3.3 • PRACTICE — PROGRESS RESETS";if first and page then renderMenu() end
  elseif kind=="Open" then if payload=="Pets" then petTab="CASES" end;open(payload)
  elseif kind=="CaseResult" then
   modal.Visible=false;page=nil
