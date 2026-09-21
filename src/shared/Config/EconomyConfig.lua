@@ -12,7 +12,7 @@ function E.cost(key,level) local d=E.Upgrades[key];return d and math.floor(d.Bas
 function E.upgradeCost(level) return E.cost("Income",level) end
 function E.slotCost(level) return E.cost("Floors",level) end
 function E.income(base,level,double,rebirths) return base*(1+E.IncomePerLevel*level)*(1+math.min(rebirths or 0,10)*0.05)*(double and 2 or 1) end
-function E.rebirthCost(count) return math.floor(25000000*2.5^math.min(count,10)) end
+function E.rebirthCost(count) local n=math.min(count,10);return math.floor(25000000*2.5^math.min(n,3)*1.65^math.max(0,n-3)) end
 function E.speed(upgrades,carrying)
  return carrying and math.min(E.MaxCarrySpeed,E.CarrySpeed+upgrades.Carry*E.CarryPerLevel)
   or math.min(E.MaxWalkSpeed,E.WalkSpeed+upgrades.Speed*E.SpeedPerLevel)

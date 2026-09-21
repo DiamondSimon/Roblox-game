@@ -5,7 +5,7 @@ ROOT=Path(__file__).resolve().parents[1]
 
 class BuildTests(unittest.TestCase):
  def test_studio_place_contains_current_source_and_entrypoints(self):
-  xml=ET.parse(ROOT/'build/SCRAPYARD-0.3.3.rbxlx')
+  xml=ET.parse(ROOT/'build/SCRAPYARD-0.3.4.rbxlx')
   embedded={}
   def walk(node,path=''):
    for child in node.findall('Item'):

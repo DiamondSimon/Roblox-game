@@ -8,11 +8,11 @@ class Patch033Tests(unittest.TestCase):
    local w=require(TestModules.WorldService);local g=require(TestModules.GameplayService)
    local c=require(game.ReplicatedStorage.Shared.Config.GameConfig)
    local belt=w.Root.ConveyorAssembly["CENTRAL SALVAGE"]
-   assert(belt.Position.Z==183 and belt.Position.Z-belt.Size.Z/2==70)
-   assert(w.Root.ConveyorAssembly["Salvage hopper"].Position.Z==48)
-   assert(w.Shredder.Position.Z==310)
+   assert(belt.Position.Z==1 and belt.Position.Z-belt.Size.Z/2==-224)
+   assert(w.Root.ConveyorAssembly["Salvage hopper"].Position.Z==-246)
+   assert(w.Shredder.Position.Z==240)
    for model,entry in pairs(g.Salvage) do
-    assert(model.PrimaryPart.Position.Z>=70 and model.PrimaryPart.Position.Z<=145)
+    assert(model.PrimaryPart.Position.Z>=-224 and model.PrimaryPart.Position.Z<=-149)
    end
    g:MoveSalvage(Clock+1)
    for model,entry in pairs(g.Salvage) do

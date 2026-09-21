@@ -27,9 +27,9 @@ function P:State(player,d,state)
  elseif d.TutorialStage<3 then
   local nearest,dist=nil,math.huge
   local root=player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-  for model in pairs(self.Game.Salvage) do
+  for model,entry in pairs(self.Game.Salvage) do
    local delta=root and (root.Position-model.PrimaryPart.Position).Magnitude or 0
-   if delta<dist then dist=delta;nearest=model.PrimaryPart.Position end
+   if Machines.canCollect(entry.Id,d.Rebirths) and delta<dist then dist=delta;nearest=model.PrimaryPart.Position end
   end
   state.Waypoint=nearest or Vector3.new(0,3,Config.BeltStart+10);state.Objective="GRAB YOUR FIRST JUNK • HOLD E / TAP AT THE CONVEYOR"
  elseif d.TutorialStage==3 then state.Waypoint=World.Shops.Upgrades.Position;state.Objective="VISIT THE UPGRADE STAND • TAP SHOP TO TELEPORT"
@@ -74,7 +74,11 @@ function P:Slap(player)
  self.Stunned[victim]=os.clock()+Config.KnockdownSeconds;self.Immune[victim]=os.clock()+Config.SlapImmunity
  self.Combat[player]=os.clock()+5;self.Combat[victim]=os.clock()+5
  local carried=g.Carrying[victim]
- if carried then local id=carried.Id;g:ClearCarry(victim);g:GiveCarry(player,id);g:Notify(player,"SNATCHED • "..Machines.ById[id].DisplayName) end
+ if carried then
+  local id=carried.Id
+  if Machines.canCollect(id,d.Rebirths) then g:ClearCarry(victim);g:GiveCarry(player,id);g:Notify(player,"SNATCHED • "..Machines.ById[id].DisplayName)
+  else g:Notify(player,"JUNK LOCKED • Requires "..Machines.ById[id].RequiredRebirths.." rebirths") end
+ end
  vh.PlatformStand=true
  pcall(function() vroot:SetNetworkOwner(nil);vroot:ApplyImpulse(((vroot.Position-root.Position).Unit*23+Vector3.new(0,12,0))*vroot.AssemblyMass) end)
  g.Remote:FireAllClients("SlapFX",vroot.Position)

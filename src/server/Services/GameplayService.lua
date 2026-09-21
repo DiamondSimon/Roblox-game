@@ -55,6 +55,7 @@ function Game:Pickup(player,model)
  local entry=self.Salvage[model];local d=Data:Get(player)
  if not entry or entry.Expires<=os.clock() or Progression:Blocked(player) or not d or self.Carrying[player] or not self:Near(player,model.PrimaryPart) then return end
  
+ if not Definitions.canCollect(entry.Id,d.Rebirths) then self:Notify(player,"LOCKED • Requires "..Definitions.ById[entry.Id].RequiredRebirths.." rebirths");return end
  self.Salvage[model]=nil
  local id=entry.Id;model:Destroy();self:GiveCarry(player,id)
  if d.TutorialStage==1 then d.TutorialStage=2 end
@@ -63,7 +64,7 @@ function Game:Pickup(player,model)
 end
 function Game:GiveCarry(player,id)
  local root=player.Character:FindFirstChild("HumanoidRootPart");local d=Data:Get(player)
- if not root or not d or self.Carrying[player] then return false end
+ if not root or not d or self.Carrying[player] or not Definitions.canCollect(id,d.Rebirths) then return false end
  local carry=Machine:Create(id,Vector3.zero,workspace)
  carry:PivotTo(root.CFrame*CFrame.new(0,1,-3.5))
  for _,p in ipairs(carry:GetDescendants()) do

@@ -113,7 +113,7 @@ class V2Tests(unittest.TestCase):
   lua=boot();lua.execute('''
    local world=require(TestModules.WorldService)
    for _,yard in ipairs(world.Yards) do
-    local z=math.max(70,math.min(280,yard.Spawn.Position.Z))
+    local z=yard.Spawn.Position.Z
     local distance=(yard.Spawn.Position-Vector3.new(0,0,z)).Magnitude
     assert(distance/16>=15 and distance/16<=27)
    end

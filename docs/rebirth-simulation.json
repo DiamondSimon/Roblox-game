@@ -1,0 +1,82 @@
+[
+  {
+    "RebirthFrom": 0,
+    "Cost": 25000000,
+    "MedianMinutes": 30.0,
+    "P10Minutes": 27.5,
+    "P90Minutes": 32.5,
+    "ReachedWithin6h": 200
+  },
+  {
+    "RebirthFrom": 1,
+    "Cost": 62500000,
+    "MedianMinutes": 30.0,
+    "P10Minutes": 26.25,
+    "P90Minutes": 33.75,
+    "ReachedWithin6h": 200
+  },
+  {
+    "RebirthFrom": 2,
+    "Cost": 156250000,
+    "MedianMinutes": 38.75,
+    "P10Minutes": 32.5,
+    "P90Minutes": 46.25,
+    "ReachedWithin6h": 200
+  },
+  {
+    "RebirthFrom": 3,
+    "Cost": 390625000,
+    "MedianMinutes": 51.25,
+    "P10Minutes": 41.25,
+    "P90Minutes": 65.0,
+    "ReachedWithin6h": 200
+  },
+  {
+    "RebirthFrom": 4,
+    "Cost": 644531250,
+    "MedianMinutes": 65.0,
+    "P10Minutes": 52.5,
+    "P90Minutes": 80.0,
+    "ReachedWithin6h": 200
+  },
+  {
+    "RebirthFrom": 5,
+    "Cost": 1063476562,
+    "MedianMinutes": 78.75,
+    "P10Minutes": 48.75,
+    "P90Minutes": 97.5,
+    "ReachedWithin6h": 200
+  },
+  {
+    "RebirthFrom": 6,
+    "Cost": 1754736328,
+    "MedianMinutes": 100.0,
+    "P10Minutes": 62.5,
+    "P90Minutes": 125.0,
+    "ReachedWithin6h": 200
+  },
+  {
+    "RebirthFrom": 7,
+    "Cost": 2895314941,
+    "MedianMinutes": 127.5,
+    "P10Minutes": 81.25,
+    "P90Minutes": 160.0,
+    "ReachedWithin6h": 200
+  },
+  {
+    "RebirthFrom": 8,
+    "Cost": 4777269653,
+    "MedianMinutes": 159.375,
+    "P10Minutes": 103.75,
+    "P90Minutes": 206.25,
+    "ReachedWithin6h": 200
+  },
+  {
+    "RebirthFrom": 9,
+    "Cost": 7882494927,
+    "MedianMinutes": 201.25,
+    "P10Minutes": 133.75,
+    "P90Minutes": 266.25,
+    "ReachedWithin6h": 200
+  }
+]

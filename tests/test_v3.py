@@ -24,7 +24,7 @@ class V3Tests(unittest.TestCase):
  def test_conveyor_moves_expires_and_cannot_pickup_expired(self):
   self.run_lua('''
    local model,entry=next(g.Salvage);local before=model.PrimaryPart.Position.Z
-   g:MoveSalvage(entry.Started+2);assert(math.abs(model.PrimaryPart.Position.Z-before-11.4)<0.00001)
+   g:MoveSalvage(entry.Started+2);assert(math.abs(model.PrimaryPart.Position.Z-before-22)<0.00001)
    Clock=entry.Expires;root.Position=model.PrimaryPart.Position;g:Pickup(TestPlayer,model)
    assert(not g.Carrying[TestPlayer]);g:MoveSalvage(Clock)
    assert(model.Destroyed and not g.Salvage[model]);assert(g.Remote.LastBroadcast[1]=="ShredFX")

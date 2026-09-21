@@ -18,10 +18,17 @@ local function shredder(model) if model:IsA("Model") then shredders[model]=model
 for _,p in ipairs(Tags:GetTagged("ScrapyardShredder")) do shredder(p) end
 Tags:GetInstanceAddedSignal("ScrapyardShredder"):Connect(shredder)
 Tags:GetInstanceRemovedSignal("ScrapyardShredder"):Connect(function(p) shredders[p]=nil end)
+local belt={}
+local Config=require(game.ReplicatedStorage.Shared.Config.GameConfig)
+local function tread(p) if p:IsA("BasePart") then belt[p]=p:GetAttribute("StartZ") end end
+for _,p in ipairs(Tags:GetTagged("ScrapyardBelt")) do tread(p) end
+Tags:GetInstanceAddedSignal("ScrapyardBelt"):Connect(tread)
+Tags:GetInstanceRemovedSignal("ScrapyardBelt"):Connect(function(p) belt[p]=nil end)
 local elapsed=0;local step=0
 Run.Heartbeat:Connect(function(dt)
  elapsed=elapsed+dt;step=step+dt;if step<0.05 then return end;step=0
  local camera=workspace.CurrentCamera
+ for part,z in pairs(belt) do if part.Parent then part.Position=Vector3.new(0,1.6,Config.BeltStart+((z-Config.BeltStart+elapsed*Config.BeltSpeed)%450)) end end
  for part,cf in pairs(shredders) do
   if part.Parent and camera and (cf.Position-camera.CFrame.Position).Magnitude<180 then part:PivotTo(cf*CFrame.Angles(0,0,elapsed*5*(part:GetAttribute("Direction") or 1))) end
  end

@@ -1,65 +1,65 @@
 {
   "New / free / 0% loss": {
     "FirstUpgrade": 290.0,
-    "FirstFloor": 790.0,
-    "RebirthEligible": 1790.0,
-    "Scrap60m": 142163374.625,
+    "FirstFloor": 1090.0,
+    "RebirthEligible": 2690.0,
+    "Scrap60m": 48635389.25,
     "Machines": 16.0,
-    "RebirthReached": 200
+    "RebirthReached": 199
   },
   "New / 2X / 0% loss": {
     "FirstUpgrade": 290.0,
-    "FirstFloor": 590.0,
-    "RebirthEligible": 1290.0,
-    "Scrap60m": 290629347.0,
+    "FirstFloor": 790.0,
+    "RebirthEligible": 1890.0,
+    "Scrap60m": 105171417.0,
     "Machines": 16.0,
     "RebirthReached": 200
   },
   "Average / free / 0% loss": {
     "FirstUpgrade": 215.0,
-    "FirstFloor": 440.0,
-    "RebirthEligible": 965.0,
-    "Scrap60m": 548860668.875,
+    "FirstFloor": 740.0,
+    "RebirthEligible": 1790.0,
+    "Scrap60m": 102530302.0,
     "Machines": 16.0,
     "RebirthReached": 200
   },
   "Average / free / 25% loss": {
     "FirstUpgrade": 215.0,
-    "FirstFloor": 515.0,
-    "RebirthEligible": 1115.0,
-    "Scrap60m": 390695072.0,
+    "FirstFloor": 815.0,
+    "RebirthEligible": 2015.0,
+    "Scrap60m": 86592778.0,
     "Machines": 16.0,
     "RebirthReached": 200
   },
   "Average / 2X / 0% loss": {
     "FirstUpgrade": 140.0,
-    "FirstFloor": 365.0,
-    "RebirthEligible": 740.0,
-    "Scrap60m": 1104480207.0,
+    "FirstFloor": 515.0,
+    "RebirthEligible": 1265.0,
+    "Scrap60m": 212825361.25,
     "Machines": 16.0,
     "RebirthReached": 200
   },
   "Average / 2X / 25% loss": {
-    "FirstUpgrade": 140.0,
-    "FirstFloor": 440.0,
-    "RebirthEligible": 890.0,
-    "Scrap60m": 787884750.75,
+    "FirstUpgrade": 215.0,
+    "FirstFloor": 590.0,
+    "RebirthEligible": 1415.0,
+    "Scrap60m": 181170555.25,
     "Machines": 16.0,
     "RebirthReached": 200
   },
   "Efficient / free / 0% loss": {
-    "FirstUpgrade": 105.0,
-    "FirstFloor": 325.0,
-    "RebirthEligible": 655.0,
-    "Scrap60m": 1176862525.0,
+    "FirstUpgrade": 160.0,
+    "FirstFloor": 545.0,
+    "RebirthEligible": 1315.0,
+    "Scrap60m": 133566179.5,
     "Machines": 16.0,
     "RebirthReached": 200
   },
   "Efficient / 2X / 0% loss": {
     "FirstUpgrade": 105.0,
-    "FirstFloor": 270.0,
-    "RebirthEligible": 490.0,
-    "Scrap60m": 2360112010.0,
+    "FirstFloor": 380.0,
+    "RebirthEligible": 930.0,
+    "Scrap60m": 275350182.25,
     "Machines": 16.0,
     "RebirthReached": 200
   }

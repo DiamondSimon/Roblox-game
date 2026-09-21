@@ -12,6 +12,7 @@ local Economy=require(Shared.EconomyConfig)
 local Styles=require(Shared.CoreShopConfig)
 local PetConfig=require(Shared.PetConfig)
 local Preview=require(Shared.PetPreview)
+local JunkPreview=require(Shared.MachinePreview)
 local Reel=require(Shared.CaseReel)
 local amber=Color3.fromRGB(255,187,68);local ink=Color3.fromRGB(19,28,36)
 local white=Color3.fromRGB(28,43,54);local muted=Color3.fromRGB(69,87,99);local teal=Color3.fromRGB(22,128,93)
@@ -108,6 +109,11 @@ local function marketplaceCard(item,isPass)
    else b.Text="UNAVAILABLE" end
   end)
  end
+end
+local function junkCard(id,name,description,action,callback,color)
+ local b,desc,f=card(name,description,action,callback,color)
+ f.Size=UDim2.new(1,-6,0,270);desc.Position=UDim2.fromOffset(12,164);desc.Size=UDim2.new(1,-24,0,48);b.Position=UDim2.fromOffset(12,218)
+ JunkPreview.make(f,id);return b,desc,f
 end
 renderMenu=function()
  updaters={}
@@ -218,9 +224,9 @@ renderMenu=function()
   for _,item in ipairs(state.Inventory) do
    if not item.Protected then
     local def=Machines.ById[item.MachineId]
-    card(def.DisplayName,"Sell for "..def.SellValue.." Scrap. Lose +"..def.BaseIncome.." base income/sec.","SELL…",function()
+    junkCard(item.MachineId,def.DisplayName,"Sell for "..def.SellValue.." Scrap. Lose +"..def.BaseIncome.." base income/sec.","SELL…",function()
      for _,child in ipairs(scroll:GetChildren()) do if child:IsA("GuiObject") then child:Destroy() end end
-     card("Confirm sale",def.DisplayName.." will be permanently removed.","CONFIRM • "..def.SellValue.." SCRAP",function() remote:FireServer("Sell",item.Uid) end)
+     junkCard(item.MachineId,"Confirm sale",def.DisplayName.." will be permanently removed.","CONFIRM • "..def.SellValue.." SCRAP",function() remote:FireServer("Sell",item.Uid) end)
      card("Keep your junk","Return to inventory.","CANCEL",renderMenu)
     end)
    end
@@ -242,7 +248,7 @@ renderMenu=function()
  elseif page=="Rebirth" then
   title.Text="REBIRTH"
   label(tabs,"Permanent income bonus: +"..(state.Rebirths*5).."% • "..state.Rebirths.." / 10",12,UDim2.new(),UDim2.fromScale(1,1),teal)
-  card("Start a new run","Requires "..fmt(state.RebirthCost).." Scrap. Reset ALL Scrap, earned junk, upgrades and floors. Gain +5 percentage points of permanent income (max +50%).","REVIEW RESET",function()
+  card("Start a new run","Requires "..fmt(state.RebirthCost).." Scrap. Reset ALL Scrap, earned junk, upgrades and floors. Gain +5 percentage points of permanent income (max +50%). Unlock Rare at 1, Epic at 2, Legendary at 3, Mythic at 5, Secret at 8 rebirths.","REVIEW RESET",function()
    for _,child in ipairs(scroll:GetChildren()) do if child:IsA("GuiObject") then child:Destroy() end end;updaters={}
    card("This reset is permanent","Keep Cores, cosmetics, passes, collection, daily claims and protected legacy items. Lose Scrap, unprotected machines and run upgrades.","CONFIRM REBIRTH",function() remote:FireServer("Rebirth",true);modal.Visible=false;page=nil end)
    card("Keep your current run","No changes.","CANCEL",renderMenu)
@@ -261,8 +267,8 @@ renderMenu=function()
   title.Text="COLLECTION"
   label(tabs,"Find machines. Bring them home to discover them.",12,UDim2.new(),UDim2.fromScale(1,1),muted)
   for _,id in ipairs(Machines.Order) do
-   local m=Machines.ById[id];local b=card(m.DisplayName,m.Rarity.." • +"..m.BaseIncome.." base Scrap/sec","",function() end,Machines.Rarities[m.Rarity].Color)
-   table.insert(updaters,function() b.Text=state.Discovered[id] and "DISCOVERED" or "UNDISCOVERED" end)
+   local m=Machines.ById[id];local b=junkCard(id,m.DisplayName,m.Rarity.." • +"..m.BaseIncome.." base Scrap/sec","",function() end,Machines.Rarities[m.Rarity].Color)
+   table.insert(updaters,function() b.Text=not Machines.canCollect(id,state.Rebirths) and ("LOCKED • "..m.RequiredRebirths.." REBIRTHS") or state.Discovered[id] and "DISCOVERED" or "UNDISCOVERED" end)
   end
  elseif page=="Replace" then
   title.Text="MAKE ROOM"
@@ -270,9 +276,9 @@ renderMenu=function()
   for _,item in ipairs(state.Inventory) do
    if not item.Protected then
     local def=Machines.ById[item.MachineId]
-    card(def.DisplayName,"Replace with your carried machine. This removes the old machine permanently.","SELECT TO REPLACE",function()
+    junkCard(item.MachineId,def.DisplayName,"Replace with your carried machine. This removes the old machine permanently.","SELECT TO REPLACE",function()
      updaters={};for _,child in ipairs(scroll:GetChildren()) do if child:IsA("GuiObject") then child:Destroy() end end
-     card("Confirm replacement",def.DisplayName.." will be removed. No Scrap is awarded.","CONFIRM REPLACEMENT",function() remote:FireServer("Replace",item.Uid);modal.Visible=false;page=nil end)
+     junkCard(item.MachineId,"Confirm replacement",def.DisplayName.." will be removed. No Scrap is awarded.","CONFIRM REPLACEMENT",function() remote:FireServer("Replace",item.Uid);modal.Visible=false;page=nil end)
      card("Keep your machine","Cancel and return to your inventory.","CANCEL",function() renderMenu() end)
     end)
    end
@@ -311,9 +317,9 @@ local function render()
  player:SetAttribute("TutorialTarget",state.Waypoint)
  for _,update in ipairs(updaters) do update() end
 end
-local mode=label(gui,"V0.3.3 • PRACTICE MODE",10,UDim2.new(0.5,0,1,-22),UDim2.new(0.7,0,0,18),muted);mode.AnchorPoint=Vector2.new(0.5,0);mode.TextXAlignment=Enum.TextXAlignment.Center
+local mode=label(gui,"V0.3.4 • PRACTICE MODE",10,UDim2.new(0.5,0,1,-22),UDim2.new(0.7,0,0,18),muted);mode.AnchorPoint=Vector2.new(0.5,0);mode.TextXAlignment=Enum.TextXAlignment.Center
 remote.OnClientEvent:Connect(function(kind,payload)
- if kind=="State" then local first=state==nil;state=payload;render();mode.Text=state.Persistent and "V0.3.3 • PRIVATE TEST" or "V0.3.3 • PRACTICE — PROGRESS RESETS";if first and page then renderMenu() end
+ if kind=="State" then local first=state==nil;state=payload;render();mode.Text=state.Persistent and "V0.3.4 • PRIVATE TEST" or "V0.3.4 • PRACTICE — PROGRESS RESETS";if first and page then renderMenu() end
  elseif kind=="Open" then if payload=="Pets" then petTab="CASES" end;open(payload)
  elseif kind=="CaseResult" then
   modal.Visible=false;page=nil

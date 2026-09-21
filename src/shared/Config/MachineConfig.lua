@@ -40,15 +40,17 @@ local config = {Order={}, ById={}, Rarities={
  Secret={Color=Color3.fromRGB(99,255,238), Announce=true},
 }}
 local rarityBudget={Common=295,Uncommon=93,Rare=43,Epic=12,Legendary=4,Mythic=0.9,Secret=0.1}
+local rebirthGate={Common=0,Uncommon=0,Rare=1,Epic=2,Legendary=3,Mythic=5,Secret=8}
 local rawTotals={};for _,row in ipairs(rows) do rawTotals[row[3]]=(rawTotals[row[3]] or 0)+row[5] end
 local incomeScale={Common=1000,Uncommon=1500,Rare=2500,Epic=5000,Legendary=10000,Mythic=40000,Secret=250000}
 for _, row in ipairs(rows) do
  row[4]=row[4]*incomeScale[row[3]]
  local id=row[1]
  table.insert(config.Order,id)
- config.ById[id]={MachineId=id, DisplayName=row[2], Rarity=row[3], BaseIncome=row[4],
+ config.ById[id]={MachineId=id, DisplayName=row[2], Rarity=row[3], BaseIncome=row[4],RequiredRebirths=rebirthGate[row[3]],
  SellValue=row[4]*20, SpawnWeight=row[5]*rarityBudget[row[3]]/rawTotals[row[3]], Category=row[6], ModelName=id,
  CarrySpeedModifier=0.75, MutationEligibility=true, FusionTier=1,
  UnlockZone=1, Thumbnail="", SoundProfile="Metal"}
 end
+function config.canCollect(id,rebirths) local d=config.ById[id];return d~=nil and (rebirths or 0)>=d.RequiredRebirths end
 return config

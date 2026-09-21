@@ -1,3 +1,7 @@
+# 0.3.4
+
+Correct central conveyor access and endpoint shredder; clear equal approach corridors; add off-road scenery and moving treads; gate rarity behind rebirths, including drops/slaps; add shared junk model previews to selling/replacement/collection; ease late rebirth growth based on gated simulations. 76 mocked-Lua checks. See docs/RELEASE_0.3.4.md.
+
 # 0.3.3
 
 Move the full conveyor 130 studs south; raise POI labels above roofs; increase actual earnings and rarity progression; scale prices and convert old saved Scrap once; add K/M/B/T HUD rates. 70 mocked-Lua tests and rebuilt place. See docs/RELEASE_0.3.3.md and docs/ECONOMY_0.3.3.md.
