@@ -84,6 +84,9 @@ function Machines:Create(id,position,parent)
   part("Display",Vector3.new(2.2,1.3,0.15),Vector3.new(-0.2,1.2,-1.2),Color3.fromRGB(25,41,46),Enum.Material.Glass)
   for y=0.7,1.7,0.5 do part("Dial",Vector3.new(0.3,0.3,0.2),Vector3.new(1.2,y,-1.25),color) end
  end
+ if def.RequiredRebirths>0 then
+  local marker=part("Rarity energy core",Vector3.new(0.6,1.5,0.6),Vector3.new(0,3.5,0),color,Enum.Material.Neon)
+ end
  model.Parent=parent
  return model
 end

@@ -13,7 +13,7 @@ function Pets:RefreshPolicy(player)
  self.Checking[player]=true
  local ok,result=pcall(function() return Policy:GetPolicyInfoForPlayerAsync(player) end)
  if player.Parent then
-  self.Policies[player]={Allowed=ok and type(result)=="table" and result.ArePaidRandomItemsRestricted==false,Checked=os.clock()}
+  self.Policies[player]={Allowed=ok and type(result)=="table" and result.ArePaidRandomItemsRestricted==false,TradingAllowed=ok and type(result)=="table" and result.IsPaidItemTradingAllowed==true,Checked=os.clock()}
  end
  self.Checking[player]=nil
 end
@@ -24,6 +24,10 @@ function Pets:Allowed(player)
  local record=self.Policies[player]
  if not record or os.clock()-record.Checked>300 then return false end
  return record.Allowed
+end
+function Pets:CanTrade(player)
+ if game:GetService("RunService"):IsStudio() and not Data:IsPersistent() and self.PracticePolicy[player] then return self.PracticePolicy[player]=="Allowed" end
+ local r=self.Policies[player];return r and os.clock()-r.Checked<=300 and r.Allowed and r.TradingAllowed==true
 end
 function Pets:Publish(player,d)
  player:SetAttribute("EquippedPet",d.Pets.Equipped)

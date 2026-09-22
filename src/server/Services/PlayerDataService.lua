@@ -14,7 +14,7 @@ local function clone(t)
 end
 local function fresh() return Schema.fresh(Http:GenerateGUID(false)) end
 local function validate(d)
- assert(d.SchemaVersion==6,"Unsupported schema; never overwrite a newer save")
+ assert(d.SchemaVersion==7,"Unsupported schema; never overwrite a newer save")
  assert(type(d.Scrap)=="number" and d.Scrap==d.Scrap and d.Scrap>=0 and d.Scrap<math.huge,"Bad balance")
  assert(type(d.MachineInventory)=="table" and #d.MachineInventory<=40,"Bad inventory")
  local ids={}
@@ -38,6 +38,8 @@ local function validate(d)
  for id,count in pairs(d.Pets.Owned) do assert(PetConfig.ById[id] and type(count)=="number" and count%1==0 and count>=1 and count<=10000,"Bad owned pet") end
  assert(d.Pets.Equipped=="" or (d.Pets.Owned[d.Pets.Equipped] or 0)>0,"Pet not owned")
  assert(type(d.Rewards)=="table" and type(d.Rewards.Codes)=="table" and type(d.Rewards.Milestones)=="table","Bad rewards")
+ assert(type(d.Boosts)=="table" and type(d.VIPDay)=="number","Bad boosts")
+ for k,v in pairs(d.Boosts) do assert((k=="Income" or k=="Luck" or k=="ServerLuck" or k=="ServerIncome") and type(v)=="number" and v>=0 and v<math.huge,"Bad boost expiry") end
  return d
 end
 local function update(key, transform)

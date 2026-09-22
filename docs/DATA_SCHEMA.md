@@ -1,3 +1,9 @@
+# Current: schema 7 / release 0.3.5
+
+Schema 6 → 7 adds Boosts UTC-expiry map and VIPDay claim marker. No currency rescaling. Both survive rebirth. See RELEASE_0.3.5.md for transactions, server restoration and rollback limits.
+
+## Historical migration notes
+
 0.3.4 keeps schema 6. Rarity requirements apply to newly acquired/carrying junk; existing stored machines are preserved. No repeat money conversion.
 
 # Save schema 6 (release 0.3.3)

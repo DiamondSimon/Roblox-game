@@ -76,7 +76,7 @@ function P:Slap(player)
  local carried=g.Carrying[victim]
  if carried then
   local id=carried.Id
-  if Machines.canCollect(id,d.Rebirths) then g:ClearCarry(victim);g:GiveCarry(player,id);g:Notify(player,"SNATCHED • "..Machines.ById[id].DisplayName)
+  if Machines.canCollect(id,d.Rebirths) and (not carried.PaidLuck or (require(script.Parent.PetService):CanTrade(player) and require(script.Parent.PetService):CanTrade(victim))) then g:ClearCarry(victim);g:GiveCarry(player,id,carried.PaidLuck);g:Notify(player,"SNATCHED • "..Machines.ById[id].DisplayName)
   else g:Notify(player,"JUNK LOCKED • Requires "..Machines.ById[id].RequiredRebirths.." rebirths") end
  end
  vh.PlatformStand=true

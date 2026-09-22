@@ -10,7 +10,7 @@ class Patch033Tests(unittest.TestCase):
    local belt=w.Root.ConveyorAssembly["CENTRAL SALVAGE"]
    assert(belt.Position.Z==1 and belt.Position.Z-belt.Size.Z/2==-224)
    assert(w.Root.ConveyorAssembly["Salvage hopper"].Position.Z==-246)
-   assert(w.Shredder.Position.Z==240)
+   assert(w.Shredder.Position.Z==238)
    for model,entry in pairs(g.Salvage) do
     assert(model.PrimaryPart.Position.Z>=-224 and model.PrimaryPart.Position.Z<=-149)
    end
@@ -41,7 +41,7 @@ class Patch033Tests(unittest.TestCase):
    old.SchemaVersion=5;old.Scrap=1234.5;old.LifetimeScrap=9000;old.Cores=81
    old.Receipts.paid={Currency="Scrap",Amount=500};old.Receipts.core={Currency="Cores",Amount=80}
    local d=Data:Load(Player)
-   assert(d.SchemaVersion==6 and d.Scrap==1234500 and d.LifetimeScrap==9000000 and d.Cores==81)
+   assert(d.SchemaVersion==7 and d.Scrap==1234500 and d.LifetimeScrap==9000000 and d.Cores==81)
    assert(d.Receipts.paid.Amount==500000 and d.Receipts.core.Amount==80)
    Data:Release(Player);d=Data:Load(Player)
    assert(d.Scrap==1234500 and d.Receipts.paid.Amount==500000)

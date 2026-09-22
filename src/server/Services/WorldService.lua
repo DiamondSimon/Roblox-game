@@ -235,9 +235,10 @@ function World:Build()
   local crown=self.part(scenery,"Tree canopy",Vector3.new(12,14,12),Vector3.new(x+14,15,z-7),Color3.fromRGB(65,129,68),Enum.Material.Grass);crown.Shape=Enum.PartType.Ball
   for n=1,3 do local bush=self.part(scenery,"Roadside bush",Vector3.new(5,4,5),Vector3.new(x-9+n*5,2,z-12),Color3.fromRGB(81,146+n*8,74),Enum.Material.Grass);bush.Shape=Enum.PartType.Ball end
  end end
- Lighting.ClockTime=13.5;Lighting.Brightness=3;Lighting.Ambient=Color3.fromRGB(138,145,153);Lighting.OutdoorAmbient=Color3.fromRGB(165,172,177)
- local atmosphere=Instance.new("Atmosphere");atmosphere.Density=0.16;atmosphere.Offset=0.1;atmosphere.Color=Color3.fromRGB(196,211,222);atmosphere.Parent=Lighting
+ require(script.Parent.IndustrialWorld).Build(self,root)
+ Lighting.ClockTime=16.5;Lighting.Brightness=2.6;Lighting.Ambient=Color3.fromRGB(138,145,153);Lighting.OutdoorAmbient=Color3.fromRGB(165,172,177)
+ local atmosphere=Instance.new("Atmosphere");atmosphere.Density=0.16;atmosphere.Offset=0.1;atmosphere.Color=Color3.fromRGB(225,205,178);atmosphere.Parent=Lighting
  local bloom=Instance.new("BloomEffect");bloom.Intensity=0.14;bloom.Size=20;bloom.Threshold=1.8;bloom.Parent=Lighting
- local cc=Instance.new("ColorCorrectionEffect");cc.Contrast=0.12;cc.Saturation=0.12;cc.Parent=Lighting
+ local cc=Instance.new("ColorCorrectionEffect");cc.Contrast=0.12;cc.Saturation=0.08;cc.Parent=Lighting
 end
 return World

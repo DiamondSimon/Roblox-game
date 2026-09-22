@@ -1,0 +1,632 @@
+[
+  {
+    "Scenario": "FREE",
+    "RebirthFrom": 0,
+    "FirstUpgradeMinutes": 3.75,
+    "FirstFloorMinutes": 12.5,
+    "RebirthMinutes": 30.0,
+    "ScrapPerSecondAtEnd": 34720,
+    "RebirthCost": 25000000
+  },
+  {
+    "Scenario": "FREE",
+    "RebirthFrom": 1,
+    "FirstUpgradeMinutes": 3.75,
+    "FirstFloorMinutes": 8.75,
+    "RebirthMinutes": 31.25,
+    "ScrapPerSecondAtEnd": 72030,
+    "RebirthCost": 62500000
+  },
+  {
+    "Scenario": "FREE",
+    "RebirthFrom": 2,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 38.75,
+    "ScrapPerSecondAtEnd": 135489,
+    "RebirthCost": 156250000
+  },
+  {
+    "Scenario": "FREE",
+    "RebirthFrom": 3,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 51.25,
+    "ScrapPerSecondAtEnd": 245493,
+    "RebirthCost": 390625000
+  },
+  {
+    "Scenario": "FREE",
+    "RebirthFrom": 4,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 65.0,
+    "ScrapPerSecondAtEnd": 304819,
+    "RebirthCost": 644531250
+  },
+  {
+    "Scenario": "FREE",
+    "RebirthFrom": 5,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 77.5,
+    "ScrapPerSecondAtEnd": 434350,
+    "RebirthCost": 1063476562
+  },
+  {
+    "Scenario": "FREE",
+    "RebirthFrom": 6,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 98.75,
+    "ScrapPerSecondAtEnd": 540358,
+    "RebirthCost": 1754736328
+  },
+  {
+    "Scenario": "FREE",
+    "RebirthFrom": 7,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 124.375,
+    "ScrapPerSecondAtEnd": 771876,
+    "RebirthCost": 2895314941
+  },
+  {
+    "Scenario": "FREE",
+    "RebirthFrom": 8,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 155.0,
+    "ScrapPerSecondAtEnd": 975296,
+    "RebirthCost": 4777269653
+  },
+  {
+    "Scenario": "FREE",
+    "RebirthFrom": 9,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 192.5,
+    "ScrapPerSecondAtEnd": 1269562,
+    "RebirthCost": 7882494927
+  },
+  {
+    "Scenario": "2X",
+    "RebirthFrom": 0,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 8.75,
+    "RebirthMinutes": 20.0,
+    "ScrapPerSecondAtEnd": 51128,
+    "RebirthCost": 25000000
+  },
+  {
+    "Scenario": "2X",
+    "RebirthFrom": 1,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 21.25,
+    "ScrapPerSecondAtEnd": 108780,
+    "RebirthCost": 62500000
+  },
+  {
+    "Scenario": "2X",
+    "RebirthFrom": 2,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 27.5,
+    "ScrapPerSecondAtEnd": 210333,
+    "RebirthCost": 156250000
+  },
+  {
+    "Scenario": "2X",
+    "RebirthFrom": 3,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 36.25,
+    "ScrapPerSecondAtEnd": 362057,
+    "RebirthCost": 390625000
+  },
+  {
+    "Scenario": "2X",
+    "RebirthFrom": 4,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 45.0,
+    "ScrapPerSecondAtEnd": 454474,
+    "RebirthCost": 644531250
+  },
+  {
+    "Scenario": "2X",
+    "RebirthFrom": 5,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 53.125,
+    "ScrapPerSecondAtEnd": 620340,
+    "RebirthCost": 1063476562
+  },
+  {
+    "Scenario": "2X",
+    "RebirthFrom": 6,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 68.125,
+    "ScrapPerSecondAtEnd": 767312,
+    "RebirthCost": 1754736328
+  },
+  {
+    "Scenario": "2X",
+    "RebirthFrom": 7,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 87.5,
+    "ScrapPerSecondAtEnd": 994518,
+    "RebirthCost": 2895314941
+  },
+  {
+    "Scenario": "2X",
+    "RebirthFrom": 8,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 108.125,
+    "ScrapPerSecondAtEnd": 1594656,
+    "RebirthCost": 4777269653
+  },
+  {
+    "Scenario": "2X",
+    "RebirthFrom": 9,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 138.75,
+    "ScrapPerSecondAtEnd": 1801016,
+    "RebirthCost": 7882494927
+  },
+  {
+    "Scenario": "VIP",
+    "RebirthFrom": 0,
+    "FirstUpgradeMinutes": 3.75,
+    "FirstFloorMinutes": 11.25,
+    "RebirthMinutes": 27.5,
+    "ScrapPerSecondAtEnd": 37481,
+    "RebirthCost": 25000000
+  },
+  {
+    "Scenario": "VIP",
+    "RebirthFrom": 1,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 8.75,
+    "RebirthMinutes": 28.75,
+    "ScrapPerSecondAtEnd": 79555,
+    "RebirthCost": 62500000
+  },
+  {
+    "Scenario": "VIP",
+    "RebirthFrom": 2,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 36.25,
+    "ScrapPerSecondAtEnd": 146603,
+    "RebirthCost": 156250000
+  },
+  {
+    "Scenario": "VIP",
+    "RebirthFrom": 3,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 47.5,
+    "ScrapPerSecondAtEnd": 264172,
+    "RebirthCost": 390625000
+  },
+  {
+    "Scenario": "VIP",
+    "RebirthFrom": 4,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 60.0,
+    "ScrapPerSecondAtEnd": 325349,
+    "RebirthCost": 644531250
+  },
+  {
+    "Scenario": "VIP",
+    "RebirthFrom": 5,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 71.25,
+    "ScrapPerSecondAtEnd": 452511,
+    "RebirthCost": 1063476562
+  },
+  {
+    "Scenario": "VIP",
+    "RebirthFrom": 6,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 92.5,
+    "ScrapPerSecondAtEnd": 567203,
+    "RebirthCost": 1754736328
+  },
+  {
+    "Scenario": "VIP",
+    "RebirthFrom": 7,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 115.0,
+    "ScrapPerSecondAtEnd": 867487,
+    "RebirthCost": 2895314941
+  },
+  {
+    "Scenario": "VIP",
+    "RebirthFrom": 8,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 145.0,
+    "ScrapPerSecondAtEnd": 1067044,
+    "RebirthCost": 4777269653
+  },
+  {
+    "Scenario": "VIP",
+    "RebirthFrom": 9,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.875,
+    "RebirthMinutes": 181.25,
+    "ScrapPerSecondAtEnd": 1402101,
+    "RebirthCost": 7882494927
+  },
+  {
+    "Scenario": "2X + VIP",
+    "RebirthFrom": 0,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 8.75,
+    "RebirthMinutes": 20.0,
+    "ScrapPerSecondAtEnd": 56286,
+    "RebirthCost": 25000000
+  },
+  {
+    "Scenario": "2X + VIP",
+    "RebirthFrom": 1,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 20.0,
+    "ScrapPerSecondAtEnd": 120161,
+    "RebirthCost": 62500000
+  },
+  {
+    "Scenario": "2X + VIP",
+    "RebirthFrom": 2,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 26.25,
+    "ScrapPerSecondAtEnd": 218825,
+    "RebirthCost": 156250000
+  },
+  {
+    "Scenario": "2X + VIP",
+    "RebirthFrom": 3,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 33.75,
+    "ScrapPerSecondAtEnd": 408071,
+    "RebirthCost": 390625000
+  },
+  {
+    "Scenario": "2X + VIP",
+    "RebirthFrom": 4,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 42.5,
+    "ScrapPerSecondAtEnd": 489723,
+    "RebirthCost": 644531250
+  },
+  {
+    "Scenario": "2X + VIP",
+    "RebirthFrom": 5,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 50.0,
+    "ScrapPerSecondAtEnd": 692864,
+    "RebirthCost": 1063476562
+  },
+  {
+    "Scenario": "2X + VIP",
+    "RebirthFrom": 6,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 62.5,
+    "ScrapPerSecondAtEnd": 849549,
+    "RebirthCost": 1754736328
+  },
+  {
+    "Scenario": "2X + VIP",
+    "RebirthFrom": 7,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 80.0,
+    "ScrapPerSecondAtEnd": 1116310,
+    "RebirthCost": 2895314941
+  },
+  {
+    "Scenario": "2X + VIP",
+    "RebirthFrom": 8,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 103.125,
+    "ScrapPerSecondAtEnd": 1507024,
+    "RebirthCost": 4777269653
+  },
+  {
+    "Scenario": "2X + VIP",
+    "RebirthFrom": 9,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 130.0,
+    "ScrapPerSecondAtEnd": 1983625,
+    "RebirthCost": 7882494927
+  },
+  {
+    "Scenario": "2X + VIP + best pet",
+    "RebirthFrom": 0,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 7.5,
+    "RebirthMinutes": 17.5,
+    "ScrapPerSecondAtEnd": 63447,
+    "RebirthCost": 25000000
+  },
+  {
+    "Scenario": "2X + VIP + best pet",
+    "RebirthFrom": 1,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 18.75,
+    "ScrapPerSecondAtEnd": 134719,
+    "RebirthCost": 62500000
+  },
+  {
+    "Scenario": "2X + VIP + best pet",
+    "RebirthFrom": 2,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 23.75,
+    "ScrapPerSecondAtEnd": 241253,
+    "RebirthCost": 156250000
+  },
+  {
+    "Scenario": "2X + VIP + best pet",
+    "RebirthFrom": 3,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 31.25,
+    "ScrapPerSecondAtEnd": 453514,
+    "RebirthCost": 390625000
+  },
+  {
+    "Scenario": "2X + VIP + best pet",
+    "RebirthFrom": 4,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 38.75,
+    "ScrapPerSecondAtEnd": 537405,
+    "RebirthCost": 644531250
+  },
+  {
+    "Scenario": "2X + VIP + best pet",
+    "RebirthFrom": 5,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 45.0,
+    "ScrapPerSecondAtEnd": 763333,
+    "RebirthCost": 1063476562
+  },
+  {
+    "Scenario": "2X + VIP + best pet",
+    "RebirthFrom": 6,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 57.5,
+    "ScrapPerSecondAtEnd": 937329,
+    "RebirthCost": 1754736328
+  },
+  {
+    "Scenario": "2X + VIP + best pet",
+    "RebirthFrom": 7,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 73.75,
+    "ScrapPerSecondAtEnd": 1175777,
+    "RebirthCost": 2895314941
+  },
+  {
+    "Scenario": "2X + VIP + best pet",
+    "RebirthFrom": 8,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 94.375,
+    "ScrapPerSecondAtEnd": 1534433,
+    "RebirthCost": 4777269653
+  },
+  {
+    "Scenario": "2X + VIP + best pet",
+    "RebirthFrom": 9,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 117.5,
+    "ScrapPerSecondAtEnd": 2321520,
+    "RebirthCost": 7882494927
+  },
+  {
+    "Scenario": "Paid + pet + 15m income",
+    "RebirthFrom": 0,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 12.5,
+    "ScrapPerSecondAtEnd": 86863,
+    "RebirthCost": 25000000
+  },
+  {
+    "Scenario": "Paid + pet + 15m income",
+    "RebirthFrom": 1,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 13.75,
+    "ScrapPerSecondAtEnd": 176894,
+    "RebirthCost": 62500000
+  },
+  {
+    "Scenario": "Paid + pet + 15m income",
+    "RebirthFrom": 2,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 18.75,
+    "ScrapPerSecondAtEnd": 216898,
+    "RebirthCost": 156250000
+  },
+  {
+    "Scenario": "Paid + pet + 15m income",
+    "RebirthFrom": 3,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 26.875,
+    "ScrapPerSecondAtEnd": 409167,
+    "RebirthCost": 390625000
+  },
+  {
+    "Scenario": "Paid + pet + 15m income",
+    "RebirthFrom": 4,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 35.0,
+    "ScrapPerSecondAtEnd": 503441,
+    "RebirthCost": 644531250
+  },
+  {
+    "Scenario": "Paid + pet + 15m income",
+    "RebirthFrom": 5,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 43.75,
+    "ScrapPerSecondAtEnd": 732711,
+    "RebirthCost": 1063476562
+  },
+  {
+    "Scenario": "Paid + pet + 15m income",
+    "RebirthFrom": 6,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 55.0,
+    "ScrapPerSecondAtEnd": 916433,
+    "RebirthCost": 1754736328
+  },
+  {
+    "Scenario": "Paid + pet + 15m income",
+    "RebirthFrom": 7,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 71.25,
+    "ScrapPerSecondAtEnd": 1157258,
+    "RebirthCost": 2895314941
+  },
+  {
+    "Scenario": "Paid + pet + 15m income",
+    "RebirthFrom": 8,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 92.5,
+    "ScrapPerSecondAtEnd": 1511442,
+    "RebirthCost": 4777269653
+  },
+  {
+    "Scenario": "Paid + pet + 15m income",
+    "RebirthFrom": 9,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 116.25,
+    "ScrapPerSecondAtEnd": 2349814,
+    "RebirthCost": 7882494927
+  },
+  {
+    "Scenario": "Maximum sustained stress",
+    "RebirthFrom": 0,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 11.25,
+    "ScrapPerSecondAtEnd": 111670,
+    "RebirthCost": 25000000
+  },
+  {
+    "Scenario": "Maximum sustained stress",
+    "RebirthFrom": 1,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 11.25,
+    "ScrapPerSecondAtEnd": 242012,
+    "RebirthCost": 62500000
+  },
+  {
+    "Scenario": "Maximum sustained stress",
+    "RebirthFrom": 2,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 13.75,
+    "ScrapPerSecondAtEnd": 452455,
+    "RebirthCost": 156250000
+  },
+  {
+    "Scenario": "Maximum sustained stress",
+    "RebirthFrom": 3,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 17.5,
+    "ScrapPerSecondAtEnd": 839618,
+    "RebirthCost": 390625000
+  },
+  {
+    "Scenario": "Maximum sustained stress",
+    "RebirthFrom": 4,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 21.25,
+    "ScrapPerSecondAtEnd": 1097994,
+    "RebirthCost": 644531250
+  },
+  {
+    "Scenario": "Maximum sustained stress",
+    "RebirthFrom": 5,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 23.75,
+    "ScrapPerSecondAtEnd": 1514688,
+    "RebirthCost": 1063476562
+  },
+  {
+    "Scenario": "Maximum sustained stress",
+    "RebirthFrom": 6,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 30.625,
+    "ScrapPerSecondAtEnd": 2060768,
+    "RebirthCost": 1754736328
+  },
+  {
+    "Scenario": "Maximum sustained stress",
+    "RebirthFrom": 7,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 38.75,
+    "ScrapPerSecondAtEnd": 2618111,
+    "RebirthCost": 2895314941
+  },
+  {
+    "Scenario": "Maximum sustained stress",
+    "RebirthFrom": 8,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 46.875,
+    "ScrapPerSecondAtEnd": 3424547,
+    "RebirthCost": 4777269653
+  },
+  {
+    "Scenario": "Maximum sustained stress",
+    "RebirthFrom": 9,
+    "FirstUpgradeMinutes": 2.5,
+    "FirstFloorMinutes": 6.25,
+    "RebirthMinutes": 60.0,
+    "ScrapPerSecondAtEnd": 4588693,
+    "RebirthCost": 7882494927
+  }
+]

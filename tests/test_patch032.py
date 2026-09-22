@@ -13,15 +13,15 @@ class Patch032Tests(unittest.TestCase):
  def test_shredder_whole_assembly_at_endpoint_no_overhead_text(self):
   self.run_lua('''
    local c=require(game.ReplicatedStorage.Shared.Config.GameConfig)
-   assert(world.Shredder.Position.Z==c.BeltEnd and c.BeltEnd==240)
+   assert(world.Shredder.Position.Z==c.BeltEnd and c.BeltEnd==238)
    local assembly=world.Root.ConveyorAssembly.ShredderAssembly;assert(assembly)
    for _,p in ipairs(assembly:GetDescendants()) do
     assert(not p:IsA("BillboardGui"))
-    if p:IsA("BasePart") then assert(p.Position.Z>=224 and p.Position.Z<=254) end
+    if p:IsA("BasePart") then assert(p.Position.Z>=222 and p.Position.Z<=252) end
    end
    local belt=world.Root.ConveyorAssembly["CENTRAL SALVAGE"]
    assert(belt.Position.Z+belt.Size.Z/2==226)
-   assert(math.abs((c.BeltEnd-c.BeltStart)/c.BeltSpeed-42.181818)<0.001)
+   assert(math.abs((c.BeltEnd-c.BeltStart)/c.BeltSpeed-42)<0.001)
   ''')
  def test_studio_controls_fail_closed_on_live_and_persistent(self):
   self.run_lua('''
@@ -95,7 +95,7 @@ class Patch032Tests(unittest.TestCase):
   self.run_lua('''
    d.SchemaVersion=4;d.Rewards=nil;d.Pets.Owned.bolt_mouse=1;d.Pets.Equipped="bolt_mouse";d.Cores=38
    d=require(TestModules.ProfileSchema).migrate(d)
-   assert(d.SchemaVersion==6 and next(d.Rewards.Codes)==nil and d.Pets.Equipped=="bolt_mouse" and d.Cores==38)
+   assert(d.SchemaVersion==7 and next(d.Rewards.Codes)==nil and d.Pets.Equipped=="bolt_mouse" and d.Cores==38)
   ''')
  def test_case_reel_preview_winner_and_skip_no_additional_reward(self):
   lua=boot();lua.execute((ROOT/'tests/client_stub.lua').read_text())

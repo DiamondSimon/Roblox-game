@@ -9,6 +9,9 @@ local Shared=game.ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Config"
 local Monetization=require(Shared.MonetizationConfig)
 local Machines=require(Shared.MachineConfig)
 local Economy=require(Shared.EconomyConfig)
+local BoostConfig=require(Shared.BoostConfig)
+local Odds=require(Shared.SalvageOdds)
+local luckOffer=nil;local oddsLevel=0
 local Styles=require(Shared.CoreShopConfig)
 local PetConfig=require(Shared.PetConfig)
 local Preview=require(Shared.PetPreview)
@@ -91,14 +94,18 @@ local function open(name)
 end
 local function marketplaceCard(item,isPass)
  local ready=false
- local b=card(item.Name,item.Description,"NOT CONFIGURED",function()
+ local reviewed=page=="LuckOdds"
+ local b=card(item.Name,(isPass and "PERMANENT\n" or (tostring(item.Amount).." CORES RECEIVED\n"))..item.Description,"NOT CONFIGURED",function()
+  if item.Key=="Luck" and not reviewed then luckOffer={Pass=item};oddsLevel=state.Rebirths;open("LuckOdds");return end
+  if item.Key=="Luck" and not state.CasesAllowed then notify("LUCK UNAVAILABLE FOR THIS ACCOUNT");return end
   if state and state.StudioTools then remote:FireServer("StudioAction",{Kind=isPass and "Pass" or "Product",Key=item.Key});return end
-  if not ready then return end
+  if not ready or (isPass and player:GetAttribute(item.Key)) then return end
   remote:FireServer("Telemetry",isPass and "PassPrompted" or "CorePurchasePrompted")
   local ok=pcall(function() if isPass then Marketplace:PromptGamePassPurchase(player,item.Id) else Marketplace:PromptProductPurchase(player,item.Id) end end)
   if not ok then notify("Shop unavailable • Try again later") end
  end)
- if state and state.StudioTools then b.Text="SIMULATE • NO ROBUX CHARGE";return end
+ if state and state.StudioTools then b.Text=(isPass and player:GetAttribute(item.Key)) and "OWNED • TOGGLE TEST" or "SIMULATE • NO ROBUX CHARGE";return end
+ if isPass then table.insert(updaters,function() if player:GetAttribute(item.Key) then b.Text="OWNED";ready=false end end) end
  if Monetization.Enabled and item.Id>0 and state and state.Persistent then
   b.Text="CHECKING PRICE…"
   task.spawn(function()
@@ -122,19 +129,41 @@ renderMenu=function()
  if not state then title.Text="LOADING…";return end
  if page=="Shop" then
   title.Text="SUPPLY DEPOT"
-  for i,name in ipairs({"PASSES","CORES","STYLES"}) do
-   button(tabs,name,UDim2.new((i-1)/3,0,0,0),UDim2.new(1/3,-6,1,0),function() shopTab=name;renderMenu() end,shopTab~=name)
+  for i,name in ipairs({"PASSES","CORES","BOOSTS","STYLES"}) do
+   button(tabs,name,UDim2.new((i-1)/4,0,0,0),UDim2.new(1/4,-6,1,0),function() shopTab=name;renderMenu() end,shopTab~=name)
   end
   if shopTab=="PASSES" then for _,item in ipairs(Monetization.Passes) do marketplaceCard(item,true) end
   elseif shopTab=="CORES" then
    label(tabs,"",12,UDim2.new(),UDim2.new())
    for _,item in ipairs(Monetization.Products) do if not item.Hidden then marketplaceCard(item,false) end end
+  elseif shopTab=="BOOSTS" then
+   for _,key in ipairs(BoostConfig.Order) do
+    local def=BoostConfig.Items[key]
+    local b=card(def.Name,def.Scope.." • "..def.Description.." Timer continues offline.","",function() if key=="Luck" or key=="ServerLuck" then luckOffer={Boost=key};oddsLevel=state.Rebirths;open("LuckOdds") else remote:FireServer("BuyBoost",key) end end)
+    table.insert(updaters,function() local remaining=state.Boosts[key] or 0;b.Text=remaining>0 and ("ACTIVE • "..math.ceil(remaining/60).." MIN") or (def.Cost.." CORES • ACTIVATE HERE") end)
+   end
   else
    for _,id in ipairs(Styles.Order) do
     local item=Styles.Items[id]
     local b=card(item.Name,item.Description,item.Cost.." CORES",function() remote:FireServer("CoreShop",id) end,item.Color)
     table.insert(updaters,function() b.Text=state.Cosmetics.Equipped==id and "EQUIPPED" or state.Cosmetics.Owned[id] and "EQUIP" or item.Cost.." CORES" end)
    end
+  end
+ elseif page=="LuckOdds" then
+  title.Text="LUCK • EXACT ROLL ODDS"
+  label(tabs,"REBIRTH "..oddsLevel.." • Locks still apply",12,UDim2.new(),UDim2.fromScale(1,1),teal)
+  card("How shared luck works","Every other spawn is a normal FREE roll. Boosted rolls rotate sponsorship between players. Items remain contested; a roll does not guarantee collection.","VIEW NEXT REBIRTH TIER",function() oddsLevel=(oddsLevel+1)%11;renderMenu() end)
+  if luckOffer and luckOffer.Pass then
+   if not state.CasesAllowed then card("Unavailable","Choose deterministic income, space or VIP benefits instead.","ACCOUNT RESTRICTED",function() end)
+   else luckOffer.Confirmed=true;marketplaceCard(luckOffer.Pass,true);luckOffer.Confirmed=false end
+  elseif luckOffer then
+   local key=luckOffer.Boost;local def=BoostConfig.Items[key]
+   card(def.Name,"15 real-time minutes, no active-duration stacking. Purchase only at Supplies. Inspect all outcomes below.",state.CasesAllowed and ("CONFIRM • "..def.Cost.." CORES") or "ACCOUNT RESTRICTED",function() if state.CasesAllowed then remote:FireServer("BuyBoost",key) end end)
+  end
+  local base,bt=Odds.weights(oddsLevel,1,1);local personal,pt=Odds.weights(oddsLevel,1.5,1);local server,st=Odds.weights(oddsLevel,1,1.5);local combined,ct=Odds.weights(oddsLevel,1.5,1.5)
+  for _,id in ipairs(Machines.Order) do
+   local m=Machines.ById[id]
+   card(m.DisplayName,string.format("FREE %.5f%% • PERSONAL %.5f%%\nSERVER %.5f%% • BOTH %.5f%%",100*base[id]/bt,100*personal[id]/pt,100*server[id]/st,100*combined[id]/ct),Machines.canCollect(id,oddsLevel) and "ELIGIBLE AT THIS REBIRTH" or ("REQUIRES REBIRTH "..m.RequiredRebirths),function() end,Machines.Rarities[m.Rarity].Color)
   end
  elseif page=="Upgrades" then
   title.Text="YARD WORKSHOP"
@@ -197,6 +226,10 @@ renderMenu=function()
   card("Guaranteed pets available","The PETS tab offers exact pets for Scrap, with no random outcome.","BACK TO PETS",function() petTab="PETS";open("Pets") end)
  elseif page=="Rewards" then
   title.Text="REWARDS & CODES"
+  if player:GetAttribute("VIP") then
+   local b=card("★ VIP DAILY", "5 Cores every UTC day. Your VIP yard and +15% income are always active.","",function() remote:FireServer("VIPDaily") end)
+   table.insert(updaters,function() b.Text=state.VIPDailyReady and "CLAIM VIP CORES" or "CLAIMED TODAY" end)
+  end
   label(tabs,"Collection goals are permanent • Rebirth keeps claims",12,UDim2.new(),UDim2.fromScale(1,1),teal)
   local codeBox=nil
   local b,desc,f=card("Redeem a code","","REDEEM",function() if codeBox then remote:FireServer("RedeemCode",codeBox.Text) end end)
@@ -210,7 +243,7 @@ renderMenu=function()
  elseif page=="Studio" and state.StudioTools then
   title.Text="STUDIO TEST LAB"
   label(tabs,"Local practice only • No Robux • Resets on Stop",12,UDim2.new(),UDim2.fromScale(1,1),teal)
-  for _,entry in ipairs({{"Scrap","+100,000,000 SCRAP"},{"Cores","+1,000 CORES"},{"Loadout","32 SLOTS + 8 MACHINES"},{"Tutorial","FINISH TUTORIAL"},{"Daily","RESET DAILY CLAIMS"}}) do
+  for _,entry in ipairs({{"Scrap","+100,000,000 SCRAP"},{"Cores","+1,000 CORES"},{"Loadout","32 SLOTS + 8 MACHINES"},{"Tutorial","FINISH TUTORIAL"},{"RebirthTest","+1 TEST REBIRTH"},{"Daily","RESET DAILY CLAIMS"}}) do
    local kind=entry[1];card(entry[2],"Applies only to this practice profile.","APPLY",function() remote:FireServer("StudioAction",{Kind=kind}) end)
   end
   for _,pass in ipairs(Monetization.Passes) do local key=pass.Key;card(pass.Name,"Toggle the entitlement effect for testing.","TOGGLE TEST PASS",function() remote:FireServer("StudioAction",{Kind="Pass",Key=key}) end) end
@@ -224,9 +257,9 @@ renderMenu=function()
   for _,item in ipairs(state.Inventory) do
    if not item.Protected then
     local def=Machines.ById[item.MachineId]
-    junkCard(item.MachineId,def.DisplayName,"Sell for "..def.SellValue.." Scrap. Lose +"..def.BaseIncome.." base income/sec.","SELL…",function()
+    junkCard(item.MachineId,def.DisplayName,"Sell for "..fmt(def.SellValue).." Scrap. Lose +"..fmt(def.BaseIncome).." base income/sec.","SELL…",function()
      for _,child in ipairs(scroll:GetChildren()) do if child:IsA("GuiObject") then child:Destroy() end end
-     junkCard(item.MachineId,"Confirm sale",def.DisplayName.." will be permanently removed.","CONFIRM • "..def.SellValue.." SCRAP",function() remote:FireServer("Sell",item.Uid) end)
+     junkCard(item.MachineId,"Confirm sale",def.DisplayName.." will be permanently removed.","CONFIRM • "..fmt(def.SellValue).." SCRAP",function() remote:FireServer("Sell",item.Uid) end)
      card("Keep your junk","Return to inventory.","CANCEL",renderMenu)
     end)
    end
@@ -246,8 +279,17 @@ renderMenu=function()
   local b=card("Free Core rewards","5 Cores: 60% • 10 Cores: 30% • 20 Cores: 10%. Each spin awards one Core prize.","SPIN FREE",function() remote:FireServer("Spin") end)
   table.insert(updaters,function() b.Text=state.SpinReady and "SPIN FREE" or "CLAIMED • RESETS AT 00:00 UTC" end)
  elseif page=="Rebirth" then
-  title.Text="REBIRTH"
+  title.Text="REBIRTH "..state.Rebirths.." → "..math.min(10,state.Rebirths+1)
   label(tabs,"Permanent income bonus: +"..(state.Rebirths*5).."% • "..state.Rebirths.." / 10",12,UDim2.new(),UDim2.fromScale(1,1),teal)
+  local nextCount=math.min(10,state.Rebirths+1)
+  local previewId=nil
+  for _,id in ipairs(Machines.Order) do if Machines.ById[id].RequiredRebirths==nextCount then previewId=id;break end end
+  if previewId then
+   local m=Machines.ById[previewId]
+   junkCard(previewId,"UNLOCK • "..string.upper(m.Rarity),"Rebirth "..nextCount.." unlocks this rarity on the conveyor. You still collect it yourself.","NEXT RARITY",function() end,Machines.Rarities[m.Rarity].Color)
+  end
+  card("YOUR NEXT STEP", "COST: "..fmt(state.RebirthCost).." Scrap\nBONUS: +"..(state.Rebirths*5).."% → +"..(nextCount*5).."% permanent income",state.Rebirths>=10 and "MAX REBIRTH" or "PROGRESS: "..math.min(100,math.floor(state.Scrap/state.RebirthCost*100)).."%",function() end)
+  card("WHAT CHANGES","RESET: Scrap, run junk, upgrades, floors.\nKEEP: Cores, pets, cosmetics, passes, collection, active boosts.","PERMANENT PROGRESS",function() end)
   card("Start a new run","Requires "..fmt(state.RebirthCost).." Scrap. Reset ALL Scrap, earned junk, upgrades and floors. Gain +5 percentage points of permanent income (max +50%). Unlock Rare at 1, Epic at 2, Legendary at 3, Mythic at 5, Secret at 8 rebirths.","REVIEW RESET",function()
    for _,child in ipairs(scroll:GetChildren()) do if child:IsA("GuiObject") then child:Destroy() end end;updaters={}
    card("This reset is permanent","Keep Cores, cosmetics, passes, collection, daily claims and protected legacy items. Lose Scrap, unprotected machines and run upgrades.","CONFIRM REBIRTH",function() remote:FireServer("Rebirth",true);modal.Visible=false;page=nil end)
@@ -267,7 +309,7 @@ renderMenu=function()
   title.Text="COLLECTION"
   label(tabs,"Find machines. Bring them home to discover them.",12,UDim2.new(),UDim2.fromScale(1,1),muted)
   for _,id in ipairs(Machines.Order) do
-   local m=Machines.ById[id];local b=junkCard(id,m.DisplayName,m.Rarity.." • +"..m.BaseIncome.." base Scrap/sec","",function() end,Machines.Rarities[m.Rarity].Color)
+   local m=Machines.ById[id];local b=junkCard(id,m.DisplayName,m.Rarity.." • +"..fmt(m.BaseIncome).." base Scrap/sec","",function() end,Machines.Rarities[m.Rarity].Color)
    table.insert(updaters,function() b.Text=not Machines.canCollect(id,state.Rebirths) and ("LOCKED • "..m.RequiredRebirths.." REBIRTHS") or state.Discovered[id] and "DISCOVERED" or "UNDISCOVERED" end)
   end
  elseif page=="Replace" then
@@ -317,9 +359,9 @@ local function render()
  player:SetAttribute("TutorialTarget",state.Waypoint)
  for _,update in ipairs(updaters) do update() end
 end
-local mode=label(gui,"V0.3.4 • PRACTICE MODE",10,UDim2.new(0.5,0,1,-22),UDim2.new(0.7,0,0,18),muted);mode.AnchorPoint=Vector2.new(0.5,0);mode.TextXAlignment=Enum.TextXAlignment.Center
+local mode=label(gui,"V0.3.5 • PRACTICE MODE",10,UDim2.new(0.5,0,1,-22),UDim2.new(0.7,0,0,18),muted);mode.AnchorPoint=Vector2.new(0.5,0);mode.TextXAlignment=Enum.TextXAlignment.Center
 remote.OnClientEvent:Connect(function(kind,payload)
- if kind=="State" then local first=state==nil;state=payload;render();mode.Text=state.Persistent and "V0.3.4 • PRIVATE TEST" or "V0.3.4 • PRACTICE — PROGRESS RESETS";if first and page then renderMenu() end
+ if kind=="State" then local first=state==nil;state=payload;render();mode.Text=state.Persistent and "V0.3.5 • PRIVATE TEST" or "V0.3.5 • PRACTICE — PROGRESS RESETS";if first and page then renderMenu() end
  elseif kind=="Open" then if payload=="Pets" then petTab="CASES" end;open(payload)
  elseif kind=="CaseResult" then
   modal.Visible=false;page=nil

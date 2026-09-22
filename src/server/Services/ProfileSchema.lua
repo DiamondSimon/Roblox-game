@@ -1,7 +1,7 @@
 local E=require(game.ReplicatedStorage.Shared.Config.EconomyConfig)
 local Schema={}
 function Schema.migrate(d)
- assert(d.SchemaVersion==1 or d.SchemaVersion==2 or d.SchemaVersion==3 or d.SchemaVersion==4 or d.SchemaVersion==5 or d.SchemaVersion==6,"Unsupported schema")
+ assert(d.SchemaVersion==1 or d.SchemaVersion==2 or d.SchemaVersion==3 or d.SchemaVersion==4 or d.SchemaVersion==5 or d.SchemaVersion==6 or d.SchemaVersion==7,"Unsupported schema")
  if d.SchemaVersion==1 then
   d.Cores=0;d.CapacityFloor=6+d.Upgrades.Slots
   d.Upgrades.Speed=0;d.Upgrades.Carry=0;d.Upgrades.Expansion=0
@@ -26,10 +26,11 @@ function Schema.migrate(d)
   for _,receipt in pairs(d.Receipts) do if type(receipt)=="table" and receipt.Currency=="Scrap" then receipt.Amount=receipt.Amount*1000 end end
   d.SchemaVersion=6
  end
+ if d.SchemaVersion==6 then d.Boosts={};d.VIPDay=-1;d.SchemaVersion=7 end
  return d
 end
 function Schema.fresh(uid)
- return {SchemaVersion=6,Rewards={Codes={},Milestones={}},Pets={Owned={},Equipped=""},Scrap=E.StartingScrap,LifetimeScrap=0,Cores=E.StartingCores,
+ return {SchemaVersion=7,Boosts={},VIPDay=-1,Rewards={Codes={},Milestones={}},Pets={Owned={},Equipped=""},Scrap=E.StartingScrap,LifetimeScrap=0,Cores=E.StartingCores,
  Upgrades={Income=0,Slots=0,Speed=0,Carry=0,Expansion=0,Floors=0},CapacityFloor=0,Rebirths=0,RunDelivered=0,TutorialStage=1,SpinState={Day=-1,Reward=0},
  MachineInventory={},DiscoveredMachines={},
  DiscoveredMutations={},Settings={},DailyRewardState={},Statistics={},Receipts={},

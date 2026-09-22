@@ -15,7 +15,7 @@ function T:Action(player,arg)
  local d=Data:Get(player);local kind=arg.Kind
  if kind=="Scrap" then d.Scrap=math.min(1e15,d.Scrap+100000000)
  elseif kind=="Cores" then d.Cores=d.Cores+1000
- elseif kind=="Pass" and (arg.Key=="DoubleScrap" or arg.Key=="ExtraSlots") then player:SetAttribute(arg.Key,not player:GetAttribute(arg.Key));Yard:Refresh(player,d)
+ elseif kind=="Pass" and (arg.Key=="DoubleScrap" or arg.Key=="ExtraSlots" or arg.Key=="VIP" or arg.Key=="Luck") then player:SetAttribute(arg.Key,not player:GetAttribute(arg.Key));Yard:Refresh(player,d)
  elseif kind=="Product" then
   for _,list in ipairs({Money.Products,Money.LegacyProducts}) do for _,item in ipairs(list) do
    if item.Key==arg.Key then Purchase:Grant(player,"studio:"..Http:GenerateGUID(false),item) end
@@ -23,6 +23,7 @@ function T:Action(player,arg)
  elseif kind=="Policy" and (arg.Value=="Allowed" or arg.Value=="Restricted" or arg.Value=="Actual") then
   Pets.PracticePolicy[player]=arg.Value=="Actual" and nil or arg.Value
  elseif kind=="Daily" then d.SpinState={Day=-1,Reward=0};d.QuestState={Day=-1,Progress={},Claimed={},Inspected={}}
+ elseif kind=="RebirthTest" then d.Rebirths=math.min(10,d.Rebirths+1)
  elseif kind=="Tutorial" then d.TutorialStage=4
  elseif kind=="Loadout" then
   d.Upgrades.Floors=3;d.MachineInventory={}

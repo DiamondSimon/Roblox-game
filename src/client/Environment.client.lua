@@ -28,7 +28,7 @@ local elapsed=0;local step=0
 Run.Heartbeat:Connect(function(dt)
  elapsed=elapsed+dt;step=step+dt;if step<0.05 then return end;step=0
  local camera=workspace.CurrentCamera
- for part,z in pairs(belt) do if part.Parent then part.Position=Vector3.new(0,1.6,Config.BeltStart+((z-Config.BeltStart+elapsed*Config.BeltSpeed)%450)) end end
+ for part,z in pairs(belt) do if part.Parent then part.Color=game.ReplicatedStorage:GetAttribute("ScrapRushActive") and math.sin(elapsed*4)>0 and Color3.fromRGB(255,184,55) or Color3.fromRGB(115,137,140);part.Position=Vector3.new(0,1.6,Config.BeltStart+((z-Config.BeltStart+elapsed*Config.BeltSpeed)%450)) end end
  for part,cf in pairs(shredders) do
   if part.Parent and camera and (cf.Position-camera.CFrame.Position).Magnitude<180 then part:PivotTo(cf*CFrame.Angles(0,0,elapsed*5*(part:GetAttribute("Direction") or 1))) end
  end

@@ -121,7 +121,7 @@ class V3Tests(unittest.TestCase):
    d.SchemaVersion=2;d.Upgrades.Slots=4;d.Upgrades.Expansion=3;d.Upgrades.Floors=nil
    d.MachineInventory={{Uid="legacy",MachineId="radio",Protected=true}};d.Cores=37;d.Receipts.x={Currency="Cores",Amount=80}
    local migrated=require(TestModules.ProfileSchema).migrate(d)
-   assert(migrated.SchemaVersion==6 and migrated.Upgrades.Floors==2 and migrated.Cores==37)
+   assert(migrated.SchemaVersion==7 and migrated.Upgrades.Floors==2 and migrated.Cores==37)
    assert(migrated.MachineInventory[1].Uid=="legacy" and migrated.Receipts.x.Amount==80 and migrated.TutorialStage==4)
   ''')
 if __name__=='__main__':unittest.main(verbosity=2)

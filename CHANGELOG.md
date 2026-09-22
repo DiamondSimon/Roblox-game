@@ -1,3 +1,7 @@
+# 0.3.5
+
+Align shredder front with fixed conveyor endpoint; add central industrial effects and landmarks; VIP and eligible shared-luck passes; timed Core boosts with durable expiry; exact odds and policy/provenance checks; clearer rebirth and purchase panels; schema 7. 87 mocked-Lua tests, rebuilt place, baseline and combined-multiplier simulations. See docs/RELEASE_0.3.5.md. 0.3.4 preserved.
+
 # 0.3.4
 
 Correct central conveyor access and endpoint shredder; clear equal approach corridors; add off-road scenery and moving treads; gate rarity behind rebirths, including drops/slaps; add shared junk model previews to selling/replacement/collection; ease late rebirth growth based on gated simulations. 76 mocked-Lua checks. See docs/RELEASE_0.3.4.md.

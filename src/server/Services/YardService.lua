@@ -30,8 +30,10 @@ end
 function Yard:Style(player,data)
  local yard=self.Owned[player];if not yard then return end
  local theme=Themes.Items[data.Cosmetics.Equipped]
- local color=theme and theme.Color or Color3.fromRGB(255,184,55)
- yard.Label.TextColor3=color;yard.Deposit.Color=theme and color or Color3.fromRGB(61,170,154)
+ local vip=player:GetAttribute("VIP")==true
+ local color=vip and Color3.fromRGB(255,210,90) or theme and theme.Color or Color3.fromRGB(255,184,55)
+ yard.Label.Text=(vip and "★ VIP • " or "")..player.DisplayName.."'S YARD"
+ yard.Label.TextColor3=color;yard.Deposit.Color=(theme or vip) and color or Color3.fromRGB(61,170,154)
 
 end
 function Yard:Release(player)
