@@ -10,8 +10,6 @@ class ClientSmokeTests(unittest.TestCase):
    require(TestModules.GameplayService):State(TestPlayer)
    assert(TestPlayer.PlayerGui.ScrapyardHUD)
    assert(workspace.TutorialWaypoint.Beam.Enabled)
-   TestPlayer:SetAttribute("TutorialTarget",nil);assert(not workspace.TutorialWaypoint.Beam.Enabled)
-   TestPlayer:SetAttribute("TutorialTarget",Vector3.new(1,2,3));assert(workspace.TutorialWaypoint.Position.X==1)
    local remote=game.ReplicatedStorage.Remotes.Game
    click("SHOP →");Clock=Clock+6;click("HOME →")
    remote:FireClient(TestPlayer,"Open","Shop");click("CORES");click("STYLES");click("X")

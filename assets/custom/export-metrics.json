@@ -1,0 +1,62 @@
+{
+  "reactor": {
+    "triangles": 3008,
+    "mesh_primitives": 3,
+    "materials": 3,
+    "textures": 0,
+    "dimensions_m": [
+      2.4,
+      2.82,
+      1.9
+    ],
+    "pivot": "floor center, Y up",
+    "front": "-Z",
+    "bytes": 147352,
+    "sha256": "8a6ae5cf83616d38fb74105421260a5a4dee311fcec689487d527871b2f3147a"
+  },
+  "pod": {
+    "triangles": 3382,
+    "mesh_primitives": 3,
+    "materials": 3,
+    "textures": 0,
+    "dimensions_m": [
+      2.2497,
+      2.7,
+      2.22
+    ],
+    "pivot": "floor center, Y up",
+    "front": "-Z",
+    "bytes": 191332,
+    "sha256": "e2442d61329df7021e7f4eaf40bd845b57a96b6e73d44b2a6c1039f2f685a818"
+  },
+  "singularity": {
+    "triangles": 2492,
+    "mesh_primitives": 3,
+    "materials": 3,
+    "textures": 0,
+    "dimensions_m": [
+      2.5,
+      2.75,
+      1.8
+    ],
+    "pivot": "floor center, Y up",
+    "front": "-Z",
+    "bytes": 115380,
+    "sha256": "a07a5ff60cd1e936cb81d985fce368cc51b0d6713383a7fa88b400ec650b1363"
+  },
+  "compactor": {
+    "triangles": 3848,
+    "mesh_primitives": 3,
+    "materials": 3,
+    "textures": 0,
+    "dimensions_m": [
+      3.15,
+      3.46,
+      2.52
+    ],
+    "pivot": "floor center, Y up",
+    "front": "-Z",
+    "bytes": 196672,
+    "sha256": "81d5e647429cadc97c582c93d9737425793a440ebdec4980812fcf556302e2d1"
+  }
+}

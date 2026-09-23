@@ -1,4 +1,4 @@
-Current release: **0.3.5**. See [release changes and acceptance checks](RELEASE_0.3.5.md). Open build/SCRAPYARD-0.3.5.rbxlx. Current automated suite: 87 tests; save schema 7. Earlier version-specific details below are historical where superseded.
+Current release: **0.3.6**. See [release changes and acceptance checks](RELEASE_0.3.6.md). Open build/SCRAPYARD-0.3.6.rbxlx. 101 automated checks pass; save schema 7. Earlier version-specific details below are historical where superseded.
 
 # V0.3.2 architecture
 
@@ -26,3 +26,15 @@ Security scope: checks cover range, hit cone, line-of-sight, safe zones, state/c
 PetService owns policy caching, durable pet purchases/equipment, one-use case offer tokens and equipped attributes. PetConfig defines exact odds, bonuses and guaranteed prices; PetModelFactory builds species silhouettes; Pets.client.lua animates cosmetic companions. AudioConfig configures confirmed-hit spatial audio handled by Waypoints. New remotes: BuyCase({Case,Currency,Token}), BuyPet(id), EquipPet(id/empty). Pet state includes ownership/equipment, current bonus, case eligibility and offer token.
 
 0.3.2: RewardsService owns code/milestone claims and Scrap Rush clock/multiplier. StudioToolsService owns explicitly isolated practice cheats. PurchaseService:Grant is shared between verified live receipts and simulated practice products. PetPreview creates per-card cameras/WorldModels; CaseReel animates only after a CaseResult confirms the saved award. New remotes: StudioAction (server-gated), EquipBest, RedeemCode, ClaimMilestone. Schema 5 adds claim maps.
+
+## 0.3.6 authoritative motion and art
+
+`World.ShredderContact` is an invisible noncolliding Part derived from the minimum Z face of the hook teeth after placement. Deck end and assembly center are separate concepts; the former `BeltEnd` was removed. Rotors turn about Z, leaving axial bounds invariant. The contact drives spawn deadlines, replicated DestroyZ, final server placement and ShredFX.
+
+`ConveyorMotion` provides shared clamped position math. Spawn records StartZ, StartServerTime (`Workspace:GetServerTimeNow()`), BeltSpeed and DestroyZ before tagging the root. `Conveyor.client.lua` positions each replicated model per RenderStepped. The 10 Hz server proxy updates remain for prompts/replication; pickup range uses the independently calculated current position, never a client-provided position. Expiry and ownership are exclusively server-side. Dropped salvage has no conveyor metadata and remains static for 25 seconds. Client interpolation tolerates partial attribute replication.
+
+Tutorial State now includes WaypointObject (a BasePart) for eligible moving salvage and Waypoint for static destinations. Waypoints reads the same movement math each rendered frame, avoiding callback order dependence. Target selection remains server-side; expiry and pickup refresh tutorial state immediately. Out-of-band removal is cleaned on the next 10 Hz tick; rebirth/policy eligibility is reevaluated on state refresh. Unstreamed targets are hidden until available. Home and upgrade destinations retain static vectors. The redundant shred flash in Waypoints was removed; IndustrialEffects owns the disposal sparks/audio at contact.
+
+`CustomAssetService` asynchronously loads configured Roblox **model** IDs, copies only geometry/appearance, strips scripts, scales to a maximum dimension, normalizes floor-center and inserts an invisible gameplay root. Failed/empty imports and reported preload failures retain procedural art. Zero IDs never request assets. Replicated templates serve world models and ViewportFrame previews via the same factory. Existing objects use their current visual until respawn/recreation. The compactor overlay hides original visuals while retaining simplified collision. Per-client content failures and imported PBR appearance still require Studio validation; server preload is not proof of every client's asset access.
+
+Official API references used: https://create.roblox.com/docs/reference/engine/classes/InsertService and https://create.roblox.com/docs/reference/engine/classes/ContentProvider. Uploaded models must be owned by or appropriately shared with the experience owner.

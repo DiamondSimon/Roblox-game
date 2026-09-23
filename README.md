@@ -1,10 +1,10 @@
-# SCRAPYARD — V0.3.5 playtest build
+# SCRAPYARD — V0.3.6 playtest build
 
 Moving salvage, shredder pressure, slap-and-steal combat, compact multi-floor yards, a shared shop district, guided onboarding, free daily wheel and rebirths.
 
 ## Play
 
-Open **build/SCRAPYARD-0.3.5.rbxlx** in Roblox Studio (File → Open from File), then Play. The map generates at runtime. No plugins, publishing or DataStore API access are required for practice mode. Practice progress resets when you stop.
+Open **build/SCRAPYARD-0.3.6.rbxlx** in Roblox Studio (File → Open from File), then Play. The map generates at runtime. No plugins, publishing or DataStore API access are required for practice mode. Practice progress resets when you stop.
 
 1. Start with an empty eight-slot yard, 0 Scrap and 0 Cores. Follow the yellow waypoint to the conveyor; hold E or tap a junk prompt.
 2. Carry the junk home and use the green intake. Teleports cannot transport carried junk. Stored junk generates Scrap.
@@ -12,7 +12,13 @@ Open **build/SCRAPYARD-0.3.5.rbxlx** in Roblox Studio (File → Open from File),
 4. The same district has **Sell**, **Spin**, **Rebirth** and **Supplies** stands. **HOME →** returns you to your yard.
 5. After the tutorial, use **F / SLAP** with empty hands near another player to knock them down and take carried junk. Yards and the shop district are safe zones. Stored junk cannot be stolen.
 
-## New in 0.3.5
+## New in 0.3.6
+
+Geometry-derived shredder contact, continuous client conveyor/tread/cutter motion, smoothly tracked tutorial targets, shop and mechanical detailing, high-tier beacon response, bounded local rarity lights, and optional custom-model loading with procedural fallbacks. Economy and save schema remain unchanged. Custom art status and manual import requirements are recorded in [the asset manifest](assets/asset-manifest.md); no uploaded Roblox IDs are included.
+
+[0.3.6 release and acceptance checklist](docs/RELEASE_0.3.6.md). Automated checks exercise actual Lua with mocked Roblox APIs; Studio visual acceptance remains outstanding.
+
+## Previous 0.3.5 additions
 
 Endpoint-aligned shredder with restrained effects; operational compactor, furnace and scrap-mountain landmarks; warm daylight; VIP and shared eligible luck passes; four timed Core boosts; exact luck odds and account eligibility; stronger rebirth panels. Existing yard/conveyor coordinates are preserved.
 
@@ -27,7 +33,7 @@ Slap impact audio; nine collectible/equippable pets (+3% to +20% passive income)
 - [0.3.5 complete documentation](docs/RELEASE_0.3.5.md): everything changed, test controls, rewards, data migration and acceptance checklist.
 
 - [0.3.1 complete release documentation](docs/RELEASE_0.3.1.md): case prices/odds, pet catalog, audio, models, policy handling, migration and validation.
-- [Patch-only versioning](docs/VERSIONING.md): next release is 0.3.6.
+- [Patch-only versioning](docs/VERSIONING.md): next release is 0.3.7.
 - [Current economy scenarios](docs/ECONOMY_0.3.5.md).
 
 - [Complete V0.3 feature rules](docs/V0.3_FEATURES.md): timings, controls, map, combat, floors, shops, tutorial, spin and rebirth behavior.

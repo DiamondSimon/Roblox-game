@@ -70,7 +70,7 @@ class Patch034Tests(unittest.TestCase):
    workspace.CurrentCamera.CFrame=CFrame.new(0,5,0)
   ''');lua.execute((ROOT/'src/client/Environment.client.lua').read_text());lua.execute('''
    local tread=workspace.Map.ConveyorAssembly["Moving belt tread"];local before=tread.Position.Z
-   TestServices.RunService.Heartbeat:Fire(0.5);assert(math.abs(tread.Position.Z-before-5.5)<0.001)
+   TestServices.RunService.RenderStepped:Fire(0.5);assert(math.abs(tread.Position.Z-before-5.5)<0.001)
    TestRemoved.ScrapyardBelt.fn(tread);before=tread.Position.Z
-   TestServices.RunService.Heartbeat:Fire(0.5);assert(tread.Position.Z==before)
+   TestServices.RunService.RenderStepped:Fire(0.5);assert(tread.Position.Z==before)
   ''')

@@ -4,6 +4,7 @@ local Run=game:GetService("RunService")
 local Debris=game:GetService("Debris")
 local Rep=game.ReplicatedStorage
 local Audio=require(Rep.Shared.Config.AudioConfig)
+local rareUntil=0;local rareColor=nil
 local tracked={};local elapsed=0;local accumulator=0;local activeBursts=0
 local function register(tag)
  local function add(p) if p:IsA("BasePart") then tracked[p]={Tag=tag,Position=p.Position,Color=p.Color} end end
@@ -33,6 +34,7 @@ Run.Heartbeat:Connect(function(dt)
   if p.Parent then
    local near=(s.Position-camera.CFrame.Position).Magnitude<170
    if s.Tag=="ScrapyardPress" and near then p.Position=s.Position+Vector3.new(0,-(1-math.cos(elapsed*0.65))*5,0)
+   elseif s.Tag=="ScrapyardBeacon" and near and elapsed<rareUntil then p.Color=math.sin(elapsed*7)>0 and rareColor or s.Color
    elseif s.Tag=="ScrapyardBeacon" then p.Color=near and math.sin(elapsed*(rush and 8 or 4))>0 and Color3.fromRGB(255,104,35) or s.Color
    elseif s.Tag=="ScrapyardMotor" then
     if near and not s.Sound then s.Sound=sound(p,Audio.Motor.SoundId,Audio.Motor.Volume,Audio.Motor.PlaybackSpeed,true) end
@@ -54,6 +56,7 @@ if remote then remote.OnClientEvent:Connect(function(kind,payload)
   end
  elseif kind=="RushFX" then burst(payload,Color3.fromRGB(75,235,220),10)
  elseif kind=="RareFX" and type(payload)=="table" then
+  if payload.Tier>=3 then rareUntil=elapsed+(payload.Tier>=8 and 6 or 3);rareColor=payload.Color end
   burst(payload.Position,payload.Color,payload.Major and 10 or 4)
   local camera=workspace.CurrentCamera
   if payload.Tier>=2 and camera and (payload.Position-camera.CFrame.Position).Magnitude<150 then

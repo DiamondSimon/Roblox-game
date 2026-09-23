@@ -44,3 +44,7 @@ local frameMeta=getmetatable(CFrame.new())
 frameMeta.__index={Lerp=function(a,b,t) return CFrame.new(a.Position+(b.Position-a.Position)*t) end}
 
 Enum.ApplyStrokeMode={Border="Border"}
+
+TestServices.RunService.RenderStepped=sig()
+CFrame.Angles=function() return CFrame.new() end
+Enum.EasingStyle.Quad="Quad"

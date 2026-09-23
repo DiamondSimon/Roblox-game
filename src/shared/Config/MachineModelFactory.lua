@@ -5,6 +5,12 @@ function World.part(parent,name,size,pos,color,material)
 end
 local Machines={}
 function Machines:Create(id,position,parent)
+ local templates=game.ReplicatedStorage:FindFirstChild("CustomAssetTemplates")
+ local template=templates and templates:FindFirstChild(id)
+ if template then
+  local ok,custom=pcall(function() local m=template:Clone();m:PivotTo(CFrame.new(position));m.Parent=parent;return m end)
+  if ok then return custom end
+ end
  local def=Config.ById[id];local color=Config.Rarities[def.Rarity].Color
  local model=Instance.new("Model");model.Name=def.DisplayName
  local function part(name,size,offset,tint,material)

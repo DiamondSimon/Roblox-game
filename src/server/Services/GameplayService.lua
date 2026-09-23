@@ -19,6 +19,7 @@ local Progression=require(script.Parent.ProgressionService)
 local Boosts=require(script.Parent.BoostService)
 local BoostConfig=require(Shared.BoostConfig)
 local Odds=require(Shared.SalvageOdds)
+local Motion=require(Shared.ConveyorMotion)
 local Game={Carrying={},Salvage={},LastAction={},Random=Random.new()}
 function Game:Notify(player,text) self.Remote:FireClient(player,"Notice",text) end
 function Game:Near(player,part,distance)
@@ -57,7 +58,7 @@ end
 function Game:Pickup(player,model)
  if not self:Allow(player) then return end
  local entry=self.Salvage[model];local d=Data:Get(player)
- if not entry or entry.Expires<=os.clock() or Progression:Blocked(player) or not d or self.Carrying[player] or not self:Near(player,model.PrimaryPart) then return end
+ if not entry or entry.Expires<=workspace:GetServerTimeNow() or Progression:Blocked(player) or not d or self.Carrying[player] or not self:Near(player,{Position=self:SalvagePosition(model,entry,workspace:GetServerTimeNow())}) then return end
  
  if not Definitions.canCollect(entry.Id,d.Rebirths) then self:Notify(player,"LOCKED • Requires "..Definitions.ById[entry.Id].RequiredRebirths.." rebirths");return end
  if entry.PaidLuck and not Pets:Allowed(player) then self:Notify(player,"LUCK DELIVERY UNAVAILABLE • Collect ordinary free salvage");return end
@@ -69,7 +70,7 @@ function Game:Pickup(player,model)
  local id=entry.Id;model:Destroy();self:GiveCarry(player,id,entry.PaidLuck)
  if d.TutorialStage==1 then d.TutorialStage=2 end
  Telemetry:Event(player,"FirstMachinePickedUp",1,true)
- self:Notify(player,"BRING IT HOME • Use your green intake pad");self:State(player)
+ self:Notify(player,"BRING IT HOME • Use your green intake pad");self:State(player);self:RefreshTutorials()
 end
 function Game:GiveCarry(player,id,paidLuck)
  local root=player.Character:FindFirstChild("HumanoidRootPart");local d=Data:Get(player)
@@ -149,24 +150,39 @@ function Game:Spawn(forcedId,startZ,droppedPosition,inheritedPaidLuck,paidOwner)
  for _,id in ipairs(Definitions.Order) do roll=roll-weights[id];if roll<=0 then selected=id;break end end
  selected=forcedId or selected
  local model=Machine:Create(selected,droppedPosition or Vector3.new(0,3,startZ or Config.BeltStart),World.Root)
- game:GetService("CollectionService"):AddTag(model.PrimaryPart,"ScrapyardSalvage")
- local now=os.clock();local z=startZ or Config.BeltStart
- self.Salvage[model]={Id=selected,PaidLuck=paidLuck or inheritedPaidLuck==true,PaidOwner=paidOwner,Started=now,StartZ=z,Dropped=droppedPosition~=nil,Expires=now+(droppedPosition and 25 or (Config.BeltEnd-z)/Config.BeltSpeed)}
+ local now=workspace:GetServerTimeNow();local z=startZ or Config.BeltStart
+ self.Salvage[model]={Id=selected,PaidLuck=paidLuck or inheritedPaidLuck==true,PaidOwner=paidOwner,Started=now,StartZ=z,DestroyZ=World.ShredderContact.Position.Z,Dropped=droppedPosition~=nil,Expires=now+(droppedPosition and 25 or (World.ShredderContact.Position.Z-z)/Config.BeltSpeed)}
  for _,obj in ipairs(model:GetDescendants()) do if obj:IsA("BillboardGui") then obj.MaxDistance=48;obj.Size=UDim2.fromOffset(175,50) end end
  model.PrimaryPart:SetAttribute("Rarity",Definitions.ById[selected].Rarity)
+ if not droppedPosition then
+  model.PrimaryPart:SetAttribute("StartZ",z);model.PrimaryPart:SetAttribute("StartServerTime",now)
+  model.PrimaryPart:SetAttribute("BeltSpeed",Config.BeltSpeed);model.PrimaryPart:SetAttribute("DestroyZ",World.ShredderContact.Position.Z)
+ end
+ game:GetService("CollectionService"):AddTag(model.PrimaryPart,"ScrapyardSalvage")
  World.prompt(model.PrimaryPart,"Carry machine",0.4,function(player) self:Pickup(player,model) end)
  local rarity=Definitions.ById[selected].Rarity
  if rarity~="Common" and rarity~="Uncommon" and not droppedPosition then self.Remote:FireAllClients("RareFX",{Position=model.PrimaryPart.Position,Color=Definitions.Rarities[rarity].Color,Major=Definitions.Rarities[rarity].Announce==true,Tier=Definitions.ById[selected].RequiredRebirths}) end
  if not droppedPosition and Definitions.Rarities[Definitions.ById[selected].Rarity].Announce then self.Remote:FireAllClients("Notice",string.upper(Definitions.ById[selected].Rarity).." SALVAGE DETECTED") end
 end
+function Game:SalvagePosition(model,entry,now)
+ if entry.Dropped then return model.PrimaryPart.Position end
+ return Motion.position(entry.StartZ,entry.Started,Config.BeltSpeed,entry.DestroyZ,now)
+end
+function Game:RefreshTutorials()
+ for _,player in ipairs(Players:GetPlayers()) do
+  local d=Data:Get(player);if d and d.TutorialStage<3 then self:State(player) end
+ end
+end
 function Game:MoveSalvage(now)
  for model,entry in pairs(self.Salvage) do
-  if now>=entry.Expires then
-   if not entry.Dropped then model:PivotTo(CFrame.new(0,3,Config.BeltEnd)) end
-   self.Salvage[model]=nil;model:Destroy()
-   if not entry.Dropped then self.Remote:FireAllClients("ShredFX",World.Shredder.Position) end
+  if not model.Parent then
+   self.Salvage[model]=nil;self:RefreshTutorials()
+  elseif now>=entry.Expires then
+   if not entry.Dropped then model:PivotTo(CFrame.new(World.ShredderContact.Position)) end
+   self.Salvage[model]=nil;model:Destroy();self:RefreshTutorials()
+   if not entry.Dropped then self.Remote:FireAllClients("ShredFX",World.ShredderContact.Position) end
   elseif not entry.Dropped then
-   model:PivotTo(CFrame.new(0,3,entry.StartZ+(now-entry.Started)*Config.BeltSpeed))
+   model:PivotTo(CFrame.new(self:SalvagePosition(model,entry,now)))
   end
  end
 end
@@ -216,7 +232,7 @@ function Game:Start(remote)
   while true do task.wait(Config.SpawnInterval);self:Spawn() end
  end)
  task.spawn(function()
-  while true do task.wait(0.1);self:MoveSalvage(os.clock()) end
+  while true do task.wait(0.1);self:MoveSalvage(workspace:GetServerTimeNow()) end
  end)
  task.spawn(function()
   while true do

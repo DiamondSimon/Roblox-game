@@ -29,9 +29,17 @@ function P:State(player,d,state)
   local root=player.Character and player.Character:FindFirstChild("HumanoidRootPart")
   for model,entry in pairs(self.Game.Salvage) do
    local delta=root and (root.Position-model.PrimaryPart.Position).Magnitude or 0
-   if Machines.canCollect(entry.Id,d.Rebirths) and delta<dist then dist=delta;nearest=model.PrimaryPart.Position end
+   local eligible=true
+   if entry.PaidLuck then
+    local pets=require(script.Parent.PetService);eligible=pets:Allowed(player)
+    if entry.PaidOwner and entry.PaidOwner~=player.UserId then
+     local owner=game:GetService("Players"):GetPlayerByUserId(entry.PaidOwner)
+     eligible=eligible and owner~=nil and pets:CanTrade(owner) and pets:CanTrade(player)
+    end
+   end
+   if eligible and model.Parent and entry.Expires>workspace:GetServerTimeNow() and Machines.canCollect(entry.Id,d.Rebirths) and delta<dist then dist=delta;nearest=model.PrimaryPart end
   end
-  state.Waypoint=nearest or Vector3.new(0,3,Config.BeltStart+10);state.Objective="GRAB YOUR FIRST JUNK • HOLD E / TAP AT THE CONVEYOR"
+  state.WaypointObject=nearest;state.Waypoint=not nearest and Vector3.new(0,3,Config.BeltStart+10) or nil;state.Objective="GRAB YOUR FIRST JUNK • HOLD E / TAP AT THE CONVEYOR"
  elseif d.TutorialStage==3 then state.Waypoint=World.Shops.Upgrades.Position;state.Objective="VISIT THE UPGRADE STAND • TAP SHOP TO TELEPORT"
  else state.Objective=state.SpinReady and "FREE DAILY SPIN READY • VISIT THE SHOP DISTRICT" or "GRAB • HAUL • BUILD YOUR YARD" end
  state.Stunned=self:Blocked(player)

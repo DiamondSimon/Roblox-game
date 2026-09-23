@@ -120,3 +120,8 @@ function addSource(name,source)
 end
 function startServer() require(server.ServerMain) end
 TestPlayer=player;TestServices=services;TestModules=modules
+
+function workspace:GetServerTimeNow() return os.clock() end
+
+Enum.NormalId={Front="Front"}
+ColorSequence={new=function(value) return value end}

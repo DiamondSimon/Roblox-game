@@ -13,7 +13,7 @@ class Patch032Tests(unittest.TestCase):
  def test_shredder_whole_assembly_at_endpoint_no_overhead_text(self):
   self.run_lua('''
    local c=require(game.ReplicatedStorage.Shared.Config.GameConfig)
-   assert(world.Shredder.Position.Z==c.BeltEnd and c.BeltEnd==238)
+   assert(world.Shredder.Position.Z==c.ShredderCenterZ and c.ShredderCenterZ==238)
    local assembly=world.Root.ConveyorAssembly.ShredderAssembly;assert(assembly)
    for _,p in ipairs(assembly:GetDescendants()) do
     assert(not p:IsA("BillboardGui"))
@@ -21,7 +21,7 @@ class Patch032Tests(unittest.TestCase):
    end
    local belt=world.Root.ConveyorAssembly["CENTRAL SALVAGE"]
    assert(belt.Position.Z+belt.Size.Z/2==226)
-   assert(math.abs((c.BeltEnd-c.BeltStart)/c.BeltSpeed-42)<0.001)
+   assert(math.abs((c.ShredderCenterZ-c.BeltStart)/c.BeltSpeed-42)<0.001)
   ''')
  def test_studio_controls_fail_closed_on_live_and_persistent(self):
   self.run_lua('''

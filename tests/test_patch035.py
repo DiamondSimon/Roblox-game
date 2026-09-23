@@ -10,8 +10,8 @@ class Patch035Tests(unittest.TestCase):
    local c=require(game.ReplicatedStorage.Shared.Config.GameConfig)
    local belt=w.Root.ConveyorAssembly["CENTRAL SALVAGE"]
    assert(belt.Position.Z==1 and belt.Size.Z==450 and belt.Position.Z+belt.Size.Z/2==c.BeltDeckEnd)
-   assert(w.Shredder.Position.Z-w.Shredder.Size.Z/2==c.BeltDeckEnd and w.Shredder.Position.Z==c.BeltEnd)
-   assert((c.BeltEnd-c.BeltStart)/c.BeltSpeed==42)
+   assert(w.Shredder.Position.Z-w.Shredder.Size.Z/2==c.BeltDeckEnd and w.Shredder.Position.Z==c.ShredderCenterZ)
+   assert((c.ShredderCenterZ-c.BeltStart)/c.BeltSpeed==42)
    for i,y in ipairs(w.Yards) do assert(math.abs(y.Center.X)==330 and y.Center.Z==-210+((i-1)%4)*140) end
   ''')
  def test_vip_income_theme_daily_once(self):

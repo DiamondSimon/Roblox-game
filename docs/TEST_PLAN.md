@@ -1,4 +1,4 @@
-Current release: **0.3.5**. See [release changes and acceptance checks](RELEASE_0.3.5.md). Open build/SCRAPYARD-0.3.5.rbxlx. Current automated suite: 87 tests; save schema 7. Earlier version-specific details below are historical where superseded.
+Current release: **0.3.6**. See [release changes and acceptance checks](RELEASE_0.3.6.md). Open build/SCRAPYARD-0.3.6.rbxlx. 101 automated checks pass; save schema 7. Earlier version-specific details below are historical where superseded.
 
 # V0.3.2 verification
 
@@ -28,3 +28,7 @@ Mocks do not implement rendering, real scheduling/physics, streaming, network re
 Pet/audio/shredder acceptance steps and additional executed checks are listed in RELEASE_0.3.1.md.
 
 For current placement/reel/preview/Test Lab/reward/event acceptance, follow RELEASE_0.3.2.md. Prior 0.3.1 cases remain relevant. Real Marketplace checkout is not simulated by the local Test Lab.
+
+## Current 0.3.6 acceptance
+
+Use the complete geometry/motion/tutorial/custom-asset checklist in [RELEASE_0.3.6.md](RELEASE_0.3.6.md). Automated tests do not certify rendered smoothness, real replication, physics, import moderation, audio quality or mobile FPS. Those remain unchecked until Studio testing.

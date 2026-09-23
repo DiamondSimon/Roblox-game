@@ -16,7 +16,7 @@ local Economy=require(game.ReplicatedStorage.Shared.Config.EconomyConfig)
 local folder=Instance.new("Folder");folder.Name="Remotes";folder.Parent=game.ReplicatedStorage
 local remote=Instance.new("RemoteEvent");remote.Name="Game";remote.Parent=folder
 ReplicatedStorage:SetAttribute("BootStatus","Building map")
-World:Build();Data:Start();Game:Start(remote);Purchase:Start()
+World:Build();require(services.CustomAssetService):Start();Data:Start();Game:Start(remote);Purchase:Start()
 local joining={}
 local function join(player)
  if joining[player] then return end;joining[player]=true
@@ -62,7 +62,7 @@ Players.PlayerRemoving:Connect(function(player)
 end)
 for _,player in ipairs(Players:GetPlayers()) do task.spawn(safeJoin,player) end
 ReplicatedStorage:SetAttribute("BootStatus","Ready")
-print("SCRAPYARD 0.3.5 • First playable loop loaded")
+print("SCRAPYARD 0.3.6 • First playable loop loaded")
 end
 local ok,err=xpcall(boot,debug.traceback)
 if not ok then

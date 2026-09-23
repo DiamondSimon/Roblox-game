@@ -1,3 +1,7 @@
+# 0.3.6
+
+Derive disposal contact from cutter tooth bounds; clear the cutter sweep above the feed floor and inside the funnel; preserve the central deck and eight yard approaches. Replicate server-time movement metadata, render conveyor junk/treads/rotors/fans each frame, validate pickup mathematically on the server, and track tutorial objects continuously with immediate disposal/pickup retargeting. Add shop frontage depth, original CYAN sign plates, pipework, crane cable, tiered beacon response and bounded rarity lights. Optional custom model config/cache keeps procedural fallback; no economy/schema changes. Custom art and generation blockers: assets/asset-manifest.md. Studio visual, networking, physics and upload acceptance remain open. Preserve 0.3.5.
+
 # 0.3.5
 
 Align shredder front with fixed conveyor endpoint; add central industrial effects and landmarks; VIP and eligible shared-luck passes; timed Core boosts with durable expiry; exact odds and policy/provenance checks; clearer rebirth and purchase panels; schema 7. 87 mocked-Lua tests, rebuilt place, baseline and combined-multiplier simulations. See docs/RELEASE_0.3.5.md. 0.3.4 preserved.

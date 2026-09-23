@@ -73,7 +73,7 @@ function World:Build()
  self.part(conveyor,"Salvage plaza",Vector3.new(100,0.6,510),Vector3.new(0,0.3,0),Color3.fromRGB(71,82,84),Enum.Material.Concrete)
  local belt=self.part(conveyor,"CENTRAL SALVAGE",Vector3.new(20,1,450),Vector3.new(0,1,1),steel,Enum.Material.DiamondPlate)
  local title=self.label(belt,"CENTRAL SALVAGE\nGRAB IT BEFORE IT SHREDS",amber);title.Parent.MaxDistance=400;title.Parent.StudsOffsetWorldSpace=Vector3.new(0,16,0)
- for z=-224,226,8 do
+ for z=Config.BeltStart+0.3,Config.BeltDeckEnd-0.3,8 do
   local slat=self.part(conveyor,"Moving belt tread",Vector3.new(19,0.15,0.6),Vector3.new(0,1.6,z),Color3.fromRGB(115,137,140));slat.CanCollide=false
   slat:SetAttribute("StartZ",z);Tags:AddTag(slat,"ScrapyardBelt")
  end
@@ -82,25 +82,25 @@ function World:Build()
  self.part(conveyor,"Hopper intake",Vector3.new(18,8,1),Vector3.new(0,5,-236),Color3.fromRGB(15,23,27))
  self.label(hopper,"SALVAGE IN",amber).Parent.MaxDistance=150
  local assembly=Instance.new("Folder");assembly.Name="ShredderAssembly";assembly.Parent=conveyor
- self.Shredder=self.part(assembly,"SHREDDER",Vector3.new(28,2,24),Vector3.new(0,1,76),steel)
+ self.Shredder=self.part(assembly,"SHREDDER",Vector3.new(28,0.8,24),Vector3.new(0,0.4,76),steel)
  for _,x in ipairs({-14,14}) do self.part(assembly,"Shredder wall",Vector3.new(2,10,26),Vector3.new(x,5,76),amber) end
  self.part(assembly,"Shredder rear",Vector3.new(28,10,2),Vector3.new(0,5,89),amber)
- self.part(assembly,"Shredder mouth",Vector3.new(24,0.5,22),Vector3.new(0,2.2,76),Color3.fromRGB(17,24,30))
+ self.part(assembly,"Shredder mouth",Vector3.new(24,0.5,22),Vector3.new(0,0.9,76),Color3.fromRGB(17,24,30))
  -- Twin-shaft industrial shredder: inset cutters, flared feed, drive housings and service deck.
  for _,side in ipairs({-1,1}) do
-  local motor=self.part(assembly,"Shredder drive motor",Vector3.new(7,5,8),Vector3.new(side*19,4,83),Color3.fromRGB(64,123,145))
-  for z=80,86,1.5 do self.part(assembly,"Motor cooling rib",Vector3.new(7.3,5.2,0.25),Vector3.new(side*19,4,z),steel) end
-  local feed=self.part(assembly,"Flared feed wall",Vector3.new(1,7,25),Vector3.new(side*11,6,76),Color3.fromRGB(215,152,44));feed.Orientation=Vector3.new(0,0,-side*18)
+  local motor=self.part(assembly,"Shredder drive motor",Vector3.new(7,5,8),Vector3.new(side*19,5.8,83),Color3.fromRGB(64,123,145))
+  for z=80,86,1.5 do self.part(assembly,"Motor cooling rib",Vector3.new(7.3,5.2,0.25),Vector3.new(side*19,5.8,z),steel) end
+  local feed=self.part(assembly,"Flared feed wall",Vector3.new(1,7,25),Vector3.new(side*12,6,76),Color3.fromRGB(215,152,44));feed.Orientation=Vector3.new(0,0,-side*18)
   self.part(assembly,"Service deck",Vector3.new(6,0.8,28),Vector3.new(side*18,1,74),steel,Enum.Material.DiamondPlate)
   for z=63,87,8 do self.part(assembly,"Safety post",Vector3.new(0.5,6,0.5),Vector3.new(side*22,4,z),amber) end
   self.part(assembly,"Safety rail",Vector3.new(0.5,0.5,26),Vector3.new(side*22,7,75),amber)
   local rotor=Instance.new("Model");rotor.Name="CuttingRotor";rotor.Parent=assembly
-  local shaft=self.part(rotor,"Shaft",Vector3.new(1.4,1.4,22),Vector3.new(side*5,3.4,76),Color3.fromRGB(142,160,175));shaft.CanCollide=false;rotor.PrimaryPart=shaft
+  local shaft=self.part(rotor,"Shaft",Vector3.new(1.4,1.4,22),Vector3.new(side*5,5.8,76),Color3.fromRGB(142,160,175));shaft.CanCollide=false;rotor.PrimaryPart=shaft
   for z=67,85,3 do
-   local disc=self.part(rotor,"Cutter disc",Vector3.new(1.1,7,7),Vector3.new(side*5,3.4,z),Color3.fromRGB(146,163,172));disc.Shape=Enum.PartType.Cylinder;disc.Orientation=Vector3.new(0,90,0);disc.CanCollide=false
+   local disc=self.part(rotor,"Cutter disc",Vector3.new(1.1,7,7),Vector3.new(side*5,5.8,z),Color3.fromRGB(146,163,172));disc.Shape=Enum.PartType.Cylinder;disc.Orientation=Vector3.new(0,90,0);disc.CanCollide=false
    for tooth=0,5 do
     local angle=tooth*math.pi/3+(z%2)*0.35
-    local blade=self.part(rotor,"Hook tooth",Vector3.new(1.5,1.5,1.5),Vector3.new(side*5+math.cos(angle)*3.5,3.4+math.sin(angle)*3.5,z),Color3.fromRGB(207,217,219));blade.Orientation=Vector3.new(0,0,math.deg(angle)+25);blade.CanCollide=false
+    local blade=self.part(rotor,"Hook tooth",Vector3.new(1.5,1.5,1.5),Vector3.new(side*5+math.cos(angle)*3.5,5.8+math.sin(angle)*3.5,z),Color3.fromRGB(207,217,219));blade.Orientation=Vector3.new(0,0,math.deg(angle)+25);blade.CanCollide=false
    end
   end
   rotor:SetAttribute("Direction",side);Tags:AddTag(rotor,"ScrapyardShredder")
@@ -113,8 +113,15 @@ function World:Build()
  self.part(assembly,"Emergency stop",Vector3.new(1,1,0.5),control.Position+Vector3.new(0,0.8,-1.2),Color3.fromRGB(245,67,53),Enum.Material.Neon)
  self.part(assembly,"Status lamp",Vector3.new(0.7,0.7,0.5),control.Position+Vector3.new(0,-0.5,-1.2),Color3.fromRGB(86,255,147),Enum.Material.Neon)
  for _,piece in ipairs(assembly:GetDescendants()) do
-  if piece:IsA("BasePart") then piece.Position=piece.Position+Vector3.new(0,0,Config.BeltEnd-76) end
+  if piece:IsA("BasePart") then piece.Position=piece.Position+Vector3.new(0,0,Config.ShredderCenterZ-76) end
  end
+ -- Axial bounds stay invariant as rotors turn around Z. Contact is the earliest tooth face.
+ local contactZ=math.huge
+ for _,piece in ipairs(assembly:GetDescendants()) do
+  if piece.Name=="Hook tooth" then contactZ=math.min(contactZ,piece.Position.Z-piece.Size.Z/2) end
+ end
+ self.ShredderContact=self.part(assembly,"ShredderContact",Vector3.new(1,1,0.1),Vector3.new(0,3,contactZ),steel)
+ self.ShredderContact.Transparency=1;self.ShredderContact.CanCollide=false;self.ShredderContact.CanTouch=false;self.ShredderContact.CanQuery=false
  local beforeShops={};for _,v in ipairs(root:GetDescendants()) do beforeShops[v]=true end
  self.ShopSpawn=Vector3.new(0,4,-296);self.Shops={}
  self.part(root,"Shop plaza",Vector3.new(224,0.6,88),Vector3.new(0,0.3,-229),Color3.fromRGB(188,183,161),Enum.Material.Concrete)
@@ -236,6 +243,7 @@ function World:Build()
   for n=1,3 do local bush=self.part(scenery,"Roadside bush",Vector3.new(5,4,5),Vector3.new(x-9+n*5,2,z-12),Color3.fromRGB(81,146+n*8,74),Enum.Material.Grass);bush.Shape=Enum.PartType.Ball end
  end end
  require(script.Parent.IndustrialWorld).Build(self,root)
+ require(script.Parent.VisualPolish).Build(self,root)
  Lighting.ClockTime=16.5;Lighting.Brightness=2.6;Lighting.Ambient=Color3.fromRGB(138,145,153);Lighting.OutdoorAmbient=Color3.fromRGB(165,172,177)
  local atmosphere=Instance.new("Atmosphere");atmosphere.Density=0.16;atmosphere.Offset=0.1;atmosphere.Color=Color3.fromRGB(225,205,178);atmosphere.Parent=Lighting
  local bloom=Instance.new("BloomEffect");bloom.Intensity=0.14;bloom.Size=20;bloom.Threshold=1.8;bloom.Parent=Lighting

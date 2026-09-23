@@ -359,9 +359,9 @@ local function render()
  player:SetAttribute("TutorialTarget",state.Waypoint)
  for _,update in ipairs(updaters) do update() end
 end
-local mode=label(gui,"V0.3.5 • PRACTICE MODE",10,UDim2.new(0.5,0,1,-22),UDim2.new(0.7,0,0,18),muted);mode.AnchorPoint=Vector2.new(0.5,0);mode.TextXAlignment=Enum.TextXAlignment.Center
+local mode=label(gui,"V0.3.6 • PRACTICE MODE",10,UDim2.new(0.5,0,1,-22),UDim2.new(0.7,0,0,18),muted);mode.AnchorPoint=Vector2.new(0.5,0);mode.TextXAlignment=Enum.TextXAlignment.Center
 remote.OnClientEvent:Connect(function(kind,payload)
- if kind=="State" then local first=state==nil;state=payload;render();mode.Text=state.Persistent and "V0.3.5 • PRIVATE TEST" or "V0.3.5 • PRACTICE — PROGRESS RESETS";if first and page then renderMenu() end
+ if kind=="State" then local first=state==nil;state=payload;render();mode.Text=state.Persistent and "V0.3.6 • PRIVATE TEST" or "V0.3.6 • PRACTICE — PROGRESS RESETS";if first and page then renderMenu() end
  elseif kind=="Open" then if payload=="Pets" then petTab="CASES" end;open(payload)
  elseif kind=="CaseResult" then
   modal.Visible=false;page=nil
